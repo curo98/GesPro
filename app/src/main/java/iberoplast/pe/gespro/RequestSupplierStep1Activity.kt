@@ -3,6 +3,7 @@ package iberoplast.pe.gespro
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
 class RequestSupplierStep1Activity : AppCompatActivity() {
@@ -15,5 +16,21 @@ class RequestSupplierStep1Activity : AppCompatActivity() {
             val intent = Intent(this, RequestSupplierStep2Activity::class.java)
             startActivity(intent)
         }
+    }
+
+    override fun onBackPressed() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Estas seguro que quieres salir?")
+        builder.setMessage("Si abandonas el registro, los datos que ingresastes se perderan")
+        builder.setPositiveButton("Si, salir") { _, _ ->
+            finish()
+        }
+
+        builder.setNegativeButton("Continuar con el registro"){ dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
     }
 }
