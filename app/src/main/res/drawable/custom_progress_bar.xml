@@ -1,0 +1,12 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Barra de progreso (personalizada) -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape android:shape="rectangle">
+                <solid android:color="#0088FF" /> <!-- Cambiar el color de la barra a rojo -->
+                <corners android:radius="0dp" /> <!-- Agregar esquinas redondeadas -->
+                <size android:height="10dp" /> <!-- Aumentar el grosor de la barra -->
+            </shape>
+        </clip>
+    </item>
+</layer-list>

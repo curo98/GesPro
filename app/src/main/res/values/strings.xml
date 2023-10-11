@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">GesPro - IberoPlast</string>
+    <string name="label_login">Inicio de Sesion</string>
+    <string name="label_email">Correo</string>
+    <string name="label_password">Clave</string>
+    <string name="label_link_register">Aun no te has registrado?</string>
+    <string name="label_register">Registro</string>
+    <string name="btn_register">CONFIRMAR REGISTRO</string>
+    <string name="label_name">Nombres y Apellidos</string>
+    <string name="btn_login">INGRESAR</string>
+    <string name="label_password_confirmation">Confirmar clave</string>
+    <string name="por_favor_completa_tus_datos">Por favor completa tus datos</string>
+    <string name="link_label_lobin">Ya tengo cuenta</string>
+    <string name="btn_solicitud_proveedor">SOLICITUD - PROVEEDOR</string>
+    <string name="btn_lista_proveedores">PROVEEDORES</string>
+    <string name="btn_cerrar_sesion">CERRAR SESION</string>
+    <string name="form_btn_iniciar_solicitud">INICIAR SOLICITUD</string>
+
+
+    <string name="item_supplier_id">Proveedor %1$d</string>
+    <string name="item_name_supplier">Nombres: %1$s</string>
+    <string name="item_email_supplier">Correo electronico: %1$s</string>
+    <string name="label_link_login">Ya tengo una cuenta</string>
+    <string name="press_back_again">Presione 2 veces para salir</string>
+</resources>

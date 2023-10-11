@@ -1,0 +1,29 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.GesPro" parent="Theme.AppCompat.Light.DarkActionBar">
+<!--         Customize your light theme here.-->
+<!--        <item name="colorPrimary">@color/colorBtnLogin</item>-->
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="Theme.GesPro" parent="Base.Theme.GesPro" />
+
+    <style name="MenuButton" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="android:paddingLeft">30dp</item>
+        <item name="android:paddingRight">50dp</item>
+    </style>
+
+    <style name="ButtonForm" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="android:paddingLeft">80dp</item>
+        <item name="android:paddingRight">80dp</item>
+    </style>
+
+    <style name="ButtonForm2x1" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="android:paddingLeft">25dp</item>
+        <item name="android:paddingRight">25dp</item>
+    </style>
+
+</resources>

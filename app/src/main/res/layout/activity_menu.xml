@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".MenuActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="40dp">
+        <!-- Orientación vertical hace referencia al modo de visualización de los componentes
+        dentro del layout-->
+
+        <!-- La unidad de medida "dp" se utiliza en Android para hacer referencia a los
+        padding y márgenes de un componente en Android. A diferencia de "sp", se utilizan
+        para los textos-->
+
+        <!-- wrap_content hace que sus atributos internos se ajusten a su contenido-->
+
+        <!--    <ImageView-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:src="@drawable/logo"/>-->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Bienvenido"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+
+        <!-- Reemplaza "tu_logo" con el nombre de tu imagen de logo -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="15dp">
+
+            <Button
+                android:id="@+id/btnCrearSolicitud"
+                style="@style/MenuButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorBtnLogin"
+                android:drawableEnd="@drawable/solicitud"
+                android:text="@string/btn_solicitud_proveedor" />
+
+            <Button
+                android:id="@+id/btn_list_proveedores"
+                style="@style/MenuButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorBtnLogin"
+                android:drawableEnd="@drawable/lista"
+                android:text="@string/btn_lista_proveedores" />
+
+            <Button
+                android:id="@+id/btnLogout"
+                style="@style/MenuButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorBtnLogin"
+                android:drawableEnd="@drawable/salir"
+                android:text="@string/btn_cerrar_sesion" />
+
+
+            <!-- match_content hace que sus atributos internos se ajusten al ancho total del
+            elemento padre-->
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
