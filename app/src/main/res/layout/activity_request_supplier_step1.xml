@@ -75,6 +75,7 @@
                 android:orientation="horizontal"> <!-- Espacio agregado aquí -->
 
                 <RadioButton
+                    android:checked="true"
                     android:id="@+id/nacionalRadio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -96,12 +97,13 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/etNicRuc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text" />
+                android:inputType="number" />
 
             <Button
-                android:id="@+id/btnFormRequest1"
+                android:id="@+id/btnNextFormRequest1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
