@@ -14,8 +14,6 @@ import iberoplast.pe.gespro.PreferenceHelper.set
 
 class MainActivity : AppCompatActivity() {
 
-
-
     private val snackBar by lazy {
         val mainLayout = findViewById<ScrollView>(R.id.mainLayout)
         Snackbar.make(mainLayout, R.string.press_back_again, Snackbar.LENGTH_SHORT)
@@ -38,6 +36,11 @@ class MainActivity : AppCompatActivity() {
             goToMenuActivity()
         }
 
+        btnLogin.setOnClickListener {
+            createSessionPreference()
+            goToMenuActivity()
+        }
+
         tvGoToRegister.setOnClickListener{
             Toast.makeText(this,
                 getString(R.string.por_favor_completa_tus_datos), Toast.LENGTH_SHORT).show()
@@ -47,11 +50,6 @@ class MainActivity : AppCompatActivity() {
 //          Este intent hace que nos lleve a otro activity
 
 //            finish()
-        }
-
-        btnLogin.setOnClickListener {
-            createSessionPreference()
-            goToMenuActivity()
         }
     }
 

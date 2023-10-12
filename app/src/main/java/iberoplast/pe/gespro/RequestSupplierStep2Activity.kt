@@ -12,8 +12,8 @@ class RequestSupplierStep2Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request_supplier_step2)
 
-        val btnFormRequest2 = findViewById<Button>(R.id.btnFormRequest2)
-        btnFormRequest2.setOnClickListener{
+        val btnNextFormRequest2 = findViewById<Button>(R.id.btnNextFormRequest2)
+        btnNextFormRequest2.setOnClickListener{
             val intent = Intent(this, RequestSupplierStep3Activity::class.java)
             startActivity(intent)
         }

@@ -1,104 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    tools:context=".RequestSupplierStep3Activity">
+    android:orientation="vertical"
+    android:paddingTop="15dp"
+    tools:context=".RegisterRequestSupplierActivity"
+    android:id="@+id/llFormStep3"
+    android:visibility="gone">
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:padding="10sp"
+        android:text="Política de Proveedores"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- Vista de PDF -->
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="380dp"
+        android:layout_weight="1"
+        tools:ignore="WebViewLayout"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:orientation="vertical"
-        android:padding="40dp"
-        tools:ignore="WebViewLayout">
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        android:padding="10sp">
+        <!-- Checkbox para "Acepto la política de proveedores 1" -->
+        <CheckBox
+            android:id="@+id/checkBox1"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="2dp"
-            android:background="@drawable/container_background"> <!-- Utiliza el nuevo fondo personalizado -->
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="15dp"
-                android:layout_margin="4sp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:progress="60"
-                android:progressDrawable="@drawable/custom_progress_bar" />
-        </LinearLayout>
-
-        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10sp"
-            android:text="Política de Proveedores"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:text="Acepto la política de proveedores 1" />
 
-        <!-- Vista de PDF -->
-        <WebView
-            android:id="@+id/pdfWebView"
-            android:layout_width="match_parent"
+        <!-- Checkbox para "Acepto la política de protección de datos" -->
+        <CheckBox
+            android:id="@+id/checkBox2"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Acepto la política de protección de datos" />
+
+    </LinearLayout>
+
+    <!-- Botones "Anterior" y "Siguiente" -->
+    <LinearLayout
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            style="@style/ButtonForm2x1"
+            android:background="@color/cardview_shadow_start_color"
+            android:drawableStart="@drawable/icon_before"
+            android:id="@+id/btnAnterior"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:text="Anterior" />
+
+        <Button
+            style="@style/ButtonForm2x1"
+            android:background="@color/colorBtnLogin"
+            android:drawableEnd="@drawable/icon_next"
+            android:id="@+id/btnNextFormRequest3"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:scrollbars="vertical|horizontal"
-            android:scrollbarStyle="outsideOverlay" />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="10sp">
-            <!-- Checkbox para "Acepto la política de proveedores 1" -->
-            <CheckBox
-                android:id="@+id/checkBox1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Acepto la política de proveedores 1" />
-
-            <!-- Checkbox para "Acepto la política de protección de datos" -->
-            <CheckBox
-                android:id="@+id/checkBox2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Acepto la política de protección de datos" />
-
-        </LinearLayout>
-
-        <!-- Botones "Anterior" y "Siguiente" -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnAnterior"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:text="Anterior"
-                android:drawableStart="@drawable/icon_before"
-                style="@style/ButtonForm2x1"
-                android:background="@color/cardview_shadow_start_color"/>
-
-            <Button
-                android:id="@+id/btnFormRequest3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Siguiente"
-                android:drawableEnd="@drawable/icon_next"
-                style="@style/ButtonForm2x1"
-                android:background="@color/colorBtnLogin"/>
-        </LinearLayout>
+            android:layout_width="0dp"
+            android:text="Siguiente" />
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

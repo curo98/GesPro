@@ -16,7 +16,7 @@ class MenuActivity : AppCompatActivity() {
         val btnLogout = findViewById<Button>(R.id.btnLogout)
 
         btnCrearSolicitud.setOnClickListener{
-            val intent = Intent(this, RequestSupplierStep1Activity::class.java)
+            val intent = Intent(this, RegisterRequestSupplierActivity::class.java)
             startActivity(intent)
         }
 

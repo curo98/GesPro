@@ -1,120 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    tools:context=".RequestSupplierStep4Activity">
+    android:orientation="vertical"
+    android:paddingTop="15dp"
+    tools:context=".RegisterRequestSupplierActivity"
+    android:id="@+id/llFormStep1">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <TextView
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="40dp">
-        <!-- Orientación vertical hace referencia al modo de visualización de los componentes
-        dentro del layout-->
+        android:layout_marginTop="6dp"
+        android:layout_width="wrap_content"
+        android:text="Origen del proveedor"
+        android:textStyle="bold" />
 
-        <!-- La unidad de medida "dp" se utiliza en Android para hacer referencia a los
-        padding y márgenes de un componente en Android. A diferencia de "sp", se utilizan
-        para los textos-->
+    <RadioGroup
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"> <!-- Espacio agregado aquí -->
 
-        <!-- wrap_content hace que sus atributos internos se ajusten a su contenido-->
-
-
-        <!--    <TextView-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:gravity="center"-->
-        <!--        android:text="@string/label_login"-->
-        <!--        android:paddingTop="30sp"-->
-        <!--        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />-->
-
-        <!-- Reemplaza "tu_logo" con el nombre de tu imagen de logo -->
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <RadioButton
+            android:checked="true"
+            android:id="@+id/nacionalRadio"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="2dp"
-            android:background="@drawable/container_background"> <!-- Utiliza el nuevo fondo personalizado -->
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="15dp"
-                android:layout_margin="4sp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:progress="20"
-                android:progressDrawable="@drawable/custom_progress_bar" />
-        </LinearLayout>
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:text="Nacional" /> <!-- Espacio agregado aquí -->
 
-
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <RadioButton
+            android:id="@+id/extranjeroRadio"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="15dp">
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:text="Extranjero" />
+    </RadioGroup>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:text="NIC / RUC"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/etNicRuc"
+        android:inputType="number"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
+    <Button
+        style="@style/ButtonForm"
+        android:background="@color/colorBtnLogin"
+        android:drawableEnd="@drawable/icon_next"
+        android:id="@+id/btnNextFormRequest1"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:text="@string/form_btn_iniciar_solicitud" />
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:text="Origen del proveedor"
-                android:textStyle="bold" />
-
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:orientation="horizontal"> <!-- Espacio agregado aquí -->
-
-                <RadioButton
-                    android:checked="true"
-                    android:id="@+id/nacionalRadio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:text="Nacional" /> <!-- Espacio agregado aquí -->
-
-                <RadioButton
-                    android:id="@+id/extranjeroRadio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Extranjero" />
-            </RadioGroup>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="NIC / RUC"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/etNicRuc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number" />
-
-            <Button
-                android:id="@+id/btnNextFormRequest1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@color/colorBtnLogin"
-                android:drawableEnd="@drawable/icon_next"
-                style="@style/ButtonForm"
-                android:text="@string/form_btn_iniciar_solicitud" />
-
-
-            <!-- match_content hace que sus atributos internos se ajusten al ancho total del
-            elemento padre-->
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    <!-- match_content hace que sus atributos internos se ajusten al ancho total del
+    elemento padre-->
+</LinearLayout>

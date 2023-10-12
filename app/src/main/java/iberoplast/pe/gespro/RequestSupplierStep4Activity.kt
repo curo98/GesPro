@@ -10,9 +10,9 @@ class RequestSupplierStep4Activity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request_supplier_step4)
 
-        val btnFormRequest4 = findViewById<Button>(R.id.btnFormRequest4)
+        val btnNextFormRequest4 = findViewById<Button>(R.id.btnNextFormRequest4)
 
-        btnFormRequest4.setOnClickListener{
+        btnNextFormRequest4.setOnClickListener{
             val intent = Intent(this, RequestSupplierStep5Activity::class.java)
             startActivity(intent)
         }

@@ -11,9 +11,6 @@ class SuppliersActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_suppliers)
 
-
-
-
         val suppliers = ArrayList<Supplier>()
         suppliers.add(Supplier(1, "Juanito", "Juanito@gmail.com"))
         suppliers.add(Supplier(2, "Alfonso", "Alfonso@gmail.com"))

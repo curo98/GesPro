@@ -11,6 +11,8 @@ class RequestSupplierStep1Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request_supplier_step1)
+
+
         val btnNext = findViewById<Button>(R.id.btnNextFormRequest1)
 
         btnNext.setOnClickListener{
