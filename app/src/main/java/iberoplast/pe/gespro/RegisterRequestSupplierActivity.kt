@@ -6,30 +6,43 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ProgressBar
+import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 
 class RegisterRequestSupplierActivity : AppCompatActivity() {
+    private var currentStep = 1 // Valor predeterminado: paso 1 (20%)
+    private lateinit var progressBar: ProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_request_supplier)
 
-        // Start code formstep1
+        progressBar = findViewById(R.id.progressBar)
+
+        // Variables
         val btnNextFormRequest1 = findViewById<Button>(R.id.btnNextFormRequest1)
         val btnNextFormRequest2 = findViewById<Button>(R.id.btnNextFormRequest2)
         val btnNextFormRequest3 = findViewById<Button>(R.id.btnNextFormRequest3)
         val btnNextFormRequest4 = findViewById<Button>(R.id.btnNextFormRequest4)
 
+        val llFormStep1 = findViewById<LinearLayout>(R.id.llFormStep1)
+        val llFormStep2 = findViewById<LinearLayout>(R.id.llFormStep2)
+        val llFormStep3 = findViewById<LinearLayout>(R.id.llFormStep3)
+        val llFormStep4 = findViewById<LinearLayout>(R.id.llFormStep4)
+        val llFormStep5 = findViewById<LinearLayout>(R.id.llFormStep5)
+
+        // Start code formstep1
         btnNextFormRequest1.setOnClickListener{
             val etNicRuc = findViewById<EditText>(R.id.etNicRuc)
             val nicRucText = etNicRuc.text.toString().trim()
-
-            val llFormStep1 = findViewById<LinearLayout>(R.id.llFormStep1)
-            val llFormStep2 = findViewById<LinearLayout>(R.id.llFormStep2)
 
             if (nicRucText.isEmpty()) {
                 etNicRuc.error = "El NIC o RUC no puede estar vacío"
@@ -43,6 +56,10 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
                 llFormStep2.visibility = View.VISIBLE
 //                val intent = Intent(this, RequestSupplierStep2Activity::class.java)
 //                startActivity(intent)
+
+                currentStep = 2
+                // Actualizar la barra de progreso
+                updateProgressBar()
             }
         }
         // end code formstep1
@@ -61,11 +78,49 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
         spDistritos.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, distritos)
 
         btnNextFormRequest2.setOnClickListener{
-            val llFormStep2 = findViewById<LinearLayout>(R.id.llFormStep2)
-            val llFormStep3 = findViewById<LinearLayout>(R.id.llFormStep3)
-            // Continuar con el paso 2(TEST)
-            llFormStep2.visibility = View.GONE
-            llFormStep3.visibility = View.VISIBLE
+            val etNomProveedor = findViewById<EditText>(R.id.etNomProveedor)
+            val etCorreo = findViewById<EditText>(R.id.etCorreo)
+            val etDir1 = findViewById<EditText>(R.id.etDir1)
+            val etDir2 = findViewById<EditText>(R.id.etDir2)
+
+            val nombreProveedor = etNomProveedor.text.toString()
+            val correo = etCorreo.text.toString()
+            val dir1 = etDir1.text.toString()
+            val dir2 = etDir2.text.toString()
+
+//            val rgCondPago = findViewById<RadioGroup>(R.id.rgCondPago)
+//            val selCondPagoId = rgCondPago.checkedRadioButtonId
+//            val selTipoCon = rgCondPago.findViewById<RadioButton>(selCondPagoId)
+//            val tipoConPago = selTipoCon.text .toString()
+//
+//            val rgTipoPago = findViewById<RadioGroup>(R.id.rgTipoPago)
+//            val selTipoPagoId = rgTipoPago.checkedRadioButtonId
+//            val selTipoPago = rgTipoPago.findViewById<RadioButton>(selTipoPagoId)
+//            val tipoPago = selTipoPago.text .toString()
+
+            if (nombreProveedor.isEmpty() || dir1.isEmpty() || dir2.isEmpty()) {
+                // Manejar la validación de campos vacíos aquí
+                etNomProveedor.error = "Este campo no puede estar vacío"
+                etDir1.error = "Este campo no puede estar vacío"
+                etDir2.error = "Este campo no puede estar vacío"
+            }
+            // Validación del formato de correo electrónico
+            else if (correo.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
+                etCorreo.error = "Ingresa un correo electrónico válido"
+            }
+            else{
+                // Continuar con el paso 2(TEST)
+                llFormStep2.visibility = View.GONE
+                llFormStep3.visibility = View.VISIBLE
+
+
+                currentStep = 3
+                // Actualizar la barra de progreso
+                updateProgressBar()
+            }
+
+
+
         }
         // end code formstep2
 
@@ -81,21 +136,53 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
         webView.loadUrl(url)
 
         btnNextFormRequest3.setOnClickListener{
-            val llFormStep3 = findViewById<LinearLayout>(R.id.llFormStep3)
-            val llFormStep4 = findViewById<LinearLayout>(R.id.llFormStep4)
-            // Continuar con el paso 3(TEST)
-            llFormStep3.visibility = View.GONE
-            llFormStep4.visibility = View.VISIBLE
+            val checkBox1 = findViewById<CheckBox>(R.id.checkBox1)
+            val checkBox2 = findViewById<CheckBox>(R.id.checkBox2)
+
+            val aceptoPoliticaPro = checkBox1.isChecked
+            val aceptoPoliticaDatos = checkBox2.isChecked
+
+            if (!aceptoPoliticaPro && !aceptoPoliticaDatos) {
+                // Manejar la validación de que checkBox1 no está marcado
+                val layout = findViewById<ScrollView>(R.id.layout) // Reemplaza "layout" con el ID de tu diseño
+                val snackbar = Snackbar.make(layout, "Debe aceptar nuestras politicas", Snackbar.LENGTH_LONG)
+                snackbar.show()
+            }
+            else if (!aceptoPoliticaPro) {
+                // Manejar la validación de que checkBox1 no está marcado
+                val layout = findViewById<ScrollView>(R.id.layout) // Reemplaza "layout" con el ID de tu diseño
+                val snackbar = Snackbar.make(layout, "Debe aceptar nuestra politica de proveedores", Snackbar.LENGTH_LONG)
+                snackbar.show()
+            }
+
+            else if (!aceptoPoliticaDatos) {
+                // Manejar la validación de que checkBox1 no está marcado
+                val layout = findViewById<ScrollView>(R.id.layout) // Reemplaza "layout" con el ID de tu diseño
+                val snackbar = Snackbar.make(layout, "Debe aceptar nuestra politica de proteccion de datos", Snackbar.LENGTH_LONG)
+                snackbar.show()
+            }
+            else {
+                // Ambos CheckBox están marcados, puedes continuar con tus acciones
+                // Continuar con el paso 3(TEST)
+                llFormStep3.visibility = View.GONE
+                llFormStep4.visibility = View.VISIBLE
+
+                currentStep = 4
+                // Actualizar la barra de progreso
+                updateProgressBar()
+            }
         }
         // end code formstep3
 
         // Start code formstep4
         btnNextFormRequest4.setOnClickListener{
-            val llFormStep4 = findViewById<LinearLayout>(R.id.llFormStep4)
-            val llFormStep5 = findViewById<LinearLayout>(R.id.llFormStep5)
             // Continuar con el paso 4(TEST)
             llFormStep4.visibility = View.GONE
             llFormStep5.visibility = View.VISIBLE
+
+            currentStep = 5
+            // Actualizar la barra de progreso
+            updateProgressBar()
         }
         // end code formstep4
 
@@ -124,38 +211,61 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
         val llFormStep4 = findViewById<LinearLayout>(R.id.llFormStep4)
         val llFormStep5 = findViewById<LinearLayout>(R.id.llFormStep5)
 
-        when {
-            llFormStep5.visibility == View.VISIBLE -> {
-                llFormStep5.visibility = View.GONE
-                llFormStep4.visibility = View.VISIBLE
-            }
-            llFormStep4.visibility == View.VISIBLE -> {
-                llFormStep4.visibility = View.GONE
-                llFormStep3.visibility = View.VISIBLE
-            }
-            llFormStep3.visibility == View.VISIBLE -> {
-                llFormStep3.visibility = View.GONE
-                llFormStep2.visibility = View.VISIBLE
-            }
-            llFormStep2.visibility == View.VISIBLE -> {
-                llFormStep2.visibility = View.GONE
-                llFormStep1.visibility = View.VISIBLE
-            }
-            llFormStep1.visibility == View.VISIBLE -> {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("Estas seguro que quieres salir?")
-                builder.setMessage("Si abandonas el registro, los datos que ingresastes se perderan")
-                builder.setPositiveButton("Si, salir") { _, _ ->
-                    finish()
-                }
+        if (llFormStep5.visibility == View.VISIBLE && currentStep == 5) {
+            llFormStep5.visibility = View.GONE
+            llFormStep4.visibility = View.VISIBLE
 
-                builder.setNegativeButton("Continuar con el registro"){ dialog, _ ->
-                    dialog.dismiss()
-                }
-
-                val dialog = builder.create()
-                dialog.show()
-            }
+            currentStep = 4 // Actualiza el paso actual a 4
+            updateProgressBar() // Actualiza la barra de progreso
         }
+        else if (llFormStep4.visibility == View.VISIBLE && currentStep == 4) {
+            llFormStep4.visibility = View.GONE
+            llFormStep3.visibility = View.VISIBLE
+
+            currentStep = 3 // Actualiza el paso actual a 3
+            updateProgressBar() // Actualiza la barra de progreso
+        }
+        else if (llFormStep3.visibility == View.VISIBLE && currentStep == 3) {
+            llFormStep3.visibility = View.GONE
+            llFormStep2.visibility = View.VISIBLE
+
+            currentStep = 2 // Actualiza el paso actual a 2
+            updateProgressBar() // Actualiza la barra de progreso
+        }
+        else if (llFormStep2.visibility == View.VISIBLE && currentStep == 2) {
+            llFormStep2.visibility = View.GONE
+            llFormStep1.visibility = View.VISIBLE
+
+            currentStep = 1 // Actualiza el paso actual a 1
+            updateProgressBar() // Actualiza la barra de progreso
+        }
+        else if (llFormStep1.visibility == View.VISIBLE) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Estas seguro que quieres salir?")
+            builder.setMessage("Si abandonas el registro, los datos que ingresastes se perderan")
+            builder.setPositiveButton("Si, salir") { _, _ ->
+                finish()
+            }
+
+            builder.setNegativeButton("Continuar con el registro"){ dialog, _ ->
+                dialog.dismiss()
+            }
+
+            val dialog = builder.create()
+            dialog.show()
+        }
+    }
+
+    private fun updateProgressBar() {
+        val progress = when (currentStep) {
+            1 -> 20
+            2 -> 40
+            3 -> 60
+            4 -> 80
+            5 -> 100
+            else -> 0
+        }
+
+        progressBar.progress = progress
     }
 }

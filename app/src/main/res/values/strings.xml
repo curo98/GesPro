@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GesPro - IberoPlast</string>
+    <string name="app_name">GesPro</string>
     <string name="label_login">Inicio de Sesion</string>
     <string name="label_email">Correo</string>
     <string name="label_password">Clave</string>

@@ -13,39 +13,13 @@
 
     <TextView
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_width="wrap_content"
-        android:text="Origen del proveedor"
-        android:textStyle="bold" />
-
-    <RadioGroup
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_width="wrap_content"
-        android:orientation="horizontal"> <!-- Espacio agregado aquí -->
-
-        <RadioButton
-            android:id="@+id/nacionalRadio"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_width="wrap_content"
-            android:text="Nacional" /> <!-- Espacio agregado aquí -->
-
-        <RadioButton
-            android:id="@+id/extranjeroRadio"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="Extranjero" />
-    </RadioGroup>
-
-    <TextView
-        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:text="Nombre del proveedor"
         android:textStyle="bold" />
 
     <EditText
+        android:id="@+id/etNomProveedor"
         android:inputType="textPersonName"
         android:layout_height="wrap_content"
         android:layout_width="match_parent" />
@@ -58,6 +32,7 @@
         android:textStyle="bold" />
 
     <EditText
+        android:id="@+id/etCorreo"
         android:inputType="textEmailAddress"
         android:layout_height="wrap_content"
         android:layout_width="match_parent" />
@@ -70,6 +45,7 @@
         android:textStyle="bold" />
 
     <EditText
+        android:id="@+id/etDir1"
         android:inputType="text"
         android:layout_height="wrap_content"
         android:layout_width="match_parent" />
@@ -83,6 +59,7 @@
         android:textStyle="bold" />
 
     <EditText
+        android:id="@+id/etDir2"
         android:inputType="text"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10sp"
@@ -124,8 +101,6 @@
             android:layout_weight="1"
             android:layout_width="0dp" />
 
-        <!--                android:popupBackground="@color/colorBtnLogin"-->
-
     </LinearLayout>
 
 
@@ -140,17 +115,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:layout_width="wrap_content"
-        android:orientation="horizontal"> <!-- Espacio agregado aquí -->
+        android:orientation="horizontal"
+        android:id="@+id/rgCondPago"
+        android:checkedButton="@id/rbConFactura"> <!-- Espacio agregado aquí -->
 
         <RadioButton
-            android:id="@+id/condPago1"
+            android:id="@+id/rbConFactura"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_width="wrap_content"
             android:text="Factura" /> <!-- Espacio agregado aquí -->
 
         <RadioButton
-            android:id="@+id/condPago2"
+            android:id="@+id/rbConBoleta"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="Boleta" />
@@ -167,17 +144,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:layout_width="wrap_content"
-        android:orientation="horizontal"> <!-- Espacio agregado aquí -->
+        android:orientation="horizontal"
+        android:id="@+id/rgTipoPago"
+        android:checkedButton="@id/rbTransferencia"> <!-- Espacio agregado aquí -->
 
         <RadioButton
-            android:id="@+id/viaPago1"
+            android:id="@+id/rbTransferencia"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_width="wrap_content"
             android:text="Transferencia Bancaria" /> <!-- Espacio agregado aquí -->
 
         <RadioButton
-            android:id="@+id/viaPago2"
+            android:id="@+id/rbLetras"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:text="Letras" />
@@ -190,7 +169,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:paddingTop="10sp">
+        android:paddingTop="15sp">
 
         <Button
             style="@style/ButtonForm2x1"

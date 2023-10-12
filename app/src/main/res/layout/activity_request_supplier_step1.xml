@@ -21,18 +21,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:layout_width="match_parent"
-        android:orientation="horizontal"> <!-- Espacio agregado aquí -->
+        android:orientation="horizontal"
+        android:id="@+id/rgTipoProveedor"
+        android:checkedButton="@id/rbNacional"> <!-- Espacio agregado aquí -->
 
         <RadioButton
             android:checked="true"
-            android:id="@+id/nacionalRadio"
+            android:id="@+id/rbNacional"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:text="Nacional" /> <!-- Espacio agregado aquí -->
 
         <RadioButton
-            android:id="@+id/extranjeroRadio"
+            android:id="@+id/rbExtranjero"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_width="0dp"

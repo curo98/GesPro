@@ -37,7 +37,7 @@
             android:id="@+id/checkBox1"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="Acepto la política de proveedores 1" />
+            android:text="Acepto la política de proveedores" />
 
         <!-- Checkbox para "Acepto la política de protección de datos" -->
         <CheckBox
