@@ -15,38 +15,38 @@
         android:theme="@style/Theme.GesPro"
         tools:targetApi="31">
         <activity
-            android:name=".RegisterRequestSupplierActivity"
+            android:name=".ui.RegisterRequestSupplierActivity"
             android:exported="false"
-            android:parentActivityName=".MenuActivity"
+            android:parentActivityName=".ui.MenuActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".SuppliersActivity"
+            android:name=".ui.SuppliersActivity"
             android:exported="false"
-            android:parentActivityName=".MenuActivity" />
+            android:parentActivityName=".ui.MenuActivity" />
         <activity
-            android:name=".RequestSupplierStep5Activity"
+            android:name=".ui.RequestSupplierStep5Activity"
             android:exported="false" />
         <activity
-            android:name=".RequestSupplierStep4Activity"
+            android:name=".ui.RequestSupplierStep4Activity"
             android:exported="false" />
         <activity
-            android:name=".RequestSupplierStep3Activity"
+            android:name=".ui.RequestSupplierStep3Activity"
             android:exported="false" />
         <activity
-            android:name=".RequestSupplierStep2Activity"
+            android:name=".ui.RequestSupplierStep2Activity"
             android:exported="false" />
         <activity
-            android:name=".RequestSupplierStep1Activity"
+            android:name=".ui.RequestSupplierStep1Activity"
             android:exported="false" />
         <activity
-            android:name=".MenuActivity"
+            android:name=".ui.MenuActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".ui.RegisterActivity"
             android:exported="false"
             android:launchMode="singleInstance" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:launchMode="singleInstance">
             <intent-filter>

@@ -9,4 +9,7 @@
     <color name="colorPrimaryDark">#141F81</color>
     <color name="colorAccent">#448AFF</color>
 
+    <color name="colorActivo">#00FF00</color>
+    <color name="colorInactivo">#FF0000</color>
+    <color name="colorPendiente">#FFA500</color>
 </resources>

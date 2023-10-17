@@ -1,4 +1,4 @@
-package iberoplast.pe.gespro
+package iberoplast.pe.gespro.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import iberoplast.pe.gespro.R
 
 class RequestSupplierStep1Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

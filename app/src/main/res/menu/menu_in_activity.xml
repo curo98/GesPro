@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.MenuActivity">
+    <item
+        android:id="@+id/proveedores"
+        android:title="Proveedores" />
+    <item
+        android:id="@+id/solic"
+        android:title="Crear solicitud" />
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/icon_logout_menu"
+        android:title="Cerrar sesion" />
+</menu>

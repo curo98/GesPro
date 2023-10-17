@@ -1,4 +1,4 @@
-package iberoplast.pe.gespro
+package iberoplast.pe.gespro.ui
 
 import android.os.Bundle
 import android.view.View
@@ -16,14 +16,26 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import iberoplast.pe.gespro.R
+import iberoplast.pe.gespro.io.ApiService
+import iberoplast.pe.gespro.model.StateRequest
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class RegisterRequestSupplierActivity : AppCompatActivity() {
+
     private var currentStep = 1 // Valor predeterminado: paso 1 (20%)
     private lateinit var progressBar: ProgressBar
+
+    private val apiService: ApiService by lazy {
+        ApiService.create()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_request_supplier)
+
 
         progressBar = findViewById(R.id.progressBar)
 
@@ -72,6 +84,7 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
         val paises = arrayOf("Peru", "Colombia", "Chile", "Venezuela")
         val departamentos = arrayOf("Lima", "Iquitos", "Ica", "Puno")
         val distritos = arrayOf("San vicente de canete", "La victoria", "Pucusana", "Juliaca")
+
 
         spPaises.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, paises)
         spDepartamentos.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, departamentos)
@@ -202,6 +215,40 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
             finish()
         }
         // end code formstep5
+
+        loadStatesRequest()
+    }
+
+    private fun loadStatesRequest() {
+        val spEstados = findViewById<Spinner>(R.id.spinnerEstados)
+
+        val call = apiService.getStates()
+        call.enqueue(object: Callback<ArrayList<StateRequest>> {
+
+            override fun onFailure(call: Call<ArrayList<StateRequest>>, t: Throwable) {
+                Toast.makeText(this@RegisterRequestSupplierActivity, "Ocurrio un problema al cargar los estados del formulario", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+
+            override fun onResponse(
+                call: Call<ArrayList<StateRequest>>,
+                response: Response<ArrayList<StateRequest>>
+            ) {
+                if (response.isSuccessful){
+                    val states = response.body()
+
+                    val dataStateRequest = ArrayList<String>()
+                    states?.forEach {
+                        dataStateRequest.add(it.name)
+                    }
+
+
+                    spEstados.adapter = ArrayAdapter(this@RegisterRequestSupplierActivity, android.R.layout.simple_list_item_1, dataStateRequest)
+                }
+            }
+
+        })
+
     }
 
     override fun onBackPressed() {

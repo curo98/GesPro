@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="15dp"
-    tools:context=".RegisterRequestSupplierActivity"
+    tools:context=".ui.RegisterRequestSupplierActivity"
     android:visibility="gone"
     android:id="@+id/llFormStep5">
 
