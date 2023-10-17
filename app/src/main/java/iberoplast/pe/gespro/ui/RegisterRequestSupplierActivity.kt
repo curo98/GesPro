@@ -10,6 +10,8 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.Toast
@@ -18,7 +20,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
+import iberoplast.pe.gespro.model.MethodPayment
 import iberoplast.pe.gespro.model.StateRequest
+import iberoplast.pe.gespro.model.TypePayment
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -217,6 +221,8 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
         // end code formstep5
 
         loadStatesRequest()
+        loadTypesPayments()
+        loadMethodsPayments()
     }
 
     private fun loadStatesRequest() {
@@ -249,6 +255,112 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
 
         })
 
+    }
+
+    private fun loadTypesPayments() {
+        val rgTypesPayments = findViewById<RadioGroup>(R.id.rgCondPago) // Referencia al RadioGroup
+
+        val call = apiService.getTypesPayments()
+        call.enqueue(object: Callback<ArrayList<TypePayment>> {
+
+            override fun onFailure(call: Call<ArrayList<TypePayment>>, t: Throwable) {
+                Toast.makeText(this@RegisterRequestSupplierActivity, "Ocurrió un problema al cargar los tipos de pago del formulario", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+
+            override fun onResponse(
+                call: Call<ArrayList<TypePayment>>,
+                response: Response<ArrayList<TypePayment>>
+            ) {
+                if (response.isSuccessful) {
+                    val typesPayments = response.body()
+
+                    // Verifica si se recibieron datos
+                    if (typesPayments != null) {
+                        // Recorre los datos y agrega opciones al RadioGroup
+                        for (typePayment in typesPayments) {
+                            val radioButton = RadioButton(this@RegisterRequestSupplierActivity)
+                            radioButton.text = typePayment.name
+                            radioButton.id = View.generateViewId() // Asigna un ID único
+                            // Obtiene el valor del padding desde dimens.xml
+                            val paddingInPx = resources.getDimension(R.dimen.radio_button_padding).toInt()
+
+                            // Aplica el padding a los RadioButtons
+                            radioButton.setPadding(paddingInPx, paddingInPx, paddingInPx, paddingInPx)
+
+                            val params = RadioGroup.LayoutParams(
+                                RadioGroup.LayoutParams.WRAP_CONTENT,
+                                RadioGroup.LayoutParams.WRAP_CONTENT
+                            )
+                            params.weight = 1f
+                            params.width = 0
+                            radioButton.layoutParams = params
+                            rgTypesPayments.addView(radioButton)
+                        }
+
+                        // Establece un listener para gestionar la selección
+                        rgTypesPayments.setOnCheckedChangeListener { group, checkedId ->
+                            val selectedRadioButton = findViewById<RadioButton>(checkedId)
+                            val selectedTypePayment = selectedRadioButton.text.toString()
+                            // Hacer algo con el tipo de pago seleccionado
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    private fun loadMethodsPayments() {
+        val rgMethodsPayments = findViewById<RadioGroup>(R.id.rgTipoPago) // Referencia al RadioGroup
+
+        val call = apiService.getMethodsPayments()
+        call.enqueue(object: Callback<ArrayList<MethodPayment>> {
+
+            override fun onFailure(call: Call<ArrayList<MethodPayment>>, t: Throwable) {
+                Toast.makeText(this@RegisterRequestSupplierActivity, "Ocurrió un problema al cargar los tipos de pago del formulario", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+
+            override fun onResponse(
+                call: Call<ArrayList<MethodPayment>>,
+                response: Response<ArrayList<MethodPayment>>
+            ) {
+                if (response.isSuccessful) {
+                    val methodsPayments = response.body()
+
+                    // Verifica si se recibieron datos
+                    if (methodsPayments != null) {
+                        // Recorre los datos y agrega opciones al RadioGroup
+                        for (typePayment in methodsPayments) {
+                            val radioButton = RadioButton(this@RegisterRequestSupplierActivity)
+                            radioButton.text = typePayment.name
+                            radioButton.id = View.generateViewId() // Asigna un ID único
+                            // Obtiene el valor del padding desde dimens.xml
+                            val paddingInPx = resources.getDimension(R.dimen.radio_button_padding).toInt()
+
+                            // Aplica el padding a los RadioButtons
+                            radioButton.setPadding(paddingInPx, paddingInPx, paddingInPx, paddingInPx)
+
+                            val params = RadioGroup.LayoutParams(
+                                RadioGroup.LayoutParams.WRAP_CONTENT,
+                                RadioGroup.LayoutParams.WRAP_CONTENT
+                            )
+                            params.weight = 1f
+                            params.width = 0
+                            radioButton.layoutParams = params
+                            rgMethodsPayments.addView(radioButton)
+                        }
+
+                        // Establece un listener para gestionar la selección
+                        rgMethodsPayments.setOnCheckedChangeListener { group, checkedId ->
+                            val selectedRadioButton = findViewById<RadioButton>(checkedId)
+                            val selectedMethodPayment = selectedRadioButton.text.toString()
+                            // Hacer algo con el tipo de pago seleccionado
+                        }
+                    }
+                }
+            }
+        })
     }
 
     override fun onBackPressed() {

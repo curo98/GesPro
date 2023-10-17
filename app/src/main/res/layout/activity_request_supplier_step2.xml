@@ -112,26 +112,12 @@
         android:textStyle="bold" />
 
     <RadioGroup
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_width="wrap_content"
-        android:orientation="horizontal"
         android:id="@+id/rgCondPago"
-        android:checkedButton="@id/rbConFactura"> <!-- Espacio agregado aquí -->
-
-        <RadioButton
-            android:id="@+id/rbConFactura"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_width="wrap_content"
-            android:text="Factura" /> <!-- Espacio agregado aquí -->
-
-        <RadioButton
-            android:id="@+id/rbConBoleta"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="Boleta" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     </RadioGroup>
+
 
     <TextView
         android:layout_height="wrap_content"
@@ -141,25 +127,10 @@
         android:textStyle="bold" />
 
     <RadioGroup
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_width="wrap_content"
-        android:orientation="horizontal"
         android:id="@+id/rgTipoPago"
-        android:checkedButton="@id/rbTransferencia"> <!-- Espacio agregado aquí -->
-
-        <RadioButton
-            android:id="@+id/rbTransferencia"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_width="wrap_content"
-            android:text="Transferencia Bancaria" /> <!-- Espacio agregado aquí -->
-
-        <RadioButton
-            android:id="@+id/rbLetras"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="Letras" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     </RadioGroup>
 
 
