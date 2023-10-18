@@ -2,6 +2,7 @@ package iberoplast.pe.gespro.io
 
 import iberoplast.pe.gespro.model.MethodPayment
 import iberoplast.pe.gespro.model.StateRequest
+import iberoplast.pe.gespro.model.SupplierRequest
 import iberoplast.pe.gespro.model.TypePayment
 import retrofit2.Call
 import retrofit2.Retrofit
@@ -17,6 +18,9 @@ interface ApiService {
 
     @GET("methods-payments")
     fun getMethodsPayments(): Call<ArrayList<MethodPayment>>
+
+    @GET("requests-suppliers")
+    fun getSupplierRequests(): Call<ArrayList<SupplierRequest>>
 
     companion object Factory {
         private const val BASE_URL = "https://gespro-iberoplast.000webhostapp.com/api/"

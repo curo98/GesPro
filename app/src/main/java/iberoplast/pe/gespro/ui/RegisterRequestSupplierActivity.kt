@@ -223,6 +223,7 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
         loadStatesRequest()
         loadTypesPayments()
         loadMethodsPayments()
+
     }
 
     private fun loadStatesRequest() {
@@ -362,6 +363,8 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
             }
         })
     }
+
+
 
     override fun onBackPressed() {
         val llFormStep1 = findViewById<LinearLayout>(R.id.llFormStep1)

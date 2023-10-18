@@ -49,6 +49,16 @@
                 android:text="@string/btn_lista_proveedores" />
 
             <Button
+                android:id="@+id/btn_list_solicitudes"
+                style="@style/MenuButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorBtnLogin"
+                android:drawableEnd="@drawable/lista"
+                android:text="SOLICITUDES" />
+
+            <Button
                 android:id="@+id/btnLogout"
                 style="@style/MenuButton"
                 android:layout_width="match_parent"

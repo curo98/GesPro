@@ -20,6 +20,7 @@ class MenuActivity : AppCompatActivity() {
 
         val btnCrearSolicitud = findViewById<Button>(R.id.btnCrearSolicitud)
         val btnListProveedores = findViewById<Button>(R.id.btn_list_proveedores)
+        val btnListSolicitudes = findViewById<Button>(R.id.btn_list_solicitudes)
         val btnLogout = findViewById<Button>(R.id.btnLogout)
 
         btnCrearSolicitud.setOnClickListener{
@@ -29,6 +30,11 @@ class MenuActivity : AppCompatActivity() {
 
         btnListProveedores.setOnClickListener{
             val intent = Intent(this, SuppliersActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnListSolicitudes.setOnClickListener{
+            val intent = Intent(this, SupplierRequestsActivity::class.java)
             startActivity(intent)
         }
 
