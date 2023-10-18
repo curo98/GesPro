@@ -46,11 +46,11 @@ class SupplierRequestAdapter(private val supplierRequests: List<SupplierRequest>
 //            tvMethodPayId.text = itemView.context.getString(R.string.item_methodPayment_request, request.method_payment.name)
 
             // CODIGO PARA APLICAR NEGRITA A LOS TEXTVIEW, EXCEPTO A LOS VALOR OBTENIDOS DESDE LA API
-            applyBoldStyleToAttribute(tvRequestId, "Solicitud", request.id)
+            applyBoldStyleToAttribute(tvRequestId, "Solicitud #", request.id)
             applyBoldStyleToAttribute(tvUserId, "Solicitante", request.user.name)
             applyBoldStyleToAttribute(tvStateId, "", request.state.name)
-            applyBoldStyleToAttribute(tvTypePayId, "Tipo de comprobante", request.type_payment.name)
-            applyBoldStyleToAttribute(tvMethodPayId, "Método de pago", request.method_payment.name)
+            applyBoldStyleToAttribute(tvTypePayId, "Comprobante emitido", request.type_payment.name)
+            applyBoldStyleToAttribute(tvMethodPayId, "Pago por", request.method_payment.name)
 
             when (request.state.name) {
                 "Aprobado" -> {

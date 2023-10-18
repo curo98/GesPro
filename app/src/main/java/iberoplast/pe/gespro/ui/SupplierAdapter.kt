@@ -60,6 +60,10 @@ package iberoplast.pe.gespro.ui
 //
 //}
 
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
 import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.MenuInflater
@@ -89,35 +93,37 @@ class SupplierAdapter(private val suppliers: List<Supplier>) : RecyclerView.Adap
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnCreateContextMenuListener {
         private val tvSupplierId: TextView = itemView.findViewById(R.id.tvSupplierId)
-        private val tvNameSupplier: TextView = itemView.findViewById(R.id.tvNombreProveedor)
-        private val tvEmailSupplier: TextView = itemView.findViewById(R.id.tvCorreoProveedor)
-        private val tvEstado: TextView = itemView.findViewById(R.id.tvEstado)
+        private val tvNameSupplier: TextView = itemView.findViewById(R.id.tvNameSupplier)
+        private val tvNacionality: TextView = itemView.findViewById(R.id.tvNacionality)
+        private val tvEmail: TextView = itemView.findViewById(R.id.tvEmail)
+        private val tvState: TextView = itemView.findViewById(R.id.tvState)
 
-        fun bind(supplier: Supplier) {
-//            idTextView.text = supplier.nombreProveedor
-//            nameTextView.text = supplier.nombreProveedor
-//            emailTextView.text = supplier.emailProveedor
-//            statusTextView.text = supplier.estado
+        fun bind(request: Supplier) {
+//            tvRequestId.text = itemView.context.getString(R.string.item_request_id, request.id)
+//            tvUserId.text = itemView.context.getString(R.string.item_user_request, request.user.name)
+//            tvStateId.text = itemView.context.getString(R.string.item_state_request, request.state.name)
+//            tvTypePayId.text = itemView.context.getString(R.string.item_typePayment_request, request.type_payment.name)
+//            tvMethodPayId.text = itemView.context.getString(R.string.item_methodPayment_request, request.method_payment.name)
 
-            tvSupplierId.text = itemView.context.getString(R.string.item_supplier_id, supplier.id)
-            tvNameSupplier.text = itemView.context.getString(R.string.item_name_supplier, supplier.nombreProveedor)
-            tvEmailSupplier.text = itemView.context.getString(R.string.item_email_supplier, supplier.emailProveedor)
-            tvEstado.text = itemView.context.getString(R.string.item_state_supplier, supplier.estado)
-            when (supplier.estado) {
-                "Aprobado" -> {
-                    tvEstado.setTextColor(ContextCompat.getColor(itemView.context,
-                        R.color.colorActivo
-                    ))
+            // CODIGO PARA APLICAR NEGRITA A LOS TEXTVIEW, EXCEPTO A LOS VALOR OBTENIDOS DESDE LA API
+            applyBoldStyleToAttribute(tvSupplierId, "Solicitud #", request.id)
+            applyBoldStyleToAttribute(tvNameSupplier, "Nombre", request.user.name)
+            applyBoldStyleToAttribute(tvNacionality, "Nacionalidad", request.nacionality)
+            applyBoldStyleToAttribute(tvEmail, "E-mail:", request.user.email)
+            applyBoldStyleToAttribute(tvState, "", request.state)
+
+            when (request.state) {
+                "inactivo" -> {
+                    tvState.setTextColor(
+                        ContextCompat.getColor(itemView.context,
+                            R.color.colorInactivo
+                        ))
                 }
-                "Rechazado" -> {
-                    tvEstado.setTextColor(ContextCompat.getColor(itemView.context,
-                        R.color.colorInactivo
-                    ))
-                }
-                "Por validar" -> {
-                    tvEstado.setTextColor(ContextCompat.getColor(itemView.context,
-                        R.color.colorPendiente
-                    ))
+                "activo" -> {
+                    tvState.setTextColor(
+                        ContextCompat.getColor(itemView.context,
+                            R.color.colorActivo
+                        ))
                 }
             }
             itemView.setOnCreateContextMenuListener(this)
@@ -126,6 +132,19 @@ class SupplierAdapter(private val suppliers: List<Supplier>) : RecyclerView.Adap
         override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
             val inflater = MenuInflater(v?.context)
             inflater.inflate(R.menu.menu_options, menu)
+        }
+
+        private fun applyBoldStyleToAttribute(textView: TextView, attribute: String, value: Any?) {
+
+            val text = if (value == "activo" || value == "inactivo") {
+                "$value"
+            } else {
+                "$attribute: $value"
+            }
+
+            val spannableString = SpannableString(text)
+            spannableString.setSpan(StyleSpan(Typeface.BOLD), 0, attribute.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            textView.text = spannableString
         }
     }
 }

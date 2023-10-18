@@ -33,21 +33,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/tvSupplierId"
-                    android:text="Numero de solicitud #10"/>
+                    android:text="Proveedor #:"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/tvNombreProveedor"
-                    android:text="Nombre del proveedor"/>
+                    android:id="@+id/tvNameSupplier"
+                    android:text="Nombres:"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/tvCorreoProveedor"
-                    android:text="Correo electronico"/>
+                    android:id="@+id/tvNacionality"
+                    android:text="Nacionalidad:"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvEmail"
+                    android:text="Correo electronico:"/>
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tvEstado"
+                android:id="@+id/tvState"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

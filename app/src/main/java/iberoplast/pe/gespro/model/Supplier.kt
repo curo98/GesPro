@@ -2,8 +2,11 @@ package iberoplast.pe.gespro.model
 
 data class Supplier (
     val id: Int,
-    val nombreProveedor: String,
-    val emailProveedor: String,
-    val estado: String,
+    val nacionality: String,
+    val nic_ruc: String,
+    val id_user: Int,
+    val state: String,
+
+    val user: User,
 
     )

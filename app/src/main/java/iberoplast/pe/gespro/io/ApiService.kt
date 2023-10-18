@@ -2,6 +2,7 @@ package iberoplast.pe.gespro.io
 
 import iberoplast.pe.gespro.model.MethodPayment
 import iberoplast.pe.gespro.model.StateRequest
+import iberoplast.pe.gespro.model.Supplier
 import iberoplast.pe.gespro.model.SupplierRequest
 import iberoplast.pe.gespro.model.TypePayment
 import retrofit2.Call
@@ -12,6 +13,8 @@ import retrofit2.http.GET
 interface ApiService {
     @GET("states")
     fun getStates(): Call<ArrayList<StateRequest>>
+    @GET("suppliers")
+    fun getSuppliers(): Call<ArrayList<Supplier>>
 
     @GET("types-payments")
     fun getTypesPayments(): Call<ArrayList<TypePayment>>

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:padding="6dp"
-        android:text="Solicitudes de proveedor"
+        android:text="Solicitudes de proveedores"
         android:textSize="15dp" />
 
     <androidx.recyclerview.widget.RecyclerView
