@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:paddingTop="15dp"
-    tools:context=".ui.RegisterRequestSupplierActivity"
+    tools:context=".ui.modules.requests.RegisterRequestSupplierActivity"
     android:id="@+id/llFormStep3"
     android:visibility="gone">
 
@@ -59,7 +59,7 @@
             style="@style/ButtonForm2x1"
             android:background="@color/cardview_shadow_start_color"
             android:drawableStart="@drawable/icon_before"
-            android:id="@+id/btnAnterior"
+            android:id="@+id/btnPrevForm3"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"

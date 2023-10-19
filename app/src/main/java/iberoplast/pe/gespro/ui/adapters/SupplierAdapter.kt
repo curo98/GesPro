@@ -1,4 +1,4 @@
-package iberoplast.pe.gespro.ui
+package iberoplast.pe.gespro.ui.adapters
 
 //import android.view.LayoutInflater
 //import android.view.View

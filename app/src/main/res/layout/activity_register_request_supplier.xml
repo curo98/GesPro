@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".ui.RegisterRequestSupplierActivity"
+    tools:context=".ui.modules.requests.RegisterRequestSupplierActivity"
     android:id="@+id/layout"
     android:animateLayoutChanges="true">
 

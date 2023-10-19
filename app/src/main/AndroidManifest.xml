@@ -15,42 +15,48 @@
         android:theme="@style/Theme.GesPro"
         tools:targetApi="31">
         <activity
-            android:name=".ui.SupplierRequestsActivity"
-            android:exported="false"
-            android:parentActivityName=".ui.MenuActivity"/>
+            android:name=".ui.modules.SuccesfulRegisterActivity"
+            android:exported="false" />
         <activity
-            android:name=".ui.RegisterRequestSupplierActivity"
+            android:name=".ui.modules.state.StateRequestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.modules.requests.SupplierRequestsActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.MenuActivity" />
+        <activity
+            android:name=".ui.modules.requests.RegisterRequestSupplierActivity"
             android:exported="false"
             android:parentActivityName=".ui.MenuActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.SuppliersActivity"
+            android:name=".ui.modules.supplier.SuppliersActivity"
             android:exported="false"
             android:parentActivityName=".ui.MenuActivity" />
         <activity
-            android:name=".ui.RequestSupplierStep5Activity"
+            android:name=".ui.modules.requests.RequestSupplierStep5Activity"
             android:exported="false" />
         <activity
-            android:name=".ui.RequestSupplierStep4Activity"
+            android:name=".ui.modules.requests.RequestSupplierStep4Activity"
             android:exported="false" />
         <activity
-            android:name=".ui.RequestSupplierStep3Activity"
+            android:name=".ui.modules.requests.RequestSupplierStep3Activity"
             android:exported="false" />
         <activity
-            android:name=".ui.RequestSupplierStep2Activity"
+            android:name=".ui.modules.requests.RequestSupplierStep2Activity"
             android:exported="false" />
         <activity
-            android:name=".ui.RequestSupplierStep1Activity"
+            android:name=".ui.modules.requests.RequestSupplierStep1Activity"
             android:exported="false" />
         <activity
             android:name=".ui.MenuActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.RegisterActivity"
+            android:name=".ui.auth.RegisterActivity"
             android:exported="false"
             android:launchMode="singleInstance" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.auth.MainActivity"
             android:exported="true"
             android:launchMode="singleInstance">
             <intent-filter>

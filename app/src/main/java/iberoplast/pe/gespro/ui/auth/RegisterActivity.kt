@@ -1,4 +1,4 @@
-package iberoplast.pe.gespro.ui
+package iberoplast.pe.gespro.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import iberoplast.pe.gespro.R
+import iberoplast.pe.gespro.ui.MenuActivity
 
 class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

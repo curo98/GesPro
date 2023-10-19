@@ -5,15 +5,18 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import iberoplast.pe.gespro.PreferenceHelper
-import iberoplast.pe.gespro.PreferenceHelper.set
+import iberoplast.pe.gespro.ui.helpers.PreferenceHelper
+import iberoplast.pe.gespro.ui.helpers.PreferenceHelper.set
 import iberoplast.pe.gespro.R
+import iberoplast.pe.gespro.ui.auth.MainActivity
+import iberoplast.pe.gespro.ui.modules.requests.RegisterRequestSupplierActivity
+import iberoplast.pe.gespro.ui.modules.requests.SupplierRequestsActivity
+import iberoplast.pe.gespro.ui.modules.state.StateRequestActivity
+import iberoplast.pe.gespro.ui.modules.supplier.SuppliersActivity
 
 class MenuActivity : AppCompatActivity() {
 
-    var tvPrueba: TextView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu)
@@ -52,28 +55,66 @@ class MenuActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(opcion_menu: MenuItem): Boolean {
-        val id = opcion_menu.itemId
-        if (id == R.id.proveedores) {
-//            Toast.makeText(this, "Configuracion", Toast.LENGTH_SHORT).show()
-//            tvPrueba!!.text = "Menu Configuracion"
-            val intent = Intent(this, SuppliersActivity::class.java)
-            startActivity(intent)
-            return true
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.proveedores -> {
+                // Hacer algo cuando se selecciona "Proveedores"
+
+                return true
+            }
+            R.id.solic -> {
+                // Hacer algo cuando se selecciona "Solicitudes"
+
+                return true
+            }
+            R.id.submenu_item_1 -> {
+                // Hacer algo cuando se selecciona "Submenú 1"
+                val intent = Intent(this, SuppliersActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+            R.id.submenu_item_2 -> {
+                // Hacer algo cuando se selecciona "Submenú 2"
+                return true
+            }
+
+            R.id.submenu_item_3 -> {
+                // Hacer algo cuando se selecciona "Submenú 1"
+                val intent = Intent(this, SupplierRequestsActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+            R.id.submenu_item_4 -> {
+                // Hacer algo cuando se selecciona "Submenú 2"
+                return true
+            }
+
+            R.id.btnCrearSolicitud -> {
+                // Hacer algo cuando se selecciona "Proveedores"
+                val intent = Intent(this, RegisterRequestSupplierActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+            R.id.btnVerEstadoSol -> {
+                // Hacer algo cuando se selecciona "Solicitudes"
+                val intent = Intent(this, StateRequestActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+            R.id.logout -> {
+                clearSessionPreference()
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
         }
-        if (id == R.id.solic){
-            val intent = Intent(this, RegisterRequestSupplierActivity::class.java)
-            startActivity(intent)
-        }
-        if (id == R.id.logout) {
-            clearSessionPreference()
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-            return true
-        }
-        return super.onOptionsItemSelected(opcion_menu)
     }
+
+
+
+
     /* END MENU CODE */
 
     private fun clearSessionPreference() {

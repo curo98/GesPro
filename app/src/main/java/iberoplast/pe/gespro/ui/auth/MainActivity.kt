@@ -1,4 +1,4 @@
-package iberoplast.pe.gespro.ui
+package iberoplast.pe.gespro.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,10 +8,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
-import iberoplast.pe.gespro.PreferenceHelper
-import iberoplast.pe.gespro.PreferenceHelper.get
-import iberoplast.pe.gespro.PreferenceHelper.set
+import iberoplast.pe.gespro.ui.helpers.PreferenceHelper
+import iberoplast.pe.gespro.ui.helpers.PreferenceHelper.get
+import iberoplast.pe.gespro.ui.helpers.PreferenceHelper.set
 import iberoplast.pe.gespro.R
+import iberoplast.pe.gespro.ui.MenuActivity
 
 
 class MainActivity : AppCompatActivity() {

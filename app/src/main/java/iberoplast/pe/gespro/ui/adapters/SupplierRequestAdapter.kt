@@ -1,4 +1,4 @@
-package iberoplast.pe.gespro.ui
+package iberoplast.pe.gespro.ui.adapters
 
 import android.graphics.Typeface
 import android.text.Spannable

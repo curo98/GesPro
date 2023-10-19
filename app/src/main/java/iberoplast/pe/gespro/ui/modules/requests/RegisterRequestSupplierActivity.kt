@@ -1,5 +1,6 @@
-package iberoplast.pe.gespro.ui
+package iberoplast.pe.gespro.ui.modules.requests
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebView
@@ -21,8 +22,8 @@ import com.google.android.material.snackbar.Snackbar
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
 import iberoplast.pe.gespro.model.MethodPayment
-import iberoplast.pe.gespro.model.StateRequest
 import iberoplast.pe.gespro.model.TypePayment
+import iberoplast.pe.gespro.ui.modules.SuccesfulRegisterActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -105,16 +106,6 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
             val dir1 = etDir1.text.toString()
             val dir2 = etDir2.text.toString()
 
-//            val rgCondPago = findViewById<RadioGroup>(R.id.rgCondPago)
-//            val selCondPagoId = rgCondPago.checkedRadioButtonId
-//            val selTipoCon = rgCondPago.findViewById<RadioButton>(selCondPagoId)
-//            val tipoConPago = selTipoCon.text .toString()
-//
-//            val rgTipoPago = findViewById<RadioGroup>(R.id.rgTipoPago)
-//            val selTipoPagoId = rgTipoPago.checkedRadioButtonId
-//            val selTipoPago = rgTipoPago.findViewById<RadioButton>(selTipoPagoId)
-//            val tipoPago = selTipoPago.text .toString()
-
             if (nombreProveedor.isEmpty() || dir1.isEmpty() || dir2.isEmpty()) {
                 // Manejar la validación de campos vacíos aquí
                 etNomProveedor.error = "Este campo no puede estar vacío"
@@ -135,8 +126,6 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
                 // Actualizar la barra de progreso
                 updateProgressBar()
             }
-
-
 
         }
         // end code formstep2
@@ -208,55 +197,67 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
         val btnSend = findViewById<Button>(R.id.btnSend)
 
         btnSend.setOnClickListener {
-            // Mostrar un mensaje Toast
-            Toast.makeText(this, "Solicitud de registro proveedor enviada", Toast.LENGTH_SHORT).show()
-
-            // Redirigir a MenuActivity
-//            val intent = Intent(this, MenuActivity::class.java)
-//            startActivity(intent)
+            val mensaje = "Su solicitud fue enviada satisfactoriamente."
+            val intent = Intent(this, SuccesfulRegisterActivity::class.java)
+            intent.putExtra("mensaje", mensaje) // Configura el mensaje en la intención antes de iniciar la actividad
+            startActivity(intent)
 
             // Finalizar la actividad actual
             finish()
         }
+
         // end code formstep5
 
-        loadStatesRequest()
+        val btnPrevForm2 = findViewById<Button>(R.id.btnPrevForm2)
+        val btnPrevForm3 = findViewById<Button>(R.id.btnPrevForm3)
+        val btnPrevForm4 = findViewById<Button>(R.id.btnPrevForm4)
+        val btnPrevForm5 = findViewById<Button>(R.id.btnPrevForm5)
+
+        btnPrevForm2.setOnClickListener {
+            if (llFormStep2.visibility == View.VISIBLE && currentStep == 2) {
+                llFormStep2.visibility = View.GONE
+                llFormStep1.visibility = View.VISIBLE
+
+                currentStep = 1 // Actualiza el paso actual a 1
+                updateProgressBar() // Actualiza la barra de progreso
+            }
+        }
+
+        btnPrevForm3.setOnClickListener {
+            if (llFormStep3.visibility == View.VISIBLE && currentStep == 3) {
+                llFormStep3.visibility = View.GONE
+                llFormStep2.visibility = View.VISIBLE
+
+                currentStep = 2 // Actualiza el paso actual a 1
+                updateProgressBar() // Actualiza la barra de progreso
+            }
+        }
+
+        btnPrevForm4.setOnClickListener {
+            if (llFormStep4.visibility == View.VISIBLE && currentStep == 4) {
+                llFormStep4.visibility = View.GONE
+                llFormStep3.visibility = View.VISIBLE
+
+                currentStep = 3 // Actualiza el paso actual a 1
+                updateProgressBar() // Actualiza la barra de progreso
+            }
+        }
+
+        btnPrevForm5.setOnClickListener {
+            if (llFormStep5.visibility == View.VISIBLE && currentStep == 5) {
+                llFormStep5.visibility = View.GONE
+                llFormStep4.visibility = View.VISIBLE
+
+                currentStep = 4 // Actualiza el paso actual a 1
+                updateProgressBar() // Actualiza la barra de progreso
+            }
+        }
+
         loadTypesPayments()
         loadMethodsPayments()
 
     }
 
-    private fun loadStatesRequest() {
-        val spEstados = findViewById<Spinner>(R.id.spinnerEstados)
-
-        val call = apiService.getStates()
-        call.enqueue(object: Callback<ArrayList<StateRequest>> {
-
-            override fun onFailure(call: Call<ArrayList<StateRequest>>, t: Throwable) {
-                Toast.makeText(this@RegisterRequestSupplierActivity, "Ocurrio un problema al cargar los estados del formulario", Toast.LENGTH_SHORT).show()
-                finish()
-            }
-
-            override fun onResponse(
-                call: Call<ArrayList<StateRequest>>,
-                response: Response<ArrayList<StateRequest>>
-            ) {
-                if (response.isSuccessful){
-                    val states = response.body()
-
-                    val dataStateRequest = ArrayList<String>()
-                    states?.forEach {
-                        dataStateRequest.add(it.name)
-                    }
-
-
-                    spEstados.adapter = ArrayAdapter(this@RegisterRequestSupplierActivity, android.R.layout.simple_list_item_1, dataStateRequest)
-                }
-            }
-
-        })
-
-    }
 
     private fun loadTypesPayments() {
         val rgTypesPayments = findViewById<RadioGroup>(R.id.rgCondPago) // Referencia al RadioGroup

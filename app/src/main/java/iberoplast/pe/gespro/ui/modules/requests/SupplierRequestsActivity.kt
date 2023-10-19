@@ -1,4 +1,4 @@
-package iberoplast.pe.gespro.ui
+package iberoplast.pe.gespro.ui.modules.requests
 
 import android.os.Bundle
 import android.widget.Toast
@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
 import iberoplast.pe.gespro.model.SupplierRequest
+import iberoplast.pe.gespro.ui.adapters.SupplierRequestAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

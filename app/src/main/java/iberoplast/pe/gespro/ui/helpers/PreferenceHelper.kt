@@ -1,4 +1,4 @@
-package iberoplast.pe.gespro
+package iberoplast.pe.gespro.ui.helpers
 
 import android.content.Context
 import android.content.SharedPreferences

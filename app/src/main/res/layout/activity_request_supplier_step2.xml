@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:paddingTop="15dp"
-    tools:context=".ui.RegisterRequestSupplierActivity"
+    tools:context=".ui.modules.requests.RegisterRequestSupplierActivity"
     android:id="@+id/llFormStep2"
     android:visibility="gone">
 
@@ -68,41 +68,26 @@
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:layout_margin="5dp"
+        android:padding="10dp">
 
         <Spinner
             android:id="@+id/spinnerPaises"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp" />
+            android:layout_width="match_parent" />
 
         <Spinner
             android:id="@+id/spinnerDepartamentos"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="horizontal">
+            android:layout_width="match_parent" />
 
         <Spinner
             android:id="@+id/spinnerDistritos"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp" />
-
-        <Spinner
-            android:id="@+id/spinnerEstados"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp" />
+            android:layout_width="match_parent" />
 
     </LinearLayout>
-
 
     <TextView
         android:layout_height="wrap_content"
@@ -146,7 +131,7 @@
             style="@style/ButtonForm2x1"
             android:background="@color/cardview_shadow_start_color"
             android:drawableStart="@drawable/icon_before"
-            android:id="@+id/btnFormRequest1"
+            android:id="@+id/btnPrevForm2"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
