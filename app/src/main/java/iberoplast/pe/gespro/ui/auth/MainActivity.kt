@@ -8,11 +8,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import iberoplast.pe.gespro.R
+import iberoplast.pe.gespro.ui.MenuActivity
 import iberoplast.pe.gespro.ui.helpers.PreferenceHelper
 import iberoplast.pe.gespro.ui.helpers.PreferenceHelper.get
 import iberoplast.pe.gespro.ui.helpers.PreferenceHelper.set
-import iberoplast.pe.gespro.R
-import iberoplast.pe.gespro.ui.MenuActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,10 +29,7 @@ class MainActivity : AppCompatActivity() {
         val tvGoToRegister = findViewById<TextView>(R.id.tvGoToRegister)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
 
-        /*
         // PERSISTENCIA DE DATOS CON SHARED PREFERENCES
-        val preferences = getSharedPreferences("general", Context.MODE_PRIVATE)
-        val session = preferences.getBoolean("session", false)*/
         val preferences = PreferenceHelper.defaultPrefs(this)
 
         if (preferences["session", false]){
@@ -50,18 +47,10 @@ class MainActivity : AppCompatActivity() {
 
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
-//          Este intent hace que nos lleve a otro activity
-
-//            finish()
         }
     }
 
     private fun createSessionPreference(){
-//        val preferences = getSharedPreferences("general", Context.MODE_PRIVATE)
-//        val editor = preferences.edit()
-//        editor.putBoolean("session", true)
-//        editor.apply()
-
         // Esto llama el metodo set del Helper, este metodo va a recibir la key que le estamos
         // enviando y el valor que seria TRUE.
         val preferences = PreferenceHelper.defaultPrefs(this)
@@ -71,7 +60,6 @@ class MainActivity : AppCompatActivity() {
     private fun goToMenuActivity() {
         val intent = Intent(this, MenuActivity::class.java)
         startActivity(intent)
-
         finish()
     }
 

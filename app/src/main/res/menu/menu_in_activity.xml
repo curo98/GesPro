@@ -1,53 +1,49 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Nivel 1 -->
-    <group
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-        <item
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:title="Administracion" >
-            <menu
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-                <item
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:title="Formulario">
-                    <menu
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" >
-                        <item
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:title="Estados" />
-                        <item
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:title="Tipos de pago" />
-                        <item
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:title="Metodos de pago" />
-                        <item
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:title="Preguntas" />
-                    </menu>
-                </item>
+    <item
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:title="Administracion">
+        <menu
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <item
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:title="Formulario">
+                <menu
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <item
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:title="Estados" />
+                    <item
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:title="Tipos de Pago" />
+                    <item
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:title="Metodos de Pago" />
+                    <item
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:title="Preguntas" />
+                </menu>
+            </item>
 
-                <item
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:title="Roles" />
-                <item
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:title="Usuarios" />
-            </menu>
-        </item>
-    </group>
+            <item
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:title="Roles" />
+            <item
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:title="Usuarios" />
+        </menu>
+    </item>
     <item
         android:id="@+id/proveedores"
         android:title="Proveedores">
@@ -55,12 +51,10 @@
             <!-- Nivel 2 -->
             <item
                 android:id="@+id/submenu_item_1"
-                android:title="Lista de proveedores">
-            </item>
+                android:title="Lista de Proveedores"/>
             <item
                 android:id="@+id/submenu_item_2"
-                android:title="Estado de proveedores">
-            </item>
+                android:title="Estado de Proveedores"/>
         </menu>
     </item>
 
@@ -72,12 +66,11 @@
             <!-- Nivel 2 -->
             <item
                 android:id="@+id/submenu_item_3"
-                android:title="Listar solicitudes">
-            </item>
+                android:title="Listar Solicitudes"/>
             <!-- Otros elementos de nivel 2 -->
             <item
                 android:id="@+id/submenu_item_4"
-                android:title="Estado de solicitudes" />
+                android:title="Estado de Solicitudes" />
         </menu>
     </item>
 
@@ -87,9 +80,9 @@
         android:title="Crear Solicitud" />
     <item
         android:id="@+id/btnVerEstadoSol"
-        android:title="Estado de solicitud" />
+        android:title="Estado de Solicitud" />
     <item
         android:id="@+id/logout"
-        android:title="Logout"
-        android:icon="@drawable/icon_logout_menu"/>
+        android:icon="@drawable/icon_logout_menu"
+        android:title="Cerrar Sesion" />
 </menu>

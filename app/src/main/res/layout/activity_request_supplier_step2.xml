@@ -33,7 +33,7 @@
 
     <EditText
         android:id="@+id/etCorreo"
-        android:inputType="textEmailAddress"
+        android:inputType="text"
         android:layout_height="wrap_content"
         android:layout_width="match_parent" />
 
@@ -62,15 +62,13 @@
         android:id="@+id/etDir2"
         android:inputType="text"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10sp"
+        android:layout_marginBottom="5sp"
         android:layout_width="match_parent" />
 
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_margin="5dp"
-        android:padding="10dp">
+        android:orientation="vertical">
 
         <Spinner
             android:id="@+id/spinnerPaises"
@@ -79,6 +77,10 @@
 
         <Spinner
             android:id="@+id/spinnerDepartamentos"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+        <Spinner
+            android:id="@+id/spinnerProvincias"
             android:layout_height="wrap_content"
             android:layout_width="match_parent" />
 
@@ -150,6 +152,6 @@
     </LinearLayout>
 
 
-    <!-- match_content hace que sus atributos internos se ajusten al ancho total del
+    <!-- match_parent hace que sus atributos internos se ajusten al ancho total del
     elemento padre-->
 </LinearLayout>

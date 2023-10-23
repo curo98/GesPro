@@ -23,6 +23,8 @@ import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
 import iberoplast.pe.gespro.model.MethodPayment
 import iberoplast.pe.gespro.model.TypePayment
+import iberoplast.pe.gespro.model.ubigeo_peru.Department
+import iberoplast.pe.gespro.model.ubigeo_peru.District
 import iberoplast.pe.gespro.ui.modules.SuccesfulRegisterActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -82,51 +84,16 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
         // end code formstep1
 
         // Start code formstep2
-        val spPaises = findViewById<Spinner>(R.id.spinnerPaises)
-        val spDepartamentos = findViewById<Spinner>(R.id.spinnerDepartamentos)
-        val spDistritos = findViewById<Spinner>(R.id.spinnerDistritos)
-
-        val paises = arrayOf("Peru", "Colombia", "Chile", "Venezuela")
-        val departamentos = arrayOf("Lima", "Iquitos", "Ica", "Puno")
-        val distritos = arrayOf("San vicente de canete", "La victoria", "Pucusana", "Juliaca")
-
-
-        spPaises.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, paises)
-        spDepartamentos.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, departamentos)
-        spDistritos.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, distritos)
-
-        btnNextFormRequest2.setOnClickListener{
-            val etNomProveedor = findViewById<EditText>(R.id.etNomProveedor)
-            val etCorreo = findViewById<EditText>(R.id.etCorreo)
-            val etDir1 = findViewById<EditText>(R.id.etDir1)
-            val etDir2 = findViewById<EditText>(R.id.etDir2)
-
-            val nombreProveedor = etNomProveedor.text.toString()
-            val correo = etCorreo.text.toString()
-            val dir1 = etDir1.text.toString()
-            val dir2 = etDir2.text.toString()
-
-            if (nombreProveedor.isEmpty() || dir1.isEmpty() || dir2.isEmpty()) {
-                // Manejar la validación de campos vacíos aquí
-                etNomProveedor.error = "Este campo no puede estar vacío"
-                etDir1.error = "Este campo no puede estar vacío"
-                etDir2.error = "Este campo no puede estar vacío"
-            }
-            // Validación del formato de correo electrónico
-            else if (correo.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
-                etCorreo.error = "Ingresa un correo electrónico válido"
-            }
-            else{
+        btnNextFormRequest2.setOnClickListener {
+            if (validateForm()) {
                 // Continuar con el paso 2(TEST)
                 llFormStep2.visibility = View.GONE
                 llFormStep3.visibility = View.VISIBLE
-
 
                 currentStep = 3
                 // Actualizar la barra de progreso
                 updateProgressBar()
             }
-
         }
         // end code formstep2
 
@@ -255,8 +222,89 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
 
         loadTypesPayments()
         loadMethodsPayments()
-
+        loadDepartments()
+        //loadProvinces()
+        loadDistricts()
     }
+
+    private fun loadDepartments() {
+        val spDepartamentos = findViewById<Spinner>(R.id.spinnerDepartamentos)
+        val call = apiService.getDepartments()
+
+        call.enqueue(object : Callback<ArrayList<Department>> {
+            override fun onResponse(
+                call: Call<ArrayList<Department>>,
+                response: Response<ArrayList<Department>>
+            ) {
+                if (response.isSuccessful) {
+                    val departments = response.body()
+
+                    val departmentOptions = ArrayList<String>()
+                    departments?.forEach {
+                        departmentOptions.add(it.name)
+                    }
+                    spDepartamentos.adapter = ArrayAdapter(
+                        this@RegisterRequestSupplierActivity,
+                        android.R.layout.simple_list_item_1,
+                        departmentOptions
+                    )
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<Department>>, t: Throwable) {
+                Toast.makeText(this@RegisterRequestSupplierActivity, "Ocurrió un problema", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        })
+    }
+
+//    private fun loadProvinces() {
+//        val spDepartments = findViewById<Spinner>(R.id.spinnerDepartamentos)
+//        spDepartments.onItemSelectedListener = object:
+//            AdapterView.OnItemSelectedListener{
+//            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+//                val option: String = p0?.getItemAtPosition(p2) as String
+//                Toast.makeText(this@RegisterRequestSupplierActivity, option, Toast.LENGTH_SHORT).show()
+//            }
+//
+//            override fun onNothingSelected(p0: AdapterView<*>?) {
+//                TODO("Not yet implemented")
+//            }
+//
+//        }
+//    }
+    private fun loadDistricts() {
+        val spDistricts = findViewById<Spinner>(R.id.spinnerDistritos)
+        val call = apiService.getDistricts()
+
+        call.enqueue(object : Callback<ArrayList<District>> {
+            override fun onResponse(
+                call: Call<ArrayList<District>>,
+                response: Response<ArrayList<District>>
+            ) {
+                if (response.isSuccessful) {
+                    val districts = response.body()
+
+                    val districtsOptions = ArrayList<String>()
+                    districts?.forEach {
+                        districtsOptions.add(it.name)
+                    }
+                    spDistricts.adapter = ArrayAdapter(
+                        this@RegisterRequestSupplierActivity,
+                        android.R.layout.simple_list_item_1,
+                        districtsOptions
+                    )
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<District>>, t: Throwable) {
+                Toast.makeText(this@RegisterRequestSupplierActivity, "Ocurrió un problema", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        })
+    }
+
+
 
 
     private fun loadTypesPayments() {
@@ -266,7 +314,8 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
         call.enqueue(object: Callback<ArrayList<TypePayment>> {
 
             override fun onFailure(call: Call<ArrayList<TypePayment>>, t: Throwable) {
-                Toast.makeText(this@RegisterRequestSupplierActivity, "Ocurrió un problema al cargar los tipos de pago del formulario", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@RegisterRequestSupplierActivity,
+                    "Ocurrió un problema al cargar los tipos de pago del formulario", Toast.LENGTH_SHORT).show()
                 finish()
             }
 
@@ -430,5 +479,48 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
         }
 
         progressBar.progress = progress
+    }
+
+    // Función para validar el formulario
+    fun validateForm(): Boolean {
+        val etNomProveedor = findViewById<EditText>(R.id.etNomProveedor)
+        val etCorreo = findViewById<EditText>(R.id.etCorreo)
+        val etDir1 = findViewById<EditText>(R.id.etDir1)
+        val etDir2 = findViewById<EditText>(R.id.etDir2)
+
+        val nombreProveedor = etNomProveedor.text.toString()
+        val correo = etCorreo.text.toString()
+        val dir1 = etDir1.text.toString()
+        val dir2 = etDir2.text.toString()
+
+        val rgCondPago = findViewById<RadioGroup>(R.id.rgCondPago)
+        val rgTipoPago = findViewById<RadioGroup>(R.id.rgTipoPago)
+
+        val selectedCondPagoId = rgCondPago.checkedRadioButtonId
+        val selectedTipoPagoId = rgTipoPago.checkedRadioButtonId
+
+        if (nombreProveedor.isEmpty()) {
+            etNomProveedor.error = "El nombre del proveedor no puede estar vacío"
+            return false
+        } else if (dir1.isEmpty()) {
+            etDir1.error = "La dirección 1 no puede estar vacía"
+            return false
+        } else if (dir2.isEmpty()) {
+            etDir2.error = "La dirección 2 no puede estar vacía"
+            return false
+        } else if (correo.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
+            etCorreo.error = "Ingresa un correo electrónico válido"
+            return false
+        } else if (selectedCondPagoId == -1) {
+            // Ningún RadioButton seleccionado en el grupo de Condición de Pago
+            Toast.makeText(this, "Debes seleccionar una condición de pago", Toast.LENGTH_SHORT).show()
+            return false
+        } else if (selectedTipoPagoId == -1) {
+            // Ningún RadioButton seleccionado en el grupo de Tipo de Pago
+            Toast.makeText(this, "Debes seleccionar un tipo de pago", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        return true  // El formulario es válido
     }
 }

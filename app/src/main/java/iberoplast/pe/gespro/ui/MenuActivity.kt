@@ -6,10 +6,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import iberoplast.pe.gespro.ui.helpers.PreferenceHelper
-import iberoplast.pe.gespro.ui.helpers.PreferenceHelper.set
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.ui.auth.MainActivity
+import iberoplast.pe.gespro.ui.helpers.PreferenceHelper
+import iberoplast.pe.gespro.ui.helpers.PreferenceHelper.set
 import iberoplast.pe.gespro.ui.modules.requests.RegisterRequestSupplierActivity
 import iberoplast.pe.gespro.ui.modules.requests.SupplierRequestsActivity
 import iberoplast.pe.gespro.ui.modules.state.StateRequestActivity
@@ -118,10 +118,6 @@ class MenuActivity : AppCompatActivity() {
     /* END MENU CODE */
 
     private fun clearSessionPreference() {
-//        val preferences = getSharedPreferences("general", MODE_PRIVATE)
-//        val editor = preferences.edit()
-//        editor.putBoolean("session", false)
-//        editor.apply()
 
         val preferences = PreferenceHelper.defaultPrefs(this)
         preferences["session"] = false
