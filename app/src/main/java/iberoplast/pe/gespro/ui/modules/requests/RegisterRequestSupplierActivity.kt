@@ -38,7 +38,7 @@ class RegisterRequestSupplierActivity : AppCompatActivity() {
     private val apiService: ApiService by lazy {
         ApiService.create()
     }
-
+// joshep chipi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_request_supplier)
