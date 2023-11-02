@@ -5,90 +5,27 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="15dp"
-    tools:context=".ui.modules.requests.RegisterRequestSupplierActivity"
+    tools:context=".ui.modules.requests.FormRequestSupplierActivity"
     android:visibility="gone"
     android:id="@+id/llFormStep5">
 
-    <!-- Primer elemento con texto y dos checkboxes -->
-    <LinearLayout
+    <TextView
+        android:id="@+id/datos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingEnd="8dp"
-            android:text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor architecto ipsam id, dolorem laboriosam suscipit laudantium, ex beatae eos rem repellendus facilis et odit dignissimos optio ab vel mollitia ducimus."
-            android:textSize="14sp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical">
-
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:text="Si" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No" />
-            </RadioGroup>
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- Segundo elemento con texto y dos checkboxes -->
-    <LinearLayout
+        android:text=""/>
+    <TextView
+        android:id="@+id/datos2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start"
-        android:orientation="horizontal">
+        android:text=""/>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingEnd="8dp"
-            android:text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor architecto ipsam id, dolorem laboriosam suscipit laudantium, ex beatae eos rem repellendus facilis et odit dignissimos optio ab vel mollitia ducimus."
-            android:textSize="14sp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical">
-
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:text="Si" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No" />
-            </RadioGroup>
-
-        </LinearLayout>
+    <LinearLayout
+        android:id="@+id/questionContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     </LinearLayout>
-
-    <!-- Agregar más elementos similares según sea necesario -->
 
     <!-- Botones "Anterior" y "Siguiente" -->
     <LinearLayout

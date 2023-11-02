@@ -1,7 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -57,6 +57,17 @@ dependencies {
 
     //LOTTIE ANIMACIONES
     implementation("com.airbnb.android:lottie:6.1.0")
+
+    //capturar consultas api
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+
+    //FIREBASE
+    implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-messaging-ktx")
+
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

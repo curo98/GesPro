@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="15dp"
-    tools:context=".ui.modules.requests.RegisterRequestSupplierActivity"
+    tools:context=".ui.modules.requests.FormRequestSupplierActivity"
     android:visibility="gone"
     android:id="@+id/llFormStep4">
 
@@ -156,7 +156,7 @@
             android:text="Adjuntar" />
 
         <TextView
-            android:id="@+id/textArchivoSeleccionado1"
+            android:id="@+id/tvAdjuntar1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Archivo no seleccionado"
@@ -187,6 +187,7 @@
             android:text="Adjuntar" />
 
         <TextView
+            android:id="@+id/tvAdjuntar2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Archivo no seleccionado"
@@ -210,12 +211,14 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/btnAdjuntar3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:text="Adjuntar" />
 
         <TextView
+            android:id="@+id/tvAdjuntar3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Archivo no seleccionado"
@@ -239,12 +242,14 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/btnAdjuntarCarta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:text="Adjuntar" />
 
         <TextView
+            android:id="@+id/textArchivoCarta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Archivo no seleccionado"

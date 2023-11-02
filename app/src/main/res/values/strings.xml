@@ -24,4 +24,8 @@
     <string name="label_link_login">Ya tengo una cuenta</string>
     <string name="press_back_again">Presione 2 veces para salir</string>
 
+    <string name="default_notification_channel_id" translatable="false">default_channel</string>
+    <string name="msg_token_fmt">Token FCM: %1$s</string>
+
+
 </resources>

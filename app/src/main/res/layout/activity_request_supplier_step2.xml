@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:paddingTop="15dp"
-    tools:context=".ui.modules.requests.RegisterRequestSupplierActivity"
+    tools:context=".ui.modules.requests.FormRequestSupplierActivity"
     android:id="@+id/llFormStep2"
     android:visibility="gone">
 
@@ -37,34 +37,6 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent" />
 
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:text="Calle / Numero"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/etDir1"
-        android:inputType="text"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" />
-
-
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:text="Urbanizacion / AA.HH / Otros"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/etDir2"
-        android:inputType="text"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5sp"
-        android:layout_width="match_parent" />
-
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -75,20 +47,88 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent" />
 
-        <Spinner
-            android:id="@+id/spinnerDepartamentos"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent" />
-        <Spinner
-            android:id="@+id/spinnerProvincias"
+            android:id="@+id/dirNacional"
+            android:orientation="vertical">
+            <Spinner
+                android:id="@+id/spinnerDepartamentos"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" />
+            <Spinner
+                android:id="@+id/spinnerProvincias"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" />
+
+            <Spinner
+                android:id="@+id/spinnerDistritos"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/dirExtranjero"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ingrese cuidad / Estado de origen"
+                android:textStyle="bold"/>
+            <EditText
+                android:id="@+id/editText1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ingrese su direccion"
+                android:textStyle="bold"/>
+            <EditText
+                android:id="@+id/editText2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/dirAdicNacional">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:text="Urbanizacion / AA.HH / Otros"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etDir2"
+            android:inputType="text"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5sp"
             android:layout_width="match_parent" />
 
-        <Spinner
-            android:id="@+id/spinnerDistritos"
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:text="Calle / Numero"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etDir1"
+            android:inputType="text"
             android:layout_height="wrap_content"
             android:layout_width="match_parent" />
-
     </LinearLayout>
 
     <TextView
@@ -98,12 +138,12 @@
         android:text="Condicion de pago"
         android:textStyle="bold" />
 
-    <RadioGroup
-        android:id="@+id/rgCondPago"
+    <Spinner
+        android:id="@+id/spinnerCondPago"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-    </RadioGroup>
+        android:padding="10dp"/>
+
 
 
     <TextView

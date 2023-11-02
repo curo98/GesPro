@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "598975927128",
+    "project_id": "gespro-iberoplast",
+    "storage_bucket": "gespro-iberoplast.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:598975927128:android:5ce1a24bf7269e984f8b2d",
+        "android_client_info": {
+          "package_name": "iberoplast.pe.gespro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9VOYvhwd70rsL2VppPZaH3HAQlA8F5EE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

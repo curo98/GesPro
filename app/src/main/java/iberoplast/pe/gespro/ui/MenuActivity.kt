@@ -2,24 +2,45 @@ package iberoplast.pe.gespro.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.Firebase
+import com.google.firebase.messaging.messaging
 import iberoplast.pe.gespro.R
+import iberoplast.pe.gespro.io.ApiService
 import iberoplast.pe.gespro.ui.auth.MainActivity
-import iberoplast.pe.gespro.ui.helpers.PreferenceHelper
-import iberoplast.pe.gespro.ui.helpers.PreferenceHelper.set
-import iberoplast.pe.gespro.ui.modules.requests.RegisterRequestSupplierActivity
+import iberoplast.pe.gespro.ui.modules.requests.FormRequestSupplierActivity
 import iberoplast.pe.gespro.ui.modules.requests.SupplierRequestsActivity
 import iberoplast.pe.gespro.ui.modules.state.StateRequestActivity
 import iberoplast.pe.gespro.ui.modules.supplier.SuppliersActivity
+import iberoplast.pe.gespro.util.PreferenceHelper
+import iberoplast.pe.gespro.util.PreferenceHelper.get
+import iberoplast.pe.gespro.util.PreferenceHelper.set
+import iberoplast.pe.gespro.util.toast
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MenuActivity : AppCompatActivity() {
+    private val apiService by lazy {
+        ApiService.create()
+    }
+
+    private val preferences by lazy {
+        PreferenceHelper.defaultPrefs(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu)
+
+        val storeToken = intent.getBooleanExtra("store_token", false)
+        if (storeToken){
+            storeToken()
+        }
 
         val btnCrearSolicitud = findViewById<Button>(R.id.btnCrearSolicitud)
         val btnListProveedores = findViewById<Button>(R.id.btn_list_proveedores)
@@ -27,7 +48,7 @@ class MenuActivity : AppCompatActivity() {
         val btnLogout = findViewById<Button>(R.id.btnLogout)
 
         btnCrearSolicitud.setOnClickListener{
-            val intent = Intent(this, RegisterRequestSupplierActivity::class.java)
+            val intent = Intent(this, FormRequestSupplierActivity::class.java)
             startActivity(intent)
         }
 
@@ -42,11 +63,39 @@ class MenuActivity : AppCompatActivity() {
         }
 
         btnLogout.setOnClickListener{
-            clearSessionPreference()
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            performLogout()
         }
+    }
+
+    private fun storeToken()
+    {
+        val jwt = preferences["jwt", ""]
+        val authHeader = "Bearer $jwt"
+        Firebase.messaging.token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                println("el token no fue generado")
+                return@addOnCompleteListener
+            }
+            // Get new FCM registration token
+            val deviceToken = task.result
+
+            val call = apiService.postToken(authHeader, deviceToken)
+            call.enqueue(object: Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    if (response.isSuccessful){
+                        Log.d(TAG, "Token registrado correctamente")
+                    }else{
+                        Log.d(TAG, "Ocurrio un error al registrar el token")
+                    }
+                }
+
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    t.localizedMessage?.let { toast(it) }
+                }
+
+            })
+        }
+
     }
 
     /* START MENU */
@@ -91,7 +140,7 @@ class MenuActivity : AppCompatActivity() {
 
             R.id.btnCrearSolicitud -> {
                 // Hacer algo cuando se selecciona "Proveedores"
-                val intent = Intent(this, RegisterRequestSupplierActivity::class.java)
+                val intent = Intent(this, FormRequestSupplierActivity::class.java)
                 startActivity(intent)
                 return true
             }
@@ -102,24 +151,41 @@ class MenuActivity : AppCompatActivity() {
                 return true
             }
             R.id.logout -> {
-                clearSessionPreference()
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
+                performLogout()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
         }
     }
 
+    private fun goToLogin(){
+        val intent = Intent(this,MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 
+    private fun performLogout(){
+        val jwt = preferences["jwt", ""]
+        val call = apiService.postLogout("Bearer $jwt")
+        call.enqueue(object: Callback<Void>{
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                clearSessionPreference()
+                goToLogin()
+            }
 
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                t.localizedMessage?.let { toast(it) }
+            }
 
+        })
+    }
     /* END MENU CODE */
 
     private fun clearSessionPreference() {
+        preferences["jwt"] = ""
+    }
 
-        val preferences = PreferenceHelper.defaultPrefs(this)
-        preferences["session"] = false
+    companion object {
+        private const val TAG = "MenuActivity"
     }
 }

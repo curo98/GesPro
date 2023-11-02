@@ -39,39 +39,39 @@ class SupplierRequestAdapter(private val supplierRequests: List<SupplierRequest>
         private val tvMethodPayId: TextView = itemView.findViewById(R.id.tvMethodPayId)
 
         fun bind(request: SupplierRequest) {
-//            tvRequestId.text = itemView.context.getString(R.string.item_request_id, request.id)
-//            tvUserId.text = itemView.context.getString(R.string.item_user_request, request.user.name)
-//            tvStateId.text = itemView.context.getString(R.string.item_state_request, request.state.name)
-//            tvTypePayId.text = itemView.context.getString(R.string.item_typePayment_request, request.type_payment.name)
-//            tvMethodPayId.text = itemView.context.getString(R.string.item_methodPayment_request, request.method_payment.name)
 
             // CODIGO PARA APLICAR NEGRITA A LOS TEXTVIEW, EXCEPTO A LOS VALOR OBTENIDOS DESDE LA API
             applyBoldStyleToAttribute(tvRequestId, "Solicitud #", request.id)
             applyBoldStyleToAttribute(tvUserId, "Solicitante", request.user.name)
-            applyBoldStyleToAttribute(tvStateId, "", request.state.name)
+            val finalState = request.getFinalState()
+            if (finalState != null) {
+                when (finalState.name) {
+                    "Aprobado" -> {
+                        tvStateId.text = finalState.name
+                        tvStateId.setTextColor(ContextCompat.getColor(itemView.context, R.color.colorActivo))
+                    }
+                    "Rechazado" -> {
+                        tvStateId.text = finalState.name
+                        tvStateId.setTextColor(ContextCompat.getColor(itemView.context, R.color.colorInactivo))
+                    }
+                    "Por validar" -> {
+                        tvStateId.text = finalState.name
+                        tvStateId.setTextColor(ContextCompat.getColor(itemView.context, R.color.colorPendiente))
+                    }
+                    else -> {
+                        tvStateId.text = finalState.name
+                        tvStateId.setTextColor(ContextCompat.getColor(itemView.context, R.color.colorPrimaryDark)) // Establece un color predeterminado si no coincide con los casos anteriores
+                    }
+                }
+            } else {
+                // No hay transiciones de estado, maneja esto como desees
+                tvStateId.text = "Sin transiciones"
+                tvStateId.setTextColor(ContextCompat.getColor(itemView.context, R.color.colorPrimaryDark)) // Establece un color predeterminado si no hay transiciones
+            }
+
             applyBoldStyleToAttribute(tvTypePayId, "Comprobante emitido", request.type_payment.name)
             applyBoldStyleToAttribute(tvMethodPayId, "Pago por", request.method_payment.name)
 
-            when (request.state.name) {
-                "Aprobado" -> {
-                    tvStateId.setTextColor(
-                        ContextCompat.getColor(itemView.context,
-                        R.color.colorActivo
-                    ))
-                }
-                "Rechazado" -> {
-                    tvStateId.setTextColor(
-                        ContextCompat.getColor(itemView.context,
-                        R.color.colorInactivo
-                    ))
-                }
-                "Por validar" -> {
-                    tvStateId.setTextColor(
-                        ContextCompat.getColor(itemView.context,
-                        R.color.colorPendiente
-                    ))
-                }
-            }
             itemView.setOnCreateContextMenuListener(this)
         }
 

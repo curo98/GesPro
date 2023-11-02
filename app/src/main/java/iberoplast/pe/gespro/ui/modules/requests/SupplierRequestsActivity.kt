@@ -9,6 +9,8 @@ import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
 import iberoplast.pe.gespro.model.SupplierRequest
 import iberoplast.pe.gespro.ui.adapters.SupplierRequestAdapter
+import iberoplast.pe.gespro.util.PreferenceHelper
+import iberoplast.pe.gespro.util.PreferenceHelper.get
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -16,6 +18,9 @@ import retrofit2.Response
 class SupplierRequestsActivity : AppCompatActivity() {
     private val apiService: ApiService by lazy {
         ApiService.create()
+    }
+    private val preferences by lazy {
+        PreferenceHelper.defaultPrefs(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +34,8 @@ class SupplierRequestsActivity : AppCompatActivity() {
     }
 
     private fun loadSupplierRequests() {
-        val call = apiService.getSupplierRequests()
+        val jwt = preferences["jwt", ""]
+        val call = apiService.getSupplierRequests("Bearer $jwt")
 
         call.enqueue(object : Callback<ArrayList<SupplierRequest>> {
             override fun onResponse(call: Call<ArrayList<SupplierRequest>>, response: Response<ArrayList<SupplierRequest>>) {
