@@ -65,7 +65,7 @@ class RegisterActivity : AppCompatActivity() {
                     if (loginResponse.success){
                         createSessionPreference(loginResponse.jwt)
                         toast("Bienvenido ${loginResponse.user.name}")
-                        goToMenuActivity()
+                        goToMenuActivity(true)
                     }else{
                         toast("Credenciales incorrectas")
                     }
@@ -85,8 +85,15 @@ class RegisterActivity : AppCompatActivity() {
         val preferences = PreferenceHelper.defaultPrefs(this)
         preferences["jwt"] = jwt
     }
-    private fun goToMenuActivity() {
+    private fun goToMenuActivity(isUserInput: Boolean = false) {
+//        val intent = Intent(this, MenuActivity::class.java)
+//        startActivity(intent)
+//        finish()
+
         val intent = Intent(this, MenuActivity::class.java)
+        if (isUserInput){
+            intent.putExtra("store_token", true)
+        }
         startActivity(intent)
         finish()
     }

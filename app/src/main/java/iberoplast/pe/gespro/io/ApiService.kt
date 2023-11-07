@@ -10,6 +10,7 @@ import iberoplast.pe.gespro.model.RequestData
 import iberoplast.pe.gespro.model.Supplier
 import iberoplast.pe.gespro.model.SupplierRequest
 import iberoplast.pe.gespro.model.TypePayment
+import iberoplast.pe.gespro.model.User
 import iberoplast.pe.gespro.model.ubigeo_peru.Department
 import iberoplast.pe.gespro.model.ubigeo_peru.District
 import iberoplast.pe.gespro.model.ubigeo_peru.Province
@@ -28,6 +29,47 @@ import retrofit2.http.Query
 
 
 interface ApiService {
+    @POST("supplier/store")
+    @Headers("Accept: application/json")
+    fun storeSupplier(
+        @Header("Authorization") authHeader: String,
+        @Query("name") name: String,
+        @Query("email") email: String,
+        @Query("nic_ruc") nic_ruc: String,
+        @Query("nacionality") nacionality: String
+    ): Call<Supplier>
+    @POST("supplier/{id}/update")
+    @Headers("Accept: application/json")
+    fun updateSupplier(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int,
+        @Query("name") name: String,
+        @Query("nic_ruc") nic_ruc: String,
+        @Query("email") email: String
+    ): Call<Void>
+    @GET("supplier/{id}/edit")
+    @Headers("Accept: application/json")
+    fun editSupplier(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int)
+    : Call<Supplier>
+    @GET("supplier/{id}")
+    @Headers("Accept: application/json")
+    fun getSupplierDetails(
+        @Header(value = "Authorization") authHeader: String,
+        @Path("id") id: Int
+    ): Call<Supplier>
+    @GET("user")
+    @Headers("Accept: application/json")
+    fun getUser(@Header("Authorization") authHeader: String,): Call<User>
+
+    @POST("user")
+    @Headers("Accept: application/json")
+    fun postUser(
+        @Header("Authorization") authHeader: String,
+        @Query("name") name: String,
+        @Query("email") email: String
+        ): Call<Void>
     @POST("login")
     fun postLogin(
         @Query(value = "email") email: String,
@@ -54,7 +96,7 @@ interface ApiService {
     fun postLogout(@Header(value = "Authorization") authHeader: String): Call<Void>
     @GET("suppliers")
     @Headers("Accept: application/json")
-    fun getSuppliers(): Call<ArrayList<Supplier>>
+    fun getSuppliers(@Header("Authorization") authHeader: String): Call<ArrayList<Supplier>>
 
     @GET("types-payments")
     fun getTypesPayments(): Call<ArrayList<TypePayment>>

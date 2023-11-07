@@ -2,6 +2,10 @@
 
     <!-- Nivel 1 -->
     <item
+        android:id="@+id/imMyProfile"
+        android:title="Mi perfil" />
+    <item
+        android:id="@+id/imAdministration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:title="Administracion">
@@ -16,18 +20,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <item
+                        android:id="@+id/imStates"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:title="Estados" />
                     <item
+                        android:id="@+id/imTypePayments"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:title="Tipos de Pago" />
                     <item
+                        android:id="@+id/imMethodPayments"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:title="Metodos de Pago" />
                     <item
+                        android:id="@+id/imQuestions"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:title="Preguntas" />
@@ -35,54 +43,53 @@
             </item>
 
             <item
+                android:id="@+id/imRoles"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:title="Roles" />
             <item
+                android:id="@+id/imUsers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:title="Usuarios" />
         </menu>
     </item>
     <item
-        android:id="@+id/proveedores"
+        android:id="@+id/imSuppliers"
         android:title="Proveedores">
         <menu>
+            <item
+                android:id="@+id/imCreateSupplier"
+                android:title="Nuevo proveedor"/>
             <!-- Nivel 2 -->
             <item
-                android:id="@+id/submenu_item_1"
+                android:id="@+id/imListSuppliers"
                 android:title="Lista de Proveedores"/>
-            <item
-                android:id="@+id/submenu_item_2"
-                android:title="Estado de Proveedores"/>
         </menu>
     </item>
 
     <!-- Nivel 1 -->
     <item
-        android:id="@+id/solic"
+        android:id="@+id/imRequests"
         android:title="Solicitudes">
         <menu>
             <!-- Nivel 2 -->
             <item
-                android:id="@+id/submenu_item_3"
+                android:id="@+id/imListRequests"
                 android:title="Listar Solicitudes"/>
             <!-- Otros elementos de nivel 2 -->
-            <item
-                android:id="@+id/submenu_item_4"
-                android:title="Estado de Solicitudes" />
         </menu>
     </item>
 
 
     <item
-        android:id="@+id/btnCrearSolicitud"
+        android:id="@+id/imCreateRequest"
         android:title="Crear Solicitud" />
     <item
-        android:id="@+id/btnVerEstadoSol"
-        android:title="Estado de Solicitud" />
+        android:id="@+id/imListMyRequests"
+        android:title="Mis solicitudes" />
     <item
-        android:id="@+id/logout"
+        android:id="@+id/imLogout"
         android:icon="@drawable/icon_logout_menu"
         android:title="Cerrar Sesion" />
 </menu>

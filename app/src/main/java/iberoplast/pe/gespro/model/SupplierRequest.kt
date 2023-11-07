@@ -1,5 +1,6 @@
 package iberoplast.pe.gespro.model
 
+@Suppress("UNREACHABLE_CODE")
 data class SupplierRequest(
     val id: Int,
     val id_user: Int,
@@ -16,9 +17,7 @@ data class SupplierRequest(
             // Obtener la última transición de estado
             val lastTransition = stateTransitions.last()
             // Verificar si existe un "to_state"
-            if (lastTransition.toState != null) {
-                return lastTransition.toState
-            }
+            return lastTransition.toState
             // Si no hay "to_state", mostrar "from_state"
             return lastTransition.fromState
         }

@@ -25,7 +25,7 @@ import retrofit2.Response
 class MainActivity : AppCompatActivity() {
 
     private val apiService: ApiService by lazy {
-            ApiService.create()
+        ApiService.create()
     }
 
     private val snackBar by lazy {
@@ -79,8 +79,12 @@ class MainActivity : AppCompatActivity() {
                         return
                     }
                     if (loginResponse.success){
+                        val preferences = PreferenceHelper.defaultPrefs(this@MainActivity)
+                        preferences["user_role_name"] = loginResponse.user.role?.name
+
+                        // Continúa con el proceso de inicio de sesión
                         createSessionPreference(loginResponse.jwt)
-                        toast("Bienvenido ${loginResponse.user.name}")
+                        toast("Bienvenido ${loginResponse.user.role?.name}")
                         goToMenuActivity(true)
                     }else{
                         toast("Credenciales incorrectas")

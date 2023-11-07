@@ -1,6 +1,12 @@
 package iberoplast.pe.gespro.ui.modules.supplier
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.ContextMenu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,6 +15,10 @@ import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
 import iberoplast.pe.gespro.model.Supplier
 import iberoplast.pe.gespro.ui.adapters.SupplierAdapter
+import iberoplast.pe.gespro.ui.modules.requests.ShowSupplierActivity
+import iberoplast.pe.gespro.util.PreferenceHelper
+import iberoplast.pe.gespro.util.PreferenceHelper.get
+import iberoplast.pe.gespro.util.toast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,77 +28,148 @@ class SuppliersActivity : AppCompatActivity() {
     private val apiService: ApiService by lazy {
         ApiService.create()
     }
+    private val preferences by lazy {
+        PreferenceHelper.defaultPrefs(this)
+    }
 
+    private lateinit var supplierAdapter: SupplierAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_suppliers)
 
-//        val suppliers = ArrayList<Supplier>()
-//        suppliers.add(Supplier(1, "Juanito", "Juanito@gmail.com", "Rechazado"))
-//        suppliers.add(Supplier(2, "Alfonso", "Alfonso@gmail.com", "Aprobado"))
-//        suppliers.add(Supplier(3, "Daniel", "Daniel@gmail.com", "Por validar"))
-
+        supplierAdapter = SupplierAdapter()
         val rvSuppliers = findViewById<RecyclerView>(R.id.rvProveedores)
         rvSuppliers.layoutManager = LinearLayoutManager(this)
-//        rvSuppliers.adapter = SupplierAdapter(suppliers)
-
+        rvSuppliers.adapter = supplierAdapter
+        registerForContextMenu(rvSuppliers)
+        rvSuppliers.isLongClickable = true
         loadSuppliers()
-
-        // Registra el RecyclerView para el menú contextual
-//        registerForContextMenu(rvSuppliers)
 
     }
 
-//    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
-//        super.onCreateContextMenu(menu, v, menuInfo)
-//
-//        if (v?.id == R.id.rvProveedores) {
-//            val inflater: MenuInflater = menuInflater
-//            inflater.inflate(R.menu.menu_options, menu)
-//        }
-//    }
+    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
 
-//    override fun onContextItemSelected(item: MenuItem): Boolean {
-//        // Maneja las opciones del menú contextual aquí
-//        when (item.itemId) {
-//            R.id.opc2 -> {
-//                // Lógica para la opción 1
-//                return true
-//            }
-//            R.id.opc1 -> {
-//                // Lógica para la opción 2
-//                return true
-//            }
-//            else -> return super.onContextItemSelected(item)
-//        }
-//    }
+        if (v?.id == R.id.rvProveedores) {
+            val inflater: MenuInflater = menuInflater
+            inflater.inflate(R.menu.menu_options, menu)
+        }
+    }
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.show -> {
+                val selectedSupplier = supplierAdapter.selectedSupplier
+                val id = selectedSupplier?.id
+                // Método a ejecutar para la opción R.id.opc2
+                if (id != null) {
+                    showSupplier(id)
+                }
+                return true
+            }
+            R.id.edit -> {
+                val selectedSupplier = supplierAdapter.selectedSupplier
+                val id = selectedSupplier?.id
+                // Método a ejecutar para la opción R.id.opc2
+                if (id != null) {
+                    editSupplier(id)
+                }
+                return true
+            }
+            else -> return super.onContextItemSelected(item)
+        }
+    }
+    private fun showSupplier(id: Int) {
+        val jwt = preferences["jwt", ""]
+        val call = apiService.getSupplierDetails("Bearer $jwt", id)
+
+        call.enqueue(object : Callback<Supplier> {
+            override fun onResponse(call: Call<Supplier>, response: Response<Supplier>) {
+                if (response.isSuccessful) {
+                    val supplier = response.body()
+
+                    if (supplier != null) {
+                        val message = "ID: ${supplier.id}\n" +
+                                "Nacionalidad: ${supplier.nacionality}\n" +
+                                "NIC/RUC: ${supplier.nic_ruc}\n" +
+                                "Estado: ${supplier.state}\n" +
+                                "Creado en: ${supplier.created_at}\n" +
+                                "Actualizado en: ${supplier.updated_at}"
+
+                        // Mostrar el mensaje en el registro (logcat)
+                        Log.d("SupplierDetails", message)
+//                        val intent = Intent(this@SuppliersActivity, ShowSupplierActivity::class.java)
+//                        intent.putExtra("supplier_details", supplier)
+//                        startActivity(intent)
+                        val intent = Intent(this@SuppliersActivity, ShowSupplierActivity::class.java)
+                        intent.putExtra("supplier_details", supplier)
+                        startActivity(intent)
+                    }
+                } else {
+                    // Manejar la respuesta no exitosa, por ejemplo, mostrar un mensaje de error
+                    toast("Error al obtener los detalles del proveedor")
+                }
+            }
+
+            override fun onFailure(call: Call<Supplier>, t: Throwable) {
+                // Manejar el error en la solicitud, por ejemplo, mostrar un mensaje de error
+                toast("Error en la solicitud: ${t.message}")
+            }
+        })
+    }
+
+    private fun editSupplier(id: Int){
+        val jwt = preferences["jwt", ""]
+        val call = apiService.editSupplier("Bearer $jwt", id)
+
+        call.enqueue(object: Callback<Supplier> {
+            override fun onResponse(call: Call<Supplier>, response: Response<Supplier>) {
+                if (response.isSuccessful)
+                {
+                    val supplier = response.body()
+                    if (supplier != null){
+
+                        val message = "ID: ${supplier.id}\n" +
+                                "Nacionalidad: ${supplier.nacionality}\n" +
+                                "NIC/RUC: ${supplier.nic_ruc}\n" +
+                                "Estado: ${supplier.state}\n" +
+                                "Creado en: ${supplier.created_at}\n" +
+                                "user en: ${supplier.user.name}\n" +
+                                "email en: ${supplier.user.email}\n" +
+                                "Actualizado en: ${supplier.updated_at}"
+
+                        // Mostrar el mensaje en el registro (logcat)
+                        Log.d("SupplierEdit", message)
+
+                        val intent = Intent(this@SuppliersActivity, FormSupplierActivity::class.java)
+                        intent.putExtra("supplier", supplier)
+                        intent.putExtra("isEditing", true)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<Supplier>, t: Throwable) {
+                t.localizedMessage?.let { toast(it) }
+            }
+
+        })
+    }
 
     private fun loadSuppliers() {
-        val call = apiService.getSuppliers()
+        val jwt = preferences["jwt", ""]
+        val call = apiService.getSuppliers("Bearer $jwt")
 
         call.enqueue(object : Callback<ArrayList<Supplier>> {
             override fun onResponse(call: Call<ArrayList<Supplier>>, response: Response<ArrayList<Supplier>>) {
                 if (response.isSuccessful) {
-                    val suppliers = response.body()
-
-                    if (suppliers != null) {
-                        // Los datos se obtuvieron correctamente, actualiza el adaptador de tu RecyclerView
-                        val rvProveedores = findViewById<RecyclerView>(R.id.rvProveedores)
-                        rvProveedores.layoutManager = LinearLayoutManager(this@SuppliersActivity)
-                        rvProveedores.adapter = SupplierAdapter(suppliers)
-                    } else {
-                        // Maneja el caso donde la respuesta no contiene datos válidos
-                        showToast("La respuesta no contiene datos válidos")
+                    response.body()?.let {
+                        supplierAdapter.updateSuppliers(it)
                     }
-                } else {
-                    // Maneja la respuesta de error aquí
-                    showToast("Error en la respuesta de la API: ${response.code()}")
                 }
             }
-
             override fun onFailure(call: Call<ArrayList<Supplier>>, t: Throwable) {
-                // Maneja errores de red u otras excepciones
-                showToast("Error en la solicitud: ${t.message}")
+                TODO("Not yet implemented")
             }
         })
     }

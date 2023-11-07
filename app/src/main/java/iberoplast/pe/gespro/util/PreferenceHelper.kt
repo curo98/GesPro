@@ -6,6 +6,20 @@ import androidx.preference.PreferenceManager
 
 object PreferenceHelper {
 
+    // Constantes para las claves de preferencias
+    const val USER_ROLE_NAME_KEY = "user_role_name"
+
+    fun saveUserRoleName(context: Context, userRoleName: String) {
+        val preferences = defaultPrefs(context)
+        preferences[USER_ROLE_NAME_KEY] = userRoleName
+    }
+
+    fun getUserRoleName(context: Context): String {
+        val preferences = defaultPrefs(context)
+        return preferences[USER_ROLE_NAME_KEY, ""]
+    }
+
+
     fun defaultPrefs(context: Context): SharedPreferences
             = PreferenceManager.getDefaultSharedPreferences(context)
 
