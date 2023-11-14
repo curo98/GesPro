@@ -13,7 +13,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
-import iberoplast.pe.gespro.ui.auth.MainActivity
+import iberoplast.pe.gespro.ui.auth.LoginActivity
 import iberoplast.pe.gespro.util.PreferenceHelper
 import iberoplast.pe.gespro.util.PreferenceHelper.get
 import iberoplast.pe.gespro.util.toast
@@ -104,7 +104,7 @@ class FCMService : FirebaseMessagingService() {
      * @param messageBody FCM message body received.
      */
     private fun sendNotification(messageTitle: String, messageBody: String) {
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(
             this, 0 /* Request code */, intent,

@@ -30,6 +30,7 @@ import iberoplast.pe.gespro.model.Countrie
 import iberoplast.pe.gespro.model.Document
 import iberoplast.pe.gespro.model.MethodPayment
 import iberoplast.pe.gespro.model.Policy
+import iberoplast.pe.gespro.model.PolicyPivot
 import iberoplast.pe.gespro.model.Question
 import iberoplast.pe.gespro.model.QuestionResponse
 import iberoplast.pe.gespro.model.RequestData
@@ -359,10 +360,13 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         val selectedPolicies = ArrayList<Policy>()
         for (checkBox in checkBoxList) {
             if (checkBox.isChecked) {
-                val id = checkBox.id
+                val id = checkBox.id // Asumiendo que el ID proviene del checkbox
                 val title = checkBox.text.toString()
+                val content = "" // Debe ser inicializado con un valor válido, según tu modelo
                 val isChecked = checkBox.isChecked
-                selectedPolicies.add(Policy(id, title, "", isChecked))
+                val pivot = PolicyPivot(0, 0, 0) // Debe ser inicializado según tu modelo
+
+                selectedPolicies.add(Policy(id, title, content, isChecked, pivot))
             }
         }
 

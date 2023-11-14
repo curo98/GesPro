@@ -53,6 +53,13 @@ interface ApiService {
         @Header("Authorization") authHeader: String,
         @Path("id") id: Int)
     : Call<Supplier>
+
+    @GET("request/{id}")
+    @Headers("Accept: application/json")
+    fun getRequestDetails(
+        @Header(value = "Authorization") authHeader: String,
+        @Path("id") id: Int
+    ): Call<SupplierRequest>
     @GET("supplier/{id}")
     @Headers("Accept: application/json")
     fun getSupplierDetails(

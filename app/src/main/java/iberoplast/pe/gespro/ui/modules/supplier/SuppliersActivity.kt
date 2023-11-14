@@ -15,7 +15,6 @@ import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
 import iberoplast.pe.gespro.model.Supplier
 import iberoplast.pe.gespro.ui.adapters.SupplierAdapter
-import iberoplast.pe.gespro.ui.modules.requests.ShowSupplierActivity
 import iberoplast.pe.gespro.util.PreferenceHelper
 import iberoplast.pe.gespro.util.PreferenceHelper.get
 import iberoplast.pe.gespro.util.toast

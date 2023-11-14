@@ -12,7 +12,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.messaging.messaging
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
-import iberoplast.pe.gespro.ui.auth.MainActivity
+import iberoplast.pe.gespro.ui.auth.LoginActivity
 import iberoplast.pe.gespro.ui.modules.requests.FormRequestSupplierActivity
 import iberoplast.pe.gespro.ui.modules.requests.SupplierRequestsActivity
 import iberoplast.pe.gespro.ui.modules.supplier.FormSupplierActivity
@@ -270,7 +270,7 @@ class MenuActivity : AppCompatActivity() {
     }
 
     private fun goToLogin(){
-        val intent = Intent(this,MainActivity::class.java)
+        val intent = Intent(this,LoginActivity::class.java)
         startActivity(intent)
         finish()
     }

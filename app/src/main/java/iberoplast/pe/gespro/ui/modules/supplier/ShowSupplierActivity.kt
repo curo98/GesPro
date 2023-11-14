@@ -1,4 +1,4 @@
-package iberoplast.pe.gespro.ui.modules.requests
+package iberoplast.pe.gespro.ui.modules.supplier
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,7 +6,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.model.Supplier
-import iberoplast.pe.gespro.ui.modules.supplier.SuppliersActivity
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -83,16 +82,5 @@ class ShowSupplierActivity : AppCompatActivity() {
             e.printStackTrace()
             return dateTime // Si ocurre un error, devolvemos el valor original
         }
-    }
-    // Función para aplicar un "badge" rojo
-    private fun applyRedBadge() {
-        tvState.setBackgroundResource(R.drawable.red_badge_background) // Define el fondo rojo
-        tvState.setTextColor(resources.getColor(R.color.red)) // Define el color de texto
-    }
-
-    // Función para aplicar un "badge" verde
-    private fun applyGreenBadge() {
-        tvState.setBackgroundResource(R.drawable.green_badge_background) // Define el fondo verde
-        tvState.setTextColor(resources.getColor(R.color.green)) // Define el color de texto
     }
 }

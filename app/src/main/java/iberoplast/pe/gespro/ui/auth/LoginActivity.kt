@@ -22,7 +22,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class MainActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
     private val apiService: ApiService by lazy {
         ApiService.create()
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_login)
 
         val tvGoToRegister = findViewById<TextView>(R.id.tvGoToRegister)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
@@ -79,12 +79,12 @@ class MainActivity : AppCompatActivity() {
                         return
                     }
                     if (loginResponse.success){
-                        val preferences = PreferenceHelper.defaultPrefs(this@MainActivity)
+                        val preferences = PreferenceHelper.defaultPrefs(this@LoginActivity)
                         preferences["user_role_name"] = loginResponse.user.role?.name
 
                         // Continúa con el proceso de inicio de sesión
                         createSessionPreference(loginResponse.jwt)
-                        toast("Bienvenido ${loginResponse.user.role?.name}")
+                        toast("Bienvenido ${loginResponse.user.name}")
                         goToMenuActivity(true)
                     }else{
                         toast("Credenciales incorrectas")
@@ -101,8 +101,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createSessionPreference(jwt: String){
-        // Esto llama el metodo set del Helper, este metodo va a recibir la key que le estamos
-        // enviando y el valor que seria TRUE.
         val preferences = PreferenceHelper.defaultPrefs(this)
         preferences["jwt"] = jwt
     }

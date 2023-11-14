@@ -29,7 +29,7 @@ class RegisterActivity : AppCompatActivity() {
         val tvGoToLogin = findViewById<TextView>(R.id.tvGoToLogin)
 
         tvGoToLogin.setOnClickListener{
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
 

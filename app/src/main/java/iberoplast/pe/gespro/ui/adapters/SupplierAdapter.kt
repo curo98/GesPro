@@ -45,11 +45,6 @@ class SupplierAdapter : RecyclerView.Adapter<SupplierAdapter.ViewHolder>() {
             LayoutInflater.from(parent.context).inflate(R.layout.item_supplier, parent, false)
         )
     }
-
-    //    fun updateSuppliers(newSuppliers: List<Supplier>) {
-//        suppliers = newSuppliers as ArrayList<Supplier>
-//        notifyDataSetChanged()
-//    }
     fun updateSuppliers(newSuppliers: List<Supplier>) {
         suppliers.clear()
         suppliers.addAll(newSuppliers)

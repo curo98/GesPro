@@ -48,10 +48,6 @@ class ProfileActivity : AppCompatActivity() {
             }
 
         })
-
-//        Handler().postDelayed({
-//            displayProfileData()
-//        }, 3000)
     }
 
     private fun displayProfileData(user: User){

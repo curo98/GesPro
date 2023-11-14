@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".ui.auth.MainActivity"
+    tools:context=".ui.auth.LoginActivity"
     android:animateLayoutChanges="true">
 
     <LinearLayout

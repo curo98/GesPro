@@ -15,10 +15,14 @@
         android:theme="@style/Theme.GesPro"
         tools:targetApi="31">
         <activity
+            android:name=".ui.modules.requests.ShowRequestActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.modules.requests.SupplierRequestsActivity"/>
+        <activity
             android:name=".ui.modules.supplier.FormSupplierActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.modules.requests.ShowSupplierActivity"
+            android:name=".ui.modules.supplier.ShowSupplierActivity"
             android:exported="false"
             android:parentActivityName=".ui.modules.supplier.SuppliersActivity" />
         <activity
@@ -67,7 +71,7 @@
             android:exported="false"
             android:launchMode="singleInstance" />
         <activity
-            android:name=".ui.auth.MainActivity"
+            android:name=".ui.auth.LoginActivity"
             android:exported="true"
             android:launchMode="singleInstance">
             <intent-filter>
