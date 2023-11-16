@@ -9,7 +9,9 @@ import android.view.ContextMenu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -33,7 +35,11 @@ class SupplierRequestsActivity : AppCompatActivity() {
     private val preferences by lazy {
         PreferenceHelper.defaultPrefs(this)
     }
+    private val userRoleName: String by lazy {
+        preferences["user_role_name", ""]
+    }
     private lateinit var etSearch: EditText
+    private lateinit var btnCreate: Button
     private lateinit var supplierRequestAdapter: SupplierRequestAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,8 +70,24 @@ class SupplierRequestsActivity : AppCompatActivity() {
                 // No necesitas implementar esto
             }
         })
+
+        btnCreate = findViewById(R.id.btnCreateRequest)
+        if (userRoleName != "proveedor" && userRoleName != "invitado") {
+            btnCreate.visibility = View.GONE
+        }
+
+        btnCreate.setOnClickListener {
+            val intent = Intent(this, FormRequestSupplierActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
-    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
         super.onCreateContextMenu(menu, v, menuInfo)
 
         if (v?.id == R.id.rvSupplierRequests) {
@@ -73,6 +95,7 @@ class SupplierRequestsActivity : AppCompatActivity() {
             inflater.inflate(R.menu.menu_options, menu)
         }
     }
+
     override fun onContextItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.show -> {
@@ -84,15 +107,20 @@ class SupplierRequestsActivity : AppCompatActivity() {
                 }
                 return true
             }
+
             else -> return super.onContextItemSelected(item)
         }
     }
+
     private fun showRequest(id: Int) {
         val jwt = preferences["jwt", ""]
         val call = apiService.getRequestDetails("Bearer $jwt", id)
 
         call.enqueue(object : Callback<SupplierRequest> {
-            override fun onResponse(call: Call<SupplierRequest>, response: Response<SupplierRequest>) {
+            override fun onResponse(
+                call: Call<SupplierRequest>,
+                response: Response<SupplierRequest>
+            ) {
                 if (response.isSuccessful) {
                     val request = response.body()
 
@@ -101,13 +129,14 @@ class SupplierRequestsActivity : AppCompatActivity() {
                         // Mostrar el mensaje en el registro (logcat)
                         Log.d("RequestDetails", request.toString())
 
-                        val intent = Intent(this@SupplierRequestsActivity, ShowRequestActivity::class.java)
+                        val intent =
+                            Intent(this@SupplierRequestsActivity, ShowRequestActivity::class.java)
                         intent.putExtra("request_details", request)
                         startActivity(intent)
                     }
                 } else {
                     // Manejar la respuesta no exitosa, por ejemplo, mostrar un mensaje de error
-                    toast("Error al obtener los detalles del proveedor")
+                    toast("Error al obtener los detalles de la solicitud")
                 }
             }
 
@@ -117,26 +146,36 @@ class SupplierRequestsActivity : AppCompatActivity() {
             }
         })
     }
+
     private fun loadSupplierRequests() {
         val jwt = preferences["jwt", ""]
         val call = apiService.getSupplierRequests("Bearer $jwt")
         val pbRequests = findViewById<ProgressBar>(R.id.pbRequests)
-        val rvSupplierRequests = findViewById<RecyclerView>(R.id.rvSupplierRequests)
+        val llContent = findViewById<LinearLayout>(R.id.llContent)
 
         pbRequests.visibility = View.VISIBLE
-        rvSupplierRequests.visibility = View.GONE
-        etSearch.visibility = View.GONE
+        llContent.visibility = View.GONE
         call.enqueue(object : Callback<ArrayList<SupplierRequest>> {
-            override fun onResponse(call: Call<ArrayList<SupplierRequest>>, response: Response<ArrayList<SupplierRequest>>) {
+            override fun onResponse(
+                call: Call<ArrayList<SupplierRequest>>,
+                response: Response<ArrayList<SupplierRequest>>
+            ) {
+                pbRequests.visibility = View.GONE
+                llContent.visibility = View.VISIBLE
+
                 if (response.isSuccessful) {
-                    pbRequests.visibility = View.GONE
-                    rvSupplierRequests.visibility = View.VISIBLE
-                    etSearch.visibility = View.VISIBLE
                     response.body()?.let {
-                        supplierRequestAdapter.updateRequests(it)
+                        if (it.isEmpty()) {
+                            showToast("No hay solicitudes por mostrar")
+                            finish()
+                        } else {
+                            // Actualizar el adaptador con las solicitudes
+                            supplierRequestAdapter.updateRequests(it)
+                        }
                     }
                 }
             }
+
             override fun onFailure(call: Call<ArrayList<SupplierRequest>>, t: Throwable) {
                 showToast("Error en la solicitud: ${t.message}")
             }

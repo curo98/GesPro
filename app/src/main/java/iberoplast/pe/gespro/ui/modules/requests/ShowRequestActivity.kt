@@ -1,5 +1,6 @@
 package iberoplast.pe.gespro.ui.modules.requests
 
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -21,8 +23,17 @@ import java.util.Locale
 class ShowRequestActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_request)
+
+        val btnReturnList = findViewById<Button>(R.id.btnReturnList)
+
+        btnReturnList.setOnClickListener {
+            val intent = Intent(this, SupplierRequestsActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         val llDetailQuestion = findViewById<LinearLayout>(R.id.llDetailQuestion)
         val ibExpandQuestions = findViewById<ImageButton>(R.id.ibExpandQuestions)

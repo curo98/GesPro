@@ -22,21 +22,35 @@
         android:padding="10dp"
         tools:visibility="gone" />
 
-    <EditText
-        android:id="@+id/etSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Buscar solicitud ....."
-        android:inputType="text"
-        android:drawableStart="@android:drawable/ic_menu_search"
-        android:drawablePadding="8dp"
-        android:layout_margin="8dp"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSupplierRequests"
+    <LinearLayout
+        android:id="@+id/llContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_supplier_request" />
+        android:orientation="vertical"
+        android:padding="10sp">
+        <Button
+            android:id="@+id/btnCreateRequest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Crear nueva solicitud"/>
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Buscar solicitud ....."
+            android:inputType="text"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:drawablePadding="8dp"
+            android:layout_margin="8dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSupplierRequests"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_supplier_request" />
+    </LinearLayout>
+
+
 
 
 </LinearLayout>

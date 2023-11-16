@@ -98,8 +98,8 @@ class MenuActivity : AppCompatActivity() {
             "proveedor" -> {
                 // Rol proveedor: Mostrar u ocultar los botones necesarios
                 btnProfile.visibility = View.VISIBLE
-                btnCrearSolicitud.visibility = View.GONE
-                btnListProveedores.visibility = View.VISIBLE
+                btnCrearSolicitud.visibility = View.VISIBLE
+                btnListProveedores.visibility = View.GONE
                 btnListSolicitudes.visibility = View.VISIBLE
             }
             // Agrega más casos según tus roles
@@ -109,7 +109,7 @@ class MenuActivity : AppCompatActivity() {
                 btnProfile.visibility = View.VISIBLE
                 btnCrearSolicitud.visibility = View.VISIBLE
                 btnListProveedores.visibility = View.GONE
-                btnListSolicitudes.visibility = View.VISIBLE
+                btnListSolicitudes.visibility = View.GONE
             }
         }
 
@@ -203,7 +203,7 @@ class MenuActivity : AppCompatActivity() {
                 imSuppliers?.isVisible = false
                 imRequests?.isVisible = false
                 imCreateRequest?.isVisible = true
-                imListMyRequests?.isVisible = true
+                imListMyRequests?.isVisible = false
             }
         }
 

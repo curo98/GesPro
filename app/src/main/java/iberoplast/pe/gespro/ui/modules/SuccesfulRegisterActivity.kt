@@ -15,9 +15,9 @@ class SuccesfulRegisterActivity : AppCompatActivity() {
 
         val btnReturnToMenu = findViewById<Button>(R.id.btnReturnToMenu)
 
-        val mensaje = intent.getStringExtra("mensaje")
+        val message = intent.getStringExtra("message")
 
-        Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show()
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 
         btnReturnToMenu.setOnClickListener {
 

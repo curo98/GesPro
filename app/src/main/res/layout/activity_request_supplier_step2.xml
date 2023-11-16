@@ -10,33 +10,6 @@
     android:id="@+id/llFormStep2"
     android:visibility="gone">
 
-
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:text="Nombre del proveedor"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/etNomProveedor"
-        android:inputType="textPersonName"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" />
-
-    <TextView
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:text="Correo electronico"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/etCorreo"
-        android:inputType="text"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent" />
-
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

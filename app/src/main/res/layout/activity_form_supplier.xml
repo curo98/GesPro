@@ -74,7 +74,7 @@
         android:gravity="center"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:paddingTop="15dp">
 
         <Button
@@ -83,8 +83,16 @@
             android:drawableEnd="@drawable/icon_next"
             android:id="@+id/btnFormSupplier"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:layout_width="match_parent"
-            android:text="Enviar" />
+            android:text="Enviar"
+            android:layout_marginBottom="10dp"/>
+        <Button
+            style="@style/ButtonForm"
+            android:background="@color/cardview_shadow_start_color"
+            android:drawableEnd="@drawable/icon_next"
+            android:id="@+id/btnPrevForm3"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="Ir a la lista" />
     </LinearLayout>
 </LinearLayout>

@@ -2,11 +2,17 @@ package iberoplast.pe.gespro.ui.modules.supplier
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.ContextMenu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,11 +36,17 @@ class SuppliersActivity : AppCompatActivity() {
     private val preferences by lazy {
         PreferenceHelper.defaultPrefs(this)
     }
-
+    private val userRoleName: String by lazy {
+        preferences["user_role_name", ""]
+    }
+    private lateinit var etSearch: EditText
+    private lateinit var btnCreate: Button
     private lateinit var supplierAdapter: SupplierAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_suppliers)
+
+        etSearch = findViewById(R.id.etSearch)
 
         supplierAdapter = SupplierAdapter()
         val rvSuppliers = findViewById<RecyclerView>(R.id.rvProveedores)
@@ -42,8 +54,33 @@ class SuppliersActivity : AppCompatActivity() {
         rvSuppliers.adapter = supplierAdapter
         registerForContextMenu(rvSuppliers)
         rvSuppliers.isLongClickable = true
+        supplierAdapter.setNewSelectedSupplier(null)
         loadSuppliers()
 
+        etSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // No necesitas implementar esto
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val searchText = s.toString().toLowerCase()
+                supplierAdapter.filterSuppliers(searchText)
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // No necesitas implementar esto
+            }
+        })
+        btnCreate = findViewById(R.id.btnCreateSupplier)
+        if (userRoleName == "admin") {
+            btnCreate.visibility = View.VISIBLE
+        }
+
+        btnCreate.setOnClickListener {
+            val intent = Intent(this, FormSupplierActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
@@ -158,10 +195,18 @@ class SuppliersActivity : AppCompatActivity() {
     private fun loadSuppliers() {
         val jwt = preferences["jwt", ""]
         val call = apiService.getSuppliers("Bearer $jwt")
+        val pbSuppliers = findViewById<ProgressBar>(R.id.pbSuppliers)
+        val llContent = findViewById<LinearLayout>(R.id.llContent)
 
+        pbSuppliers.visibility = View.VISIBLE
+        llContent.visibility = View.GONE
         call.enqueue(object : Callback<ArrayList<Supplier>> {
             override fun onResponse(call: Call<ArrayList<Supplier>>, response: Response<ArrayList<Supplier>>) {
                 if (response.isSuccessful) {
+
+                    pbSuppliers.visibility = View.GONE
+                    llContent.visibility = View.VISIBLE
+
                     response.body()?.let {
                         supplierAdapter.updateSuppliers(it)
                     }

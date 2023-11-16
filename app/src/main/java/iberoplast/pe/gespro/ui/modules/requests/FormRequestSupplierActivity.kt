@@ -1,5 +1,6 @@
 package iberoplast.pe.gespro.ui.modules.requests
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
@@ -38,8 +39,10 @@ import iberoplast.pe.gespro.model.TypePayment
 import iberoplast.pe.gespro.model.ubigeo_peru.Department
 import iberoplast.pe.gespro.model.ubigeo_peru.District
 import iberoplast.pe.gespro.model.ubigeo_peru.Province
+import iberoplast.pe.gespro.ui.modules.SuccesfulRegisterActivity
 import iberoplast.pe.gespro.util.PreferenceHelper
 import iberoplast.pe.gespro.util.PreferenceHelper.get
+import iberoplast.pe.gespro.util.PreferenceHelper.set
 import iberoplast.pe.gespro.util.toast
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -348,10 +351,6 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         val nationality = spCountry.selectedItem.toString()
 //
         val nic_ruc = findViewById<EditText>(R.id.etNicRuc).text.toString() // Obtén el valor del EditText
-        val nameSupplier = findViewById<EditText>(R.id.etNomProveedor).text.toString()
-        val emailSupplier = findViewById<EditText>(R.id.etCorreo).text.toString()
-//        val locality = findViewById<EditText>(R.id.etDir1).text.toString()
-//        val streetNumber = findViewById<EditText>(R.id.etDir2).text.toString()
 
         val spConPayment = findViewById<Spinner>(R.id.spinnerCondPago)
         val typePayment = spConPayment.selectedItem.toString()
@@ -385,8 +384,6 @@ class FormRequestSupplierActivity : AppCompatActivity() {
             authHeader,
             nationality,
             nic_ruc,
-            nameSupplier,
-            emailSupplier,
             typePayment,
             methodPayment,
             requestData
@@ -397,8 +394,11 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                 response: Response<SimpleResponse>
             ) {
                 if (response.isSuccessful){
-                    toast("Enviado")
-
+                    preferences["user_role_name"] = "proveedor"
+                    val message = "Su solicitud fue enviada satisfactoriamente."
+                    val intent = Intent(this@FormRequestSupplierActivity, SuccesfulRegisterActivity::class.java)
+                    intent.putExtra("message", message) // Configura el mensaje en la intención antes de iniciar la actividad
+                    startActivity(intent)
                     finish()
                 } else {
                     toast("Ocurrio un error inesperado en el registro de la solicitud")
@@ -412,19 +412,11 @@ class FormRequestSupplierActivity : AppCompatActivity() {
             }
 
         })
-        //val mensaje = "Su solicitud fue enviada satisfactoriamente."
-        //val intent = Intent(this, SuccesfulRegisterActivity::class.java)
-        //intent.putExtra("mensaje", mensaje) // Configura el mensaje en la intención antes de iniciar la actividad
-        //startActivity(intent)
-        //Finalizar la actividad actual
-        //finish()
+
     }
 
     private fun setupRadioGroup() {
         val radioGroup = findViewById<RadioGroup>(R.id.rgTipoProveedor)
-        val spinnerDepartamentos = findViewById<Spinner>(R.id.spinnerDepartamentos)
-        val spinnerProvincias = findViewById<Spinner>(R.id.spinnerProvincias)
-        val spinnerDistritos = findViewById<Spinner>(R.id.spinnerDistritos)
         val dirNacional = findViewById<LinearLayout>(R.id.dirNacional)
         val dirAdicNacional = findViewById<LinearLayout>(R.id.dirAdicNacional)
         val dirExtranjero = findViewById<LinearLayout>(R.id.dirExtranjero)
@@ -913,14 +905,17 @@ class FormRequestSupplierActivity : AppCompatActivity() {
     }
 
     // Función para validar el formulario
-    fun validateForm(): Boolean {
-        val etNomProveedor = findViewById<EditText>(R.id.etNomProveedor)
-        val etCorreo = findViewById<EditText>(R.id.etCorreo)
+    private fun validateForm(): Boolean {
+        val spinnerPaises = findViewById<Spinner>(R.id.spinnerPaises)
+        val rbNacional = findViewById<RadioButton>(R.id.rbNacional)
+        val selectedCountry = spinnerPaises.selectedItem.toString()
+        val isNationalSelected = rbNacional.isChecked
+
+        // Verifica si se deben validar dir1 y dir2
+        val shouldValidateAddresses = selectedCountry == "Perú" && isNationalSelected
+
         val etDir1 = findViewById<EditText>(R.id.etDir1)
         val etDir2 = findViewById<EditText>(R.id.etDir2)
-
-        val nombreProveedor = etNomProveedor.text.toString()
-        val correo = etCorreo.text.toString()
         val dir1 = etDir1.text.toString()
         val dir2 = etDir2.text.toString()
 
@@ -928,18 +923,14 @@ class FormRequestSupplierActivity : AppCompatActivity() {
 
         val selectedTipoPagoId = rgTipoPago.checkedRadioButtonId
 
-        if (nombreProveedor.isEmpty()) {
-            etNomProveedor.error = "El nombre del proveedor no puede estar vacío"
-            return false
-        } else if (dir1.isEmpty()) {
-            etDir1.error = "La dirección 1 no puede estar vacía"
-            return false
-        } else if (dir2.isEmpty()) {
-            etDir2.error = "La dirección 2 no puede estar vacía"
-            return false
-        } else if (correo.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
-            etCorreo.error = "Ingresa un correo electrónico válido"
-            return false
+        if (shouldValidateAddresses) {
+            if (dir1.isEmpty()) {
+                etDir1.error = "La dirección 1 no puede estar vacía"
+                return false
+            } else if (dir2.isEmpty()) {
+                etDir2.error = "La dirección 2 no puede estar vacía"
+                return false
+            }
         } else if (selectedTipoPagoId == -1) {
             // Ningún RadioButton seleccionado en el grupo de Tipo de Pago
             Toast.makeText(this, "Debes seleccionar un tipo de pago", Toast.LENGTH_SHORT).show()
