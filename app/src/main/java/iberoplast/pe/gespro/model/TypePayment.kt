@@ -5,17 +5,20 @@ import android.os.Parcelable
 
 data class TypePayment(
     val id: Int,
-    val name: String
+    val name: String,
+    val description: String
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
+        parcel.readString() ?: "",
         parcel.readString() ?: ""
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
         parcel.writeString(name)
+        parcel.writeString(description)
     }
 
     override fun describeContents(): Int {

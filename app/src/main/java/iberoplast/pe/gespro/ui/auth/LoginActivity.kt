@@ -2,6 +2,7 @@ package iberoplast.pe.gespro.ui.auth
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ScrollView
@@ -27,23 +28,30 @@ class LoginActivity : AppCompatActivity() {
     private val apiService: ApiService by lazy {
         ApiService.create()
     }
-
     private val snackBar by lazy {
         val mainLayout = findViewById<ScrollView>(R.id.mainLayout)
         Snackbar.make(mainLayout, R.string.press_back_again, Snackbar.LENGTH_SHORT)
+    }
+    private val preferences by lazy {
+        PreferenceHelper.defaultPrefs(this@LoginActivity)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        supportActionBar?.hide()
+
+        val userRoleName = preferences["UserRolePreferences", ""]
+        Log.d("UserRoleLoginActivity", "Rol del usuario: $userRoleName")
+
         val tvGoToRegister = findViewById<TextView>(R.id.tvGoToRegister)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
 
         // PERSISTENCIA DE DATOS CON SHARED PREFERENCES
-        val preferences = PreferenceHelper.defaultPrefs(this)
 
-        if (preferences["jwt", ""].contains(".")){
+        if (preferences["jwt", ""].contains(".") && preferences["UserRolePreferences", ""].isNotBlank()) {
+            // La preferencia "jwt" contiene un punto (.) y la preferencia "UserRolePreferences" no está en blanco
             goToMenuActivity()
         }
 
@@ -79,12 +87,10 @@ class LoginActivity : AppCompatActivity() {
                         return
                     }
                     if (loginResponse.success){
-                        val preferences = PreferenceHelper.defaultPrefs(this@LoginActivity)
-                        preferences["user_role_name"] = loginResponse.user.role?.name
-
                         // Continúa con el proceso de inicio de sesión
-                        createSessionPreference(loginResponse.jwt)
-                        toast("Bienvenido ${loginResponse.user.name}")
+                        createSessionPreference(loginResponse.jwt, loginResponse.role.name, loginResponse.user.name)
+                        Log.d("LoginResponseSuccess", loginResponse.toString())
+                        toast("Bienvenido ${loginResponse.role.name}")
                         goToMenuActivity(true)
                     }else{
                         toast("Credenciales incorrectas")
@@ -100,13 +106,15 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun createSessionPreference(jwt: String){
-        val preferences = PreferenceHelper.defaultPrefs(this)
+    private fun createSessionPreference(jwt: String, userRoleName: String, userName: String) {
         preferences["jwt"] = jwt
+        preferences["UserRolePreferences"] = userRoleName
+        preferences["UserName"] = userName
+        Log.d("UserRolePreferences", userRoleName)
     }
 
     private fun goToMenuActivity(isUserInput: Boolean = false) {
-        val intent = Intent(this, MenuActivity::class.java)
+        val intent = Intent(this@LoginActivity, MenuActivity::class.java)
         if (isUserInput){
             intent.putExtra("store_token", true)
         }

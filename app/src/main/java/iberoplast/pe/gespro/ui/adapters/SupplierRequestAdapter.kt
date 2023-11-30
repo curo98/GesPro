@@ -72,17 +72,17 @@ class SupplierRequestAdapter : RecyclerView.Adapter<SupplierRequestAdapter.ViewH
             val finalState = request.getFinalState()
             if (finalState != null) {
                 when (finalState.name) {
-                    "Aprobado" -> {
+                    "Aprobada" -> {
                         tvStateId.text = finalState.name
                         tvStateId.setTextColor(
                             ContextCompat.getColor(
                                 itemView.context,
-                                R.color.colorActivo
+                                R.color.colorApproved
                             )
                         )
                     }
 
-                    "Rechazado" -> {
+                    "Desaprobada" -> {
                         tvStateId.text = finalState.name
                         tvStateId.setTextColor(
                             ContextCompat.getColor(
@@ -101,7 +101,60 @@ class SupplierRequestAdapter : RecyclerView.Adapter<SupplierRequestAdapter.ViewH
                             )
                         )
                     }
-
+                    "Validada" -> {
+                        tvStateId.text = finalState.name
+                        tvStateId.setTextColor(
+                            ContextCompat.getColor(
+                                itemView.context,
+                                R.color.colorValidated
+                            )
+                        )
+                    }
+                    "Por aprobar" -> {
+                        tvStateId.text = finalState.name
+                        tvStateId.setTextColor(
+                            ContextCompat.getColor(
+                                itemView.context,
+                                R.color.colorToApprove
+                            )
+                        )
+                    }
+                    "Por recibir" -> {
+                        tvStateId.text = finalState.name
+                        tvStateId.setTextColor(
+                            ContextCompat.getColor(
+                                itemView.context,
+                                R.color.colorToReceive
+                            )
+                        )
+                    }
+                    "Recibida" -> {
+                        tvStateId.text = finalState.name
+                        tvStateId.setTextColor(
+                            ContextCompat.getColor(
+                                itemView.context,
+                                R.color.colorReceived
+                            )
+                        )
+                    }
+                    "Enviado" -> {
+                        tvStateId.text = finalState.name
+                        tvStateId.setTextColor(
+                            ContextCompat.getColor(
+                                itemView.context,
+                                R.color.colorActivo
+                            )
+                        )
+                    }
+                    "Cancelada" -> {
+                        tvStateId.text = finalState.name
+                        tvStateId.setTextColor(
+                            ContextCompat.getColor(
+                                itemView.context,
+                                R.color.colorCanceled
+                            )
+                        )
+                    }
                     else -> {
                         tvStateId.text = finalState.name
                         tvStateId.setTextColor(
@@ -129,7 +182,13 @@ class SupplierRequestAdapter : RecyclerView.Adapter<SupplierRequestAdapter.ViewH
 
         private fun applyBoldStyleToAttribute(textView: TextView, attribute: String, value: Any?) {
 
-            val text = if (value == "Aprobado" || value == "Rechazado" || value == "Por validar") {
+            val text = if (
+                    value == "Aprobada" || value == "Desaprobada" || value == "Enviado"
+                    || value == "Recibida" || value == "Por validar"
+                    || value == "Por aprobar" || value == "Por recibir"
+                    || value == "Cancelada" || value == "Por validar" || value == "Validada"
+                )
+            {
                 "$value"
             } else {
                 "$attribute: $value"

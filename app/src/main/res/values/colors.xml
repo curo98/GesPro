@@ -10,8 +10,14 @@
     <color name="colorAccent">#448AFF</color>
 
     <color name="colorActivo">#00FF00</color>
+    <color name="colorToReceive">#EFDE71</color>
+    <color name="colorReceived">#40730D</color>
     <color name="colorInactivo">#FF0000</color>
+    <color name="colorCanceled">#7A7A7A</color>
     <color name="colorPendiente">#FFA500</color>
+    <color name="colorToApprove">#64A9DD</color>
+    <color name="colorApproved">#163A83</color>
+    <color name="colorValidated">#88FF00</color>
 
 
 

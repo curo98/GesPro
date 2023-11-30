@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
         android:id="@+id/show"
         android:title="Ver" />
@@ -7,6 +8,19 @@
         android:id="@+id/edit"
         android:title="Editar" />
     <item
-        android:id="@+id/trash"
-        android:title="Eliminar" />
+        android:id="@+id/cancel"
+        android:title="Cancelar" />
+    <item
+        android:id="@+id/receive"
+        android:title="Recibir" />
+    <item
+        android:id="@+id/validate"
+        android:title="Validar" />
+    <item
+        android:id="@+id/approve"
+        android:title="Aprobar" />
+    <item
+        android:id="@+id/disapprove"
+        android:title="Desaprobar" />
+
 </menu>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center_vertical"
+    android:gravity="center_vertical"
+    android:paddingTop="15dp"
+    tools:context=".ui.modules.method_payment.FormMethodPaymentActivity"
+    android:padding="30dp">
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Nombre del metodo de pago:"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/etNameMethod"
+        android:inputType="text"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Descripcion:"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/etMethodDescription"
+        android:inputType="textMultiLine"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
+
+    <!-- Botones "Anterior" y "Siguiente" -->
+    <LinearLayout
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="15dp">
+
+        <Button
+            style="@style/ButtonForm"
+            android:background="@color/colorBtnLogin"
+            android:drawableEnd="@drawable/icon_next"
+            android:id="@+id/btnFormMethod"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text=""
+            android:layout_marginBottom="10dp"/>
+        <Button
+            style="@style/ButtonForm"
+            android:background="@color/cardview_shadow_start_color"
+            android:drawableEnd="@drawable/icon_next"
+            android:id="@+id/btnGoToList"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="Ir a la lista" />
+    </LinearLayout>
+</LinearLayout>

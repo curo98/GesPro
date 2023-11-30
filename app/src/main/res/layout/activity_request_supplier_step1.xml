@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:paddingTop="15dp"
-    tools:context=".ui.modules.requests.FormRequestSupplierActivity"
+    tools:context=".ui.modules.request.FormRequestSupplierActivity"
     android:id="@+id/llFormStep1">
 
 
@@ -22,23 +22,12 @@
         android:layout_marginTop="6dp"
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:id="@+id/rgTipoProveedor"
-        android:checkedButton="@id/rbNacional"> <!-- Espacio agregado aquí -->
+        android:id="@+id/rgTipoProveedor"> <!-- Espacio agregado aquí -->
 
-        <RadioButton
-            android:checked="true"
-            android:id="@+id/rbNacional"
+        <Spinner
+            android:id="@+id/spinnerPaises"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:text="Nacional" /> <!-- Espacio agregado aquí -->
-
-        <RadioButton
-            android:id="@+id/rbExtranjero"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:text="Extranjero" />
+            android:layout_width="match_parent" />
     </RadioGroup>
 
     <TextView

@@ -1,31 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     tools:context=".ui.modules.supplier.SuppliersActivity">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:padding="6dp"
-        android:text="Proveedores"
-        android:textSize="15dp" />
-
-    <ProgressBar
-        android:id="@+id/pbSuppliers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        tools:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/llContent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10sp">
 
@@ -33,8 +17,8 @@
             android:id="@+id/btnCreateSupplier"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="Crear nuevo proveedor" />
+            android:text="Crear nuevo proveedor"
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/etSearch"
@@ -52,4 +36,7 @@
             android:layout_height="match_parent"
             tools:listitem="@layout/item_supplier" />
     </LinearLayout>
+
+    <include layout="@layout/animation_loader_list" />
+
 </LinearLayout>

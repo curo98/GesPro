@@ -27,9 +27,9 @@ data class SupplierRequest(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.createTypedArrayList(StateTransition.CREATOR) ?: emptyList(),
-        parcel.readParcelable(User::class.java.classLoader) ?: User(0, "", "", 0, "", null),
-        parcel.readParcelable(TypePayment::class.java.classLoader) ?: TypePayment(0, ""),
-        parcel.readParcelable(MethodPayment::class.java.classLoader) ?: MethodPayment(0, ""),
+        parcel.readParcelable(User::class.java.classLoader) ?: User(0, "", "", 0, "", null, null),
+        parcel.readParcelable(TypePayment::class.java.classLoader) ?: TypePayment(0, "", ""),
+        parcel.readParcelable(MethodPayment::class.java.classLoader) ?: MethodPayment(0, "", ""),
         parcel.createTypedArrayList(Question.CREATOR) ?: emptyList(),
         parcel.createTypedArrayList(Policy.CREATOR) ?: emptyList(),
         parcel.createTypedArrayList(Observation.CREATOR) ?: emptyList(),
@@ -65,38 +65,38 @@ data class SupplierRequest(
         }
     }
 
-//    fun getFinalState(): StateRequest? {
-//        // Verificar si hay al menos una transición de estado
-//        if (stateTransitions.isNotEmpty()) {
-//            // Obtener la última transición de estado
-//            val lastTransition = stateTransitions.last()
-//            // Verificar si existe un "toState"
-//            return lastTransition.toState
-//        }
-//        return null // No hay transiciones de estado
-//    }
-fun getFinalState(): StateRequest? {
-    // Verificar si hay al menos una transición de estado
-    if (stateTransitions.isNotEmpty()) {
-        // Obtener la última transición de estado
-        val lastTransition = stateTransitions.last()
-
-        // Verificar si el estado actual está en "En corrección" o "Corregida"
-        if (lastTransition.toState.name == "En corrección" || lastTransition.toState.name == "Corregida") {
-            // Obtener la transición anterior
-            val previousTransition = stateTransitions.dropLast(1).lastOrNull()
-            // Devolver el estado anterior si existe
-            return previousTransition?.toState
-        } else {
-            // Devolver el estado actual
+    fun getFinalState(): StateRequest? {
+        // Verificar si hay al menos una transición de estado
+        if (stateTransitions.isNotEmpty()) {
+            // Obtener la última transición de estado
+            val lastTransition = stateTransitions.last()
+            // Verificar si existe un "toState"
             return lastTransition.toState
         }
+        return null // No hay transiciones de estado
     }
-    return null // No hay transiciones de estado
-}
-    fun getLastStateTransition(): StateTransition? {
-        return stateTransitions.lastOrNull()
-    }
+//fun getFinalState(): StateRequest? {
+//    // Verificar si hay al menos una transición de estado
+//    if (stateTransitions.isNotEmpty()) {
+//        // Obtener la última transición de estado
+//        val lastTransition = stateTransitions.last()
+//
+//        // Verificar si el estado actual está en "En corrección" o "Corregida"
+//        if (lastTransition.toState.name == "En corrección" || lastTransition.toState.name == "Corregida") {
+//            // Obtener la transición anterior
+//            val previousTransition = stateTransitions.dropLast(1).lastOrNull()
+//            // Devolver el estado anterior si existe
+//            return previousTransition?.toState
+//        } else {
+//            // Devolver el estado actual
+//            return lastTransition.toState
+//        }
+//    }
+//    return null // No hay transiciones de estado
+//}
+//    fun getLastStateTransition(): StateTransition? {
+//        return stateTransitions.lastOrNull()
+//    }
 
 }
 

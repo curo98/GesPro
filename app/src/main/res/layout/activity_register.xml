@@ -12,14 +12,6 @@
         android:gravity="center"
         android:orientation="vertical"
         android:padding="40dp">
-        <!-- Orientación vertical hace referencia al modo de visualización de los componentes
-        dentro del layout-->
-
-        <!-- La unidad de medida "dp" se utiliza en Android para hacer referencia a los
-        padding y márgenes de un componente en Android. A diferencia de "sp", se utilizan
-        para los textos-->
-
-        <!-- wrap_content hace que sus atributos internos se ajusten a su contenido-->
 
         <ImageView
             android:layout_width="wrap_content"
@@ -34,8 +26,6 @@
             android:text="@string/label_register"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
-        <!-- Reemplaza "tu_logo" con el nombre de tu imagen de logo -->
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="@string/label_name" />
+                android:text="Razón social" />
 
             <EditText
                 android:id="@+id/name"

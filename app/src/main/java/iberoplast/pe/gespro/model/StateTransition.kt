@@ -17,9 +17,9 @@ data class StateTransition(
         parcel.readInt(),
         parcel.readInt(),
         parcel.readString() ?: "",
-        parcel.readParcelable(StateRequest::class.java.classLoader) ?: StateRequest(0, ""),
-        parcel.readParcelable(StateRequest::class.java.classLoader) ?: StateRequest(0, ""),
-        parcel.readParcelable(User::class.java.classLoader) ?: User(0, "", "", 0, "", null)
+        parcel.readParcelable(StateRequest::class.java.classLoader) ?: StateRequest(0, "", ""),
+        parcel.readParcelable(StateRequest::class.java.classLoader) ?: StateRequest(0, "", ""),
+        parcel.readParcelable(User::class.java.classLoader) ?: User(0, "", "", 0, "", null, null)
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

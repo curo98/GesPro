@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:paddingTop="15dp"
-    tools:context=".ui.modules.requests.FormRequestSupplierActivity"
+    tools:context=".ui.modules.request.FormRequestSupplierActivity"
     android:id="@+id/llFormStep3"
     android:visibility="gone">
 

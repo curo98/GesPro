@@ -8,15 +8,8 @@
     android:gravity="center"
     android:animateLayoutChanges="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Editar perfil"
-        android:textSize="15dp"
-        android:padding="10dp"/>
-
     <androidx.cardview.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cvProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -27,21 +20,28 @@
         app:cardUseCompatPadding="true"
         tools:context=".ui.MenuActivity">
 
-        <ProgressBar
-            tools:visibility="gone"
-            android:id="@+id/pbProfile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"/>
-
         <LinearLayout
             android:id="@+id/llProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="6dp"
-            android:visibility="gone"
+            android:visibility="visible"
             tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Editar perfil"
+                android:textSize="15dp"
+                android:padding="10dp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:background="@android:color/darker_gray"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -102,5 +102,5 @@
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
+    <include layout="@layout/animation_loader_profile"/>
 </LinearLayout>

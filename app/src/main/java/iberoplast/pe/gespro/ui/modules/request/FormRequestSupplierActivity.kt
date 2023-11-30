@@ -1,5 +1,6 @@
-package iberoplast.pe.gespro.ui.modules.requests
+package iberoplast.pe.gespro.ui.modules.request
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -8,7 +9,6 @@ import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
@@ -17,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -24,6 +25,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
 import iberoplast.pe.gespro.io.response.SimpleResponse
@@ -35,11 +37,10 @@ import iberoplast.pe.gespro.model.PolicyPivot
 import iberoplast.pe.gespro.model.Question
 import iberoplast.pe.gespro.model.QuestionResponse
 import iberoplast.pe.gespro.model.RequestData
+import iberoplast.pe.gespro.model.SupplierRequest
 import iberoplast.pe.gespro.model.TypePayment
-import iberoplast.pe.gespro.model.ubigeo_peru.Department
-import iberoplast.pe.gespro.model.ubigeo_peru.District
-import iberoplast.pe.gespro.model.ubigeo_peru.Province
 import iberoplast.pe.gespro.ui.modules.SuccesfulRegisterActivity
+import iberoplast.pe.gespro.util.ActionBarUtils
 import iberoplast.pe.gespro.util.PreferenceHelper
 import iberoplast.pe.gespro.util.PreferenceHelper.get
 import iberoplast.pe.gespro.util.PreferenceHelper.set
@@ -53,6 +54,10 @@ import retrofit2.Response
 
 class FormRequestSupplierActivity : AppCompatActivity() {
 
+    private val etNicRuc by lazy { findViewById<EditText>(R.id.etNicRuc) }
+    private val etDir2 by lazy { findViewById<EditText>(R.id.etDir2) }
+    private val etDir1 by lazy { findViewById<EditText>(R.id.etDir1) }
+    private val btnSend by lazy { findViewById<Button>(R.id.btnSend) }
 
     private var currentStep = 1 // Valor predeterminado: paso 1 (20%)
     private lateinit var progressBar: ProgressBar
@@ -60,12 +65,11 @@ class FormRequestSupplierActivity : AppCompatActivity() {
     private val apiService: ApiService by lazy {
         ApiService.create()
     }
-
     private val preferences by lazy {
-        PreferenceHelper.defaultPrefs(this)
+        PreferenceHelper.defaultPrefs(this@FormRequestSupplierActivity)
     }
 
-    private var selectedMethodPayment: String? = null
+    private var methodPayment: String? = null
     private val checkBoxList = mutableListOf<CheckBox>()
     val questionsWithResponses = mutableListOf<QuestionResponse>()
     val listaArchivos = mutableListOf<Document>()
@@ -75,10 +79,10 @@ class FormRequestSupplierActivity : AppCompatActivity() {
     private lateinit var getContent2: ActivityResultLauncher<String>
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_form_request_supplier)
+
 
         val btnAdjuntar1 = findViewById<Button>(R.id.btnAdjuntar1)
         val tvAdjuntar1 = findViewById<TextView>(R.id.tvAdjuntar1)
@@ -127,7 +131,7 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         val llFormStep5 = findViewById<LinearLayout>(R.id.llFormStep5)
 
         // Start code formstep1
-        btnNextFormRequest1.setOnClickListener{
+        btnNextFormRequest1.setOnClickListener {
             val etNicRuc = findViewById<EditText>(R.id.etNicRuc)
             val nicRucText = etNicRuc.text.toString().trim()
 
@@ -141,8 +145,6 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                 // Continuar con el paso 2(TEST)
                 llFormStep1.visibility = View.GONE
                 llFormStep2.visibility = View.VISIBLE
-//                val intent = Intent(this, RequestSupplierStep2Activity::class.java)
-//                startActivity(intent)
 
                 currentStep = 2
                 // Actualizar la barra de progreso
@@ -169,7 +171,8 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         // Start code formstep3
         val webView = findViewById<WebView>(R.id.webView)
 
-        val url = "https://drive.google.com/file/d/1Y4gwaZnYgfpS2Y2eE6CtMEnMMapuA5aA/view?usp=drive_link"
+        val url =
+            "https://drive.google.com/file/d/1Y4gwaZnYgfpS2Y2eE6CtMEnMMapuA5aA/view?usp=drive_link"
         // Reemplaza "ENLACE_PDF" con el enlace de Google Drive a tu archivo PDF
 
         val webSettings = webView.settings
@@ -177,34 +180,23 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         webView.webViewClient = WebViewClient()
         webView.loadUrl(url)
 
-        btnNextFormRequest3.setOnClickListener{
-//            val checkBox1 = findViewById<CheckBox>(R.id.checkBox1)
-//            val checkBox2 = findViewById<CheckBox>(R.id.checkBox2)
-//
-//            val aceptoPoliticaPro = checkBox1.isChecked
-//            val aceptoPoliticaDatos = checkBox2.isChecked
+        btnNextFormRequest3.setOnClickListener {
+            // Obtener los CheckBoxes seleccionados directamente en el onClickListener
+            val selectedCheckBoxes = checkBoxList.filter { it.isChecked }
 
-//            if (!aceptoPoliticaPro && !aceptoPoliticaDatos) {
-//                // Manejar la validación de que checkBox1 no está marcado
-//                val layout = findViewById<ScrollView>(R.id.layout) // Reemplaza "layout" con el ID de tu diseño
-//                val snackbar = Snackbar.make(layout, "Debe aceptar nuestras politicas", Snackbar.LENGTH_LONG)
-//                snackbar.show()
-//            }
-//            else if (!aceptoPoliticaPro) {
-//                // Manejar la validación de que checkBox1 no está marcado
-//                val layout = findViewById<ScrollView>(R.id.layout) // Reemplaza "layout" con el ID de tu diseño
-//                val snackbar = Snackbar.make(layout, "Debe aceptar nuestra politica de proveedores", Snackbar.LENGTH_LONG)
-//                snackbar.show()
-//            }
-//
-//            else if (!aceptoPoliticaDatos) {
-//                // Manejar la validación de que checkBox1 no está marcado
-//                val layout = findViewById<ScrollView>(R.id.layout) // Reemplaza "layout" con el ID de tu diseño
-//                val snackbar = Snackbar.make(layout, "Debe aceptar nuestra politica de proteccion de datos", Snackbar.LENGTH_LONG)
-//                snackbar.show()
-//            }
-//            else {
-                // Ambos CheckBox están marcados, puedes continuar con tus acciones
+            // Realizar validación
+            if (selectedCheckBoxes.isEmpty()) {
+                // Ningún CheckBox está marcado
+                val layout =
+                    findViewById<ScrollView>(R.id.layout) // Reemplaza "layout" con el ID de tu diseño
+                val snackbar = Snackbar.make(
+                    layout,
+                    "Debe aceptar al menos una política",
+                    Snackbar.LENGTH_LONG
+                )
+                snackbar.show()
+            } else {
+                // Al menos un CheckBox está marcado, puedes continuar con tus acciones
                 // Continuar con el paso 3(TEST)
                 llFormStep3.visibility = View.GONE
                 llFormStep4.visibility = View.VISIBLE
@@ -212,12 +204,13 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                 currentStep = 4
                 // Actualizar la barra de progreso
                 updateProgressBar()
-//            }
+            }
         }
+
         // end code formstep3
 
         // Start code formstep4
-        btnNextFormRequest4.setOnClickListener{
+        btnNextFormRequest4.setOnClickListener {
 
             // Continuar con el paso 4(TEST)
             llFormStep4.visibility = View.GONE
@@ -249,22 +242,6 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         }
         // end code formstep4
 
-
-        // Start code formstep5
-        val btnSend = findViewById<Button>(R.id.btnSend)
-
-        btnSend.setOnClickListener {
-            val rgMethodsPayments = findViewById<RadioGroup>(R.id.rgTipoPago) // Referencia al RadioGroup
-            // Establece un listener para gestionar la selección
-            rgMethodsPayments.setOnCheckedChangeListener { group, checkedId ->
-                val selectedRadioButton = findViewById<RadioButton>(checkedId)
-                selectedMethodPayment = selectedRadioButton.text.toString()
-                // Hacer algo con el tipo de pago seleccionado si es necesario aquí
-            }
-            performStoreSupplierRequest(selectedMethodPayment)
-        }
-
-        // end code formstep5
 
         val btnPrevForm2 = findViewById<Button>(R.id.btnPrevForm2)
         val btnPrevForm3 = findViewById<Button>(R.id.btnPrevForm3)
@@ -311,20 +288,79 @@ class FormRequestSupplierActivity : AppCompatActivity() {
             }
         }
 
-        loadTypesPayments()
-        loadMethodsPayments()
-        loadPolicies()
-        loadQuestions()
-        setupRadioGroup()
-        loadCountries(true)
-        loadDepartments()
-        listenDepartmentChanges()
-    }
+        // Obtén el valor de "isEditing" del intent
+        val isEditing = intent.getBooleanExtra("isEditing", false)
+        val request = intent.getParcelableExtra<SupplierRequest>("request")
 
+        val rgMethodsPayments =
+            findViewById<RadioGroup>(R.id.rgTipoPago) // Referencia al RadioGroup
+        // Establece un listener para gestionar la selección
+        rgMethodsPayments.setOnCheckedChangeListener { group, checkedId ->
+            val selectedRadioButton = findViewById<RadioButton>(checkedId)
+            methodPayment = selectedRadioButton.text.toString()
+            // Hacer algo con el tipo de pago seleccionado si es necesario aquí
+        }
+
+        // Si isEditing es true, estás editando un proveedor, muestra los datos existentes
+        if (isEditing && request != null) {
+            ActionBarUtils.setCustomTitle(
+                this,
+                "Editando solicitud con id: ${request.id}"
+            )
+            etNicRuc.setText(request.user.supplier?.nic_ruc)
+            etDir2.setText(request.user.supplier?.locality)
+            etDir1.setText(request.user.supplier?.street_and_number)
+
+            loadTypesPayments(request)
+            loadMethodsPayments(request)
+            loadPolicies(request)
+            loadQuestions(request)
+            loadCountries(request)
+
+            btnSend.setOnClickListener {
+                val id = request.id
+                executeMethodUpdate(id, methodPayment)
+            }
+        } else {
+            ActionBarUtils.setCustomTitle(
+                this,
+                "Registro de nueva solicitud"
+            )
+            loadTypesPayments(null)
+            loadMethodsPayments(null)
+            loadPolicies(null)
+            loadQuestions(null)
+            loadCountries(null)
+
+            btnSend.setOnClickListener {
+                if (!validateQuestionResponses()) {
+                    return@setOnClickListener
+                }
+                executeMethodCreate(methodPayment)
+            }
+        }
+    }
+    private fun validateQuestionResponses(): Boolean {
+        val questionContainer = findViewById<LinearLayout>(R.id.questionContainer)
+
+        for (i in 0 until questionContainer.childCount) {
+            val questionLayout = questionContainer.getChildAt(i) as LinearLayout
+            val radioGroup = questionLayout.getChildAt(1) as RadioGroup
+
+            if (radioGroup.checkedRadioButtonId == -1) {
+                // Ningún RadioButton seleccionado en este grupo de preguntas
+                toast("Por favor, responde todas las preguntas")
+                return false
+            }
+        }
+
+        return true
+    }
     // Función para abrir la galería y seleccionar un archivo
     private fun openGallery(getContent: ActivityResultLauncher<String>) {
         getContent.launch("*/*")
     }
+
     private fun getFileName(uri: Uri): String {
         val cursor = contentResolver.query(uri, null, null, null, null)
         cursor?.use {
@@ -341,20 +377,21 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         return "Archivo no encontrado"
     }
 
-    private fun performStoreSupplierRequest(selectedMethodPayment: String?) {
+    private fun executeMethodCreate(methodPayment: String?) {
         val btnConfirm = findViewById<Button>(R.id.btnSend)
         btnConfirm.isClickable = false
-
         val jwt = preferences["jwt", ""]
         val authHeader = "Bearer $jwt"
         val spCountry = findViewById<Spinner>(R.id.spinnerPaises)
         val nationality = spCountry.selectedItem.toString()
-//
-        val nic_ruc = findViewById<EditText>(R.id.etNicRuc).text.toString() // Obtén el valor del EditText
-
+        val nic_ruc =
+            findViewById<EditText>(R.id.etNicRuc).text.toString() // Obtén el valor del EditText
+        val locality =
+            findViewById<EditText>(R.id.etDir2).text.toString() // Obtén el valor del EditText
+        val street_and_number =
+            findViewById<EditText>(R.id.etDir1).text.toString() // Obtén el valor del EditText
         val spConPayment = findViewById<Spinner>(R.id.spinnerCondPago)
         val typePayment = spConPayment.selectedItem.toString()
-        val methodPayment = selectedMethodPayment
 
         val selectedPolicies = ArrayList<Policy>()
         for (checkBox in checkBoxList) {
@@ -368,11 +405,8 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                 selectedPolicies.add(Policy(id, title, content, isChecked, pivot))
             }
         }
-
         val requestData = RequestData(selectedPolicies, questionsWithResponses)
-
         val files = mutableListOf<MultipartBody.Part>()
-
         for (archivo in listaArchivos) {
             val nombreArchivo = archivo.title  // Obtén el nombre del archivo utilizando tu función
             val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "")
@@ -380,24 +414,38 @@ class FormRequestSupplierActivity : AppCompatActivity() {
             files.add(part)
         }
 
+        Log.d("FormRequestSupplier", "Selected Policies: $selectedPolicies")
+
+// Imprimir questionsWithResponses en el log
+        Log.d("FormRequestSupplier", "Questions with Responses: $questionsWithResponses")
+
+
         val call = apiService.postSupplierRequests(
             authHeader,
             nationality,
             nic_ruc,
+            locality,
+            street_and_number,
             typePayment,
             methodPayment,
             requestData
-            )
-        call.enqueue(object: Callback<SimpleResponse>{
+        )
+        call.enqueue(object : Callback<SimpleResponse> {
             override fun onResponse(
                 call: Call<SimpleResponse>,
                 response: Response<SimpleResponse>
             ) {
-                if (response.isSuccessful){
-                    preferences["user_role_name"] = "proveedor"
+                if (response.isSuccessful) {
+                    preferences["UserRolePreferences"] = "proveedor"
                     val message = "Su solicitud fue enviada satisfactoriamente."
-                    val intent = Intent(this@FormRequestSupplierActivity, SuccesfulRegisterActivity::class.java)
-                    intent.putExtra("message", message) // Configura el mensaje en la intención antes de iniciar la actividad
+                    val intent = Intent(
+                        this@FormRequestSupplierActivity,
+                        SuccesfulRegisterActivity::class.java
+                    )
+                    intent.putExtra(
+                        "message",
+                        message
+                    ) // Configura el mensaje en la intención antes de iniciar la actividad
                     startActivity(intent)
                     finish()
                 } else {
@@ -415,35 +463,88 @@ class FormRequestSupplierActivity : AppCompatActivity() {
 
     }
 
-    private fun setupRadioGroup() {
-        val radioGroup = findViewById<RadioGroup>(R.id.rgTipoProveedor)
-        val dirNacional = findViewById<LinearLayout>(R.id.dirNacional)
-        val dirAdicNacional = findViewById<LinearLayout>(R.id.dirAdicNacional)
-        val dirExtranjero = findViewById<LinearLayout>(R.id.dirExtranjero)
+    private fun executeMethodUpdate(id: Int, methodPayment: String?) {
+        btnSend.isClickable = false
+        val jwt = preferences["jwt", ""]
+        val authHeader = "Bearer $jwt"
+        val spCountry = findViewById<Spinner>(R.id.spinnerPaises)
+        val nationality = spCountry.selectedItem.toString()
+        val nic_ruc =
+            findViewById<EditText>(R.id.etNicRuc).text.toString() // Obtén el valor del EditText
+        val locality =
+            findViewById<EditText>(R.id.etDir2).text.toString() // Obtén el valor del EditText
+        val street_and_number =
+            findViewById<EditText>(R.id.etDir1).text.toString() // Obtén el valor del EditText
+        val spConPayment = findViewById<Spinner>(R.id.spinnerCondPago)
+        val typePayment = spConPayment.selectedItem.toString()
 
-        // Configurar el RadioGroup para manejar los cambios
-        radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            // Lógica según la selección
-            when (checkedId) {
-                R.id.rbNacional -> {
-                    dirNacional.visibility = View.VISIBLE
-                    dirAdicNacional.visibility = View.VISIBLE
-                    dirExtranjero.visibility = View.GONE
-                    loadCountries(true)
-                }
-                R.id.rbExtranjero -> {
-                    dirNacional.visibility = View.GONE
-                    dirAdicNacional.visibility = View.GONE
-                    dirExtranjero.visibility = View.VISIBLE
-                    loadCountries(false)
-                }
+        val selectedPolicies = ArrayList<Policy>()
+        for (checkBox in checkBoxList) {
+            if (checkBox.isChecked) {
+                val id = checkBox.id // Asumiendo que el ID proviene del checkbox
+                val title = checkBox.text.toString()
+                val content = "" // Debe ser inicializado con un valor válido, según tu modelo
+                val isChecked = checkBox.isChecked
+                val pivot = PolicyPivot(0, 0, 0) // Debe ser inicializado según tu modelo
+
+                selectedPolicies.add(Policy(id, title, content, isChecked, pivot))
             }
         }
+        val requestData = RequestData(selectedPolicies, questionsWithResponses)
+        Log.d("UpdateRequestLog", "ID: $id")
+        Log.d("UpdateRequestLog", "NIC/RUC: $nic_ruc")
+        Log.d("UpdateRequestLog", "NIC/RUC: $nationality")
+        Log.d("UpdateRequestLog", "LOCALIDAD: $locality")
+        Log.d("UpdateRequestLog", "CALLE/NUMERO: $street_and_number")
+        Log.d("UpdateRequestLog", "Type Payment: $typePayment")
+        Log.d("UpdateRequestLog", "Method Payment: $methodPayment")
+        Log.d("UpdateRequestLog", "Request Data: $requestData")
+
+        val call = apiService.updateRequest(
+            authHeader,
+            id,
+            nationality,
+            nic_ruc,
+            locality,
+            street_and_number,
+            typePayment,
+            methodPayment,
+            requestData
+        )
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    val message = "Su solicitud fue actualizada correctamente."
+                    val intent = Intent(
+                        this@FormRequestSupplierActivity,
+                        SuccesfulRegisterActivity::class.java
+                    )
+                    intent.putExtra(
+                        "message",
+                        message
+                    ) // Configura el mensaje en la intención antes de iniciar la actividad
+                    startActivity(intent)
+                    finish()
+                } else {
+                    // Manejo de errores
+                    val errorMessage = when (response.code()) {
+                        401 -> "No autorizado"
+                        404 -> "Proveedor no encontrado"
+                        500 -> "Error interno del servidor"
+                        else -> "Error desconocido"
+                    }
+                    toast(errorMessage)
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                t.localizedMessage?.let { toast(it) }
+            }
+        })
     }
-    private fun loadCountries(isNacional: Boolean) {
+
+    private fun loadCountries(request: SupplierRequest?) {
         val spCountries = findViewById<Spinner>(R.id.spinnerPaises)
-        val rbNacional = findViewById<RadioButton>(R.id.rbNacional)
-        val rbExtranjero = findViewById<RadioButton>(R.id.rbExtranjero)
 
         val call = apiService.getCountries()
         call.enqueue(object : Callback<ArrayList<Countrie>> {
@@ -452,7 +553,7 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                 response: Response<ArrayList<Countrie>>
             ) {
                 if (response.isSuccessful) {
-                    val countries = response.body() ?: ArrayList() // Convierte a una lista
+                    val countries = response.body() ?: ArrayList()
 
                     // Crear un ArrayAdapter para el Spinner con la lista de países
                     val adapter = ArrayAdapter(
@@ -464,30 +565,19 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                     // Asignar el ArrayAdapter al Spinner
                     spCountries.adapter = adapter
 
-                    // Configurar el Listener para el Spinner
-                    spCountries.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                            val selectedCountry = countries[position]
+                    // Verificar si hay un objeto request y si tiene la nacionalidad
+                    if (request != null && request.user.supplier?.nacionality != null) {
+                        val nationality = request.user.supplier?.nacionality
 
-                            if (selectedCountry.name == "Perú") {
-                                // Si se selecciona "Perú" en el Spinner, marca el RadioButton Nacional
-                                rbNacional.isChecked = true
-                            } else {
-                                // Si se selecciona cualquier otro país en el Spinner, marca el RadioButton Extranjero
-                                rbExtranjero.isChecked = true
-                            }
-                        }
+                        // Encontrar la posición de la nationality en la lista de países
+                        val nationalityPosition = countries.indexOfFirst { it.name == nationality }
 
-                        override fun onNothingSelected(parent: AdapterView<*>?) {
-                            // Puedes manejar esto según tus necesidades
+                        // Si se encuentra, seleccionar automáticamente la nationality en el Spinner
+                        if (nationalityPosition != -1) {
+                            spCountries.setSelection(nationalityPosition)
                         }
                     }
 
-                    if (isNacional) {
-                        // Si es "Nacional," mostrar el Spinner con "Perú" seleccionado
-                        val peruIndex = countries.indexOfFirst { it.name == "Perú" }
-                        spCountries.setSelection(peruIndex)
-                    }
                 } else {
                     // Manejar la respuesta no exitosa aquí
                 }
@@ -500,136 +590,11 @@ class FormRequestSupplierActivity : AppCompatActivity() {
     }
 
 
-    private fun loadDepartments() {
-        val spDepartamentos = findViewById<Spinner>(R.id.spinnerDepartamentos)
-        val call = apiService.getDepartments()
-
-        call.enqueue(object : Callback<ArrayList<Department>> {
-            override fun onResponse(
-                call: Call<ArrayList<Department>>,
-                response: Response<ArrayList<Department>>
-            ) {
-                if (response.isSuccessful) {
-                    val departments = response.body() ?: ArrayList() // Convierte a una lista
-
-                    spDepartamentos.adapter = ArrayAdapter(
-                        this@FormRequestSupplierActivity,
-                        android.R.layout.simple_list_item_1,
-                        departments
-                    )
-                }
-            }
-            override fun onFailure(call: Call<ArrayList<Department>>, t: Throwable) {
-                Toast.makeText(this@FormRequestSupplierActivity, "Ocurrió un problema", Toast.LENGTH_SHORT).show()
-                finish()
-            }
-        })
-    }
-
-
-    private fun listenDepartmentChanges() {
-        val spDepartments = findViewById<Spinner>(R.id.spinnerDepartamentos)
-        val spProvinces = findViewById<Spinner>(R.id.spinnerProvincias)
-        val spDistricts = findViewById<Spinner>(R.id.spinnerDistritos)
-
-        spDepartments.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val department = parent?.getItemAtPosition(position) as Department
-                val departmentId = department.id
-
-                // Limpiar los Spinners de Provincias y Distritos al seleccionar un nuevo departamento
-                spProvinces.adapter = null
-                spDistricts.adapter = null
-
-                loadProvinces(departmentId)
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Implementar la lógica en caso de que no se seleccione nada si es necesario
-            }
-        }
-
-        spProvinces.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val province = parent?.getItemAtPosition(position) as Province
-
-                val provinceId = province.id
-
-                spDistricts.adapter = null
-
-                loadDistricts(provinceId)
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Implementar la lógica en caso de que no se seleccione nada si es necesario
-            }
-        }
-    }
-
-    private fun loadProvinces(departmentId: String) {
-        val spProvinces = findViewById<Spinner>(R.id.spinnerProvincias)
-        val call = apiService.getProvinces(departmentId)
-
-        call.enqueue(object: Callback<ArrayList<Province>> {
-            override fun onResponse(
-                call: Call<ArrayList<Province>>,
-                response: Response<ArrayList<Province>>
-            ) {
-                if (response.isSuccessful) {
-
-                    val provinces = response.body() ?: ArrayList()
-                    spProvinces.adapter = ArrayAdapter(
-                        this@FormRequestSupplierActivity,
-                        android.R.layout.simple_list_item_1,
-                        provinces
-                    )
-                }
-            }
-            override fun onFailure(call: Call<ArrayList<Province>>, t: Throwable) {
-                Toast.makeText(this@FormRequestSupplierActivity, "Ocurrió un problema", Toast.LENGTH_SHORT).show()
-                finish()
-            }
-        })
-    }
-
-
-    private fun loadDistricts(provinceId: String) {
-        val spDistricts = findViewById<Spinner>(R.id.spinnerDistritos)
-        val call = apiService.getDistricts(provinceId)
-
-        call.enqueue(object: Callback<ArrayList<District>> {
-            override fun onResponse(
-                call: Call<ArrayList<District>>,
-                response: Response<ArrayList<District>>
-            ) {
-                if (response.isSuccessful) {
-                    val districts = response.body()
-                    if (districts != null) {
-                        val districtList: List<District> = districts
-                        spDistricts.adapter = ArrayAdapter(
-                            this@FormRequestSupplierActivity,
-                            android.R.layout.simple_list_item_1,
-                            districtList
-                        )
-                    } else {
-                        Log.e("API Response", "La lista ha devuelto null")
-                    }
-                } else {
-                    Log.e("API Response", "Response no responde")
-                }
-            }
-            override fun onFailure(call: Call<ArrayList<District>>, t: Throwable) {
-                Toast.makeText(this@FormRequestSupplierActivity, "Ocurrió un problema", Toast.LENGTH_SHORT).show()
-                finish()
-            }
-        })
-    }
-
-    private fun loadTypesPayments() {
-//        val rgTypesPayments = findViewById<RadioGroup>(R.id.rgCondPago) // Referencia al RadioGroup
+    private fun loadTypesPayments(request: SupplierRequest?) {
         val spinnerCondPago = findViewById<Spinner>(R.id.spinnerCondPago)
 
-
         val call = apiService.getTypesPayments()
-        call.enqueue(object: Callback<ArrayList<TypePayment>> {
+        call.enqueue(object : Callback<ArrayList<TypePayment>> {
             override fun onResponse(
                 call: Call<ArrayList<TypePayment>>,
                 response: Response<ArrayList<TypePayment>>
@@ -650,27 +615,42 @@ class FormRequestSupplierActivity : AppCompatActivity() {
 
                         // Asigna el ArrayAdapter al Spinner
                         spinnerCondPago.adapter = adapter
+
+                        // Si hay una solicitud y el tipo de pago está presente, selecciona automáticamente el valor
+                        request?.type_payment?.name?.let { selectedTypePayment ->
+                            val position = adapter.getPosition(selectedTypePayment)
+                            if (position != Spinner.INVALID_POSITION) {
+                                spinnerCondPago.setSelection(position)
+                            }
+                        }
                     }
                 }
             }
 
             override fun onFailure(call: Call<ArrayList<TypePayment>>, t: Throwable) {
-                Toast.makeText(this@FormRequestSupplierActivity,
-                    "Ocurrió un problema al cargar los tipos de pago del formulario", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@FormRequestSupplierActivity,
+                    "Ocurrió un problema al cargar los tipos de pago del formulario",
+                    Toast.LENGTH_SHORT
+                ).show()
                 finish()
             }
         })
-
     }
 
-    private fun loadMethodsPayments() {
-        val rgMethodsPayments = findViewById<RadioGroup>(R.id.rgTipoPago) // Referencia al RadioGroup
-
-        val call = apiService.getMethodsPayments()
-        call.enqueue(object: Callback<ArrayList<MethodPayment>> {
+    private fun loadMethodsPayments(request: SupplierRequest?) {
+        val rgMethodsPayments =
+            findViewById<RadioGroup>(R.id.rgTipoPago) // Referencia al RadioGroup
+        val jwt = preferences["jwt", ""]
+        val call = apiService.getMethodsPayments("Bearer $jwt")
+        call.enqueue(object : Callback<ArrayList<MethodPayment>> {
 
             override fun onFailure(call: Call<ArrayList<MethodPayment>>, t: Throwable) {
-                Toast.makeText(this@FormRequestSupplierActivity, "Ocurrió un problema al cargar los tipos de pago del formulario", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@FormRequestSupplierActivity,
+                    "Ocurrió un problema al cargar los tipos de pago del formulario",
+                    Toast.LENGTH_SHORT
+                ).show()
                 finish()
             }
 
@@ -684,15 +664,21 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                     // Verifica si se recibieron datos
                     if (methodsPayments != null) {
                         // Recorre los datos y agrega opciones al RadioGroup
-                        for (typePayment in methodsPayments) {
+                        for (methodPayment in methodsPayments) {
                             val radioButton = RadioButton(this@FormRequestSupplierActivity)
-                            radioButton.text = typePayment.name
+                            radioButton.text = methodPayment.name
                             radioButton.id = View.generateViewId() // Asigna un ID único
                             // Obtiene el valor del padding desde dimens.xml
-                            val paddingInPx = resources.getDimension(R.dimen.radio_button_padding).toInt()
+                            val paddingInPx =
+                                resources.getDimension(R.dimen.radio_button_padding).toInt()
 
                             // Aplica el padding a los RadioButtons
-                            radioButton.setPadding(paddingInPx, paddingInPx, paddingInPx, paddingInPx)
+                            radioButton.setPadding(
+                                paddingInPx,
+                                paddingInPx,
+                                paddingInPx,
+                                paddingInPx
+                            )
 
                             val params = RadioGroup.LayoutParams(
                                 RadioGroup.LayoutParams.WRAP_CONTENT,
@@ -702,23 +688,34 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                             params.width = 0
                             radioButton.layoutParams = params
                             rgMethodsPayments.addView(radioButton)
+
+                            // Si hay una solicitud y el método de pago está presente, selecciona automáticamente el valor
+                            request?.method_payment?.name?.let { selectedMethodPayment ->
+                                if (selectedMethodPayment == methodPayment.name) {
+                                    radioButton.isChecked = true
+                                }
+                            }
                         }
 
                         // Establece un listener para gestionar la selección
                         rgMethodsPayments.setOnCheckedChangeListener { group, checkedId ->
                             val selectedRadioButton = findViewById<RadioButton>(checkedId)
-                            selectedMethodPayment = selectedRadioButton.text.toString()
-                            // Hacer algo con el tipo de pago seleccionado
+                            methodPayment = selectedRadioButton.text.toString()
+                            // Hacer algo con el método de pago seleccionado
                         }
                     }
                 }
             }
         })
     }
-    private fun loadPolicies(){
+
+    private fun loadPolicies(request: SupplierRequest?) {
         val call = apiService.getPolicies()
         call.enqueue(object : Callback<ArrayList<Policy>> {
-            override fun onResponse(call: Call<ArrayList<Policy>>, response: Response<ArrayList<Policy>>) {
+            override fun onResponse(
+                call: Call<ArrayList<Policy>>,
+                response: Response<ArrayList<Policy>>
+            ) {
                 if (response.isSuccessful) {
                     val policies = response.body()
                     val policyContainer = findViewById<LinearLayout>(R.id.policyContainer)
@@ -738,8 +735,16 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                             policyContainer.addView(checkBox)
                             checkBoxList.add(checkBox)
 
+                            // Si hay una solicitud y la política está presente, selecciona automáticamente el valor
+                            request?.policies?.let { selectedPolicies ->
+                                if (selectedPolicies.any { it.id == policy.id }) {
+                                    checkBox.isChecked = true
+                                }
+                            }
+
                             checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
                                 val policyId = buttonView.id
+                                // Realiza acciones según sea necesario
                             }
                         }
                     }
@@ -754,7 +759,7 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         })
     }
 
-    private fun loadQuestions() {
+    private fun loadQuestions(request: SupplierRequest?) {
         val call = apiService.getQuestions()
         call.enqueue(object : Callback<ArrayList<Question>> {
             override fun onResponse(
@@ -762,10 +767,10 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                 response: Response<ArrayList<Question>>
             ) {
                 if (response.isSuccessful) {
-                    val preguntas = response.body()
+                    val questions = response.body()
 
-                    if (preguntas != null) {
-                        for (pregunta in preguntas) {
+                    if (questions != null) {
+                        for (question in questions) {
                             val questionLayout = LinearLayout(this@FormRequestSupplierActivity)
                             questionLayout.layoutParams = LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -779,7 +784,7 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                                 LinearLayout.LayoutParams.WRAP_CONTENT,
                                 1.0f
                             )
-                            preguntaTextView.text = pregunta.question
+                            preguntaTextView.text = question.question
 
                             val radioGroup = RadioGroup(this@FormRequestSupplierActivity)
                             radioGroup.layoutParams = LinearLayout.LayoutParams(
@@ -794,26 +799,59 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                                 LinearLayout.LayoutParams.WRAP_CONTENT
                             )
                             siRadioButton.text = "Si"
-                            siRadioButton.id = View.generateViewId() // Asignar un ID único a siRadioButton
-                            siRadioButton.isChecked = true
-
+                            siRadioButton.id = View.generateViewId()
+                            // Asignar un ID único a siRadioButton
                             val noRadioButton = RadioButton(this@FormRequestSupplierActivity)
                             noRadioButton.layoutParams = LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT
                             )
                             noRadioButton.text = "No"
-                            noRadioButton.id = View.generateViewId() // Asignar un ID único a noRadioButton
+                            noRadioButton.id = View.generateViewId()
+                            // Asignar un ID único a noRadioButton
+                            // Si hay una solicitud y la pregunta está presente, selecciona automáticamente el valor
+                            request?.questions?.let { selectedQuestions ->
+                                val selectedQuestion =
+                                    selectedQuestions.find { it.id == question.id }
+                                if (selectedQuestion != null) {
+                                    when (selectedQuestion.pivot.response) {
+                                        1 -> {
+                                            siRadioButton.isChecked = true
+                                            // Update questionWithResponse for "Si" response
+                                            val preguntaId = question.id
+                                            val questionWithResponse =
+                                                QuestionResponse(preguntaId, true)
+                                            updateQuestionResponse(questionWithResponse)
+                                        }
 
-                            radioGroup.setOnCheckedChangeListener { group, checkedId ->
-                                val preguntaId = pregunta.id
-                                val respuesta = when (checkedId) {
-                                    siRadioButton.id -> true
-                                    noRadioButton.id -> false
-                                    else -> false  // Manejo de errores o valor predeterminado
+                                        0 -> {
+                                            noRadioButton.isChecked = true
+                                            // Update questionWithResponse for "No" response
+                                            val preguntaId = question.id
+                                            val questionWithResponse =
+                                                QuestionResponse(preguntaId, false)
+                                            updateQuestionResponse(questionWithResponse)
+                                        }
+                                    }
                                 }
-                                val questionWithResponse = QuestionResponse(preguntaId, respuesta)
-                                questionsWithResponses.add(questionWithResponse)
+                            }
+
+                            // Agregar OnCheckedChangeListener a siRadioButton
+                            siRadioButton.setOnCheckedChangeListener { _, isChecked ->
+                                if (isChecked) {
+                                    val preguntaId = question.id
+                                    val questionWithResponse = QuestionResponse(preguntaId, true)
+                                    updateQuestionResponse(questionWithResponse)
+                                }
+                            }
+
+                            // Agregar OnCheckedChangeListener a noRadioButton
+                            noRadioButton.setOnCheckedChangeListener { _, isChecked ->
+                                if (isChecked) {
+                                    val preguntaId = question.id
+                                    val questionWithResponse = QuestionResponse(preguntaId, false)
+                                    updateQuestionResponse(questionWithResponse)
+                                }
                             }
 
                             // Agrega los RadioButtons al RadioGroup
@@ -823,117 +861,85 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                             questionLayout.addView(preguntaTextView)
                             questionLayout.addView(radioGroup)
 
-                            val questionContainer = findViewById<LinearLayout>(R.id.questionContainer)
+                            val questionContainer =
+                                findViewById<LinearLayout>(R.id.questionContainer)
                             questionContainer.addView(questionLayout)
-
                         }
                     }
-
                 }
             }
 
             override fun onFailure(call: Call<ArrayList<Question>>, t: Throwable) {
                 TODO("Not yet implemented")
             }
-
         })
     }
 
+    private fun updateQuestionResponse(questionWithResponse: QuestionResponse) {
+        // Actualizar o agregar la respuesta en la lista según la lógica de tu aplicación
+        val existingResponseIndex =
+            questionsWithResponses.indexOfFirst { it.preguntaId == questionWithResponse.preguntaId }
+        if (existingResponseIndex != -1) {
+            // Si ya hay una respuesta para esta pregunta, actualizarla
+            questionsWithResponses[existingResponseIndex] = questionWithResponse
+        } else {
+            // Si no hay una respuesta para esta pregunta, agregarla
+            questionsWithResponses.add(questionWithResponse)
+        }
+    }
+    @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
-        val llFormStep1 = findViewById<LinearLayout>(R.id.llFormStep1)
-        val llFormStep2 = findViewById<LinearLayout>(R.id.llFormStep2)
-        val llFormStep3 = findViewById<LinearLayout>(R.id.llFormStep3)
-        val llFormStep4 = findViewById<LinearLayout>(R.id.llFormStep4)
-        val llFormStep5 = findViewById<LinearLayout>(R.id.llFormStep5)
+        val steps = arrayOf(R.id.llFormStep1, R.id.llFormStep2, R.id.llFormStep3, R.id.llFormStep4, R.id.llFormStep5)
 
-        if (llFormStep5.visibility == View.VISIBLE && currentStep == 5) {
-            llFormStep5.visibility = View.GONE
-            llFormStep4.visibility = View.VISIBLE
-
-            currentStep = 4 // Actualiza el paso actual a 4
-            updateProgressBar() // Actualiza la barra de progreso
-        }
-        else if (llFormStep4.visibility == View.VISIBLE && currentStep == 4) {
-            llFormStep4.visibility = View.GONE
-            llFormStep3.visibility = View.VISIBLE
-
-            currentStep = 3 // Actualiza el paso actual a 3
-            updateProgressBar() // Actualiza la barra de progreso
-        }
-        else if (llFormStep3.visibility == View.VISIBLE && currentStep == 3) {
-            llFormStep3.visibility = View.GONE
-            llFormStep2.visibility = View.VISIBLE
-
-            currentStep = 2 // Actualiza el paso actual a 2
-            updateProgressBar() // Actualiza la barra de progreso
-        }
-        else if (llFormStep2.visibility == View.VISIBLE && currentStep == 2) {
-            llFormStep2.visibility = View.GONE
-            llFormStep1.visibility = View.VISIBLE
-
-            currentStep = 1 // Actualiza el paso actual a 1
-            updateProgressBar() // Actualiza la barra de progreso
-        }
-        else if (llFormStep1.visibility == View.VISIBLE) {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("Estas seguro que quieres salir?")
-            builder.setMessage("Si abandonas el registro, los datos que ingresastes se perderan")
-            builder.setPositiveButton("Si, salir") { _, _ ->
-                finish()
+        when {
+            currentStep > 1 -> {
+                findViewById<LinearLayout>(steps[currentStep - 1]).visibility = View.GONE
+                findViewById<LinearLayout>(steps[currentStep - 2]).visibility = View.VISIBLE
+                currentStep--
             }
 
-            builder.setNegativeButton("Continuar con el registro"){ dialog, _ ->
-                dialog.dismiss()
-            }
-
-            val dialog = builder.create()
-            dialog.show()
+            currentStep == 1 -> showExitConfirmationDialog()
         }
+
+        updateProgressBar()
+    }
+
+    private fun showExitConfirmationDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("¿Estás seguro de que quieres salir?")
+            .setMessage("Si abandonas el registro, los datos que ingresaste se perderán")
+            .setPositiveButton("Sí, salir") { _, _ -> finish() }
+            .setNegativeButton("Continuar con el registro") { dialog, _ -> dialog.dismiss() }
+
+        val dialog = builder.create()
+        dialog.show()
     }
 
     private fun updateProgressBar() {
-        val progress = when (currentStep) {
-            1 -> 20
-            2 -> 40
-            3 -> 60
-            4 -> 80
-            5 -> 100
-            else -> 0
-        }
-
+        val progress = currentStep * 20
         progressBar.progress = progress
     }
 
-    // Función para validar el formulario
+    //     Función para validar el formulario
     private fun validateForm(): Boolean {
-        val spinnerPaises = findViewById<Spinner>(R.id.spinnerPaises)
-        val rbNacional = findViewById<RadioButton>(R.id.rbNacional)
-        val selectedCountry = spinnerPaises.selectedItem.toString()
-        val isNationalSelected = rbNacional.isChecked
 
-        // Verifica si se deben validar dir1 y dir2
-        val shouldValidateAddresses = selectedCountry == "Perú" && isNationalSelected
-
-        val etDir1 = findViewById<EditText>(R.id.etDir1)
-        val etDir2 = findViewById<EditText>(R.id.etDir2)
-        val dir1 = etDir1.text.toString()
-        val dir2 = etDir2.text.toString()
-
+        val dir1 = findViewById<EditText>(R.id.etDir1).text.toString()
+        val dir2 = findViewById<EditText>(R.id.etDir2).text.toString()
         val rgTipoPago = findViewById<RadioGroup>(R.id.rgTipoPago)
 
         val selectedTipoPagoId = rgTipoPago.checkedRadioButtonId
+        if (dir2.isEmpty()) {
+            etDir2.error = "Ingrese su localidad donde reside o estado"
+            return false
+        }
+        if (dir1.isEmpty()) {
+            etDir1.error = "Ingrese la calle o numero de residencia"
+            return false
+        }
 
-        if (shouldValidateAddresses) {
-            if (dir1.isEmpty()) {
-                etDir1.error = "La dirección 1 no puede estar vacía"
-                return false
-            } else if (dir2.isEmpty()) {
-                etDir2.error = "La dirección 2 no puede estar vacía"
-                return false
-            }
-        } else if (selectedTipoPagoId == -1) {
+        if (selectedTipoPagoId == -1) {
             // Ningún RadioButton seleccionado en el grupo de Tipo de Pago
-            Toast.makeText(this, "Debes seleccionar un tipo de pago", Toast.LENGTH_SHORT).show()
+            toast("Debes seleccionar al menos un tipo de pago")
             return false
         }
 

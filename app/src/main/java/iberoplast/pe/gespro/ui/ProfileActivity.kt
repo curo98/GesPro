@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
 import iberoplast.pe.gespro.model.User
+import iberoplast.pe.gespro.util.ActionBarUtils
 import iberoplast.pe.gespro.util.PreferenceHelper
 import iberoplast.pe.gespro.util.PreferenceHelper.get
 import iberoplast.pe.gespro.util.toast
@@ -30,9 +31,25 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
+        val UserName = preferences["UserName", ""]
+
+        ActionBarUtils.setCustomTitle(
+            this,
+            "Mi perfil",
+            "${UserName}"
+        )
+
         val jwt = preferences["jwt", ""]
         val authHeader = "Bearer $jwt"
         val call = apiService.getUser(authHeader)
+
+        val llLoader = findViewById<LinearLayout>(R.id.llLoader)
+        val cvProfile = findViewById<CardView>(R.id.cvProfile)
+
+        cvProfile.visibility = View.GONE
+        llLoader.visibility = View.VISIBLE
+
+
         call.enqueue(object: Callback<User>{
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful){
@@ -64,11 +81,11 @@ class ProfileActivity : AppCompatActivity() {
         // Establecer el texto del TextInputEditText
         etEmail?.setText(user.email)
 
-        val pbProfile = findViewById<ProgressBar>(R.id.pbProfile)
-        val llProfile = findViewById<LinearLayout>(R.id.llProfile)
+        val llLoader = findViewById<LinearLayout>(R.id.llLoader)
+        val cvProfile = findViewById<CardView>(R.id.cvProfile)
 
-        pbProfile.visibility = View.GONE
-        llProfile.visibility = View.VISIBLE
+        llLoader.visibility = View.GONE
+        cvProfile.visibility = View.VISIBLE
 
         val btnUpdateProfile = findViewById<Button>(R.id.btnUpdateProfile)
         btnUpdateProfile.setOnClickListener {

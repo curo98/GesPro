@@ -1,19 +1,21 @@
 package iberoplast.pe.gespro.io
 
+import Role
 import iberoplast.pe.gespro.io.response.LoginResponse
 import iberoplast.pe.gespro.io.response.SimpleResponse
+import iberoplast.pe.gespro.io.response.charts.ChartDataResponse
+import iberoplast.pe.gespro.io.response.charts.ResponseCounts
+import iberoplast.pe.gespro.io.response.charts.UserRoleResponse
 import iberoplast.pe.gespro.model.Countrie
 import iberoplast.pe.gespro.model.MethodPayment
 import iberoplast.pe.gespro.model.Policy
 import iberoplast.pe.gespro.model.Question
 import iberoplast.pe.gespro.model.RequestData
+import iberoplast.pe.gespro.model.StateRequest
 import iberoplast.pe.gespro.model.Supplier
 import iberoplast.pe.gespro.model.SupplierRequest
 import iberoplast.pe.gespro.model.TypePayment
 import iberoplast.pe.gespro.model.User
-import iberoplast.pe.gespro.model.ubigeo_peru.Department
-import iberoplast.pe.gespro.model.ubigeo_peru.District
-import iberoplast.pe.gespro.model.ubigeo_peru.Province
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -29,6 +31,162 @@ import retrofit2.http.Query
 
 
 interface ApiService {
+
+    //CHARTS
+    @GET("requests-by-weekend")
+    @Headers("Accept: application/json")
+    fun requestsByWeek(): Call<ChartDataResponse>
+    @GET("counts")
+    fun getCounts(): Call<ResponseCounts>
+
+    @GET("getUsersByRole")
+    @Headers("Accept: application/json")
+    fun getUsersByRole(): Call<List<UserRoleResponse>>
+    //END CHARTS
+
+    //CRUD USERS
+    @POST("user/{id}/update")
+    @Headers("Accept: application/json")
+    fun updateUser(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int,
+        @Query("name") name: String,
+        @Query("email") email: String,
+        @Query("id_role") id_role: Int?
+    ): Call<Void>
+
+    @GET("user/{id}/edit")
+    @Headers("Accept: application/json")
+    fun editUser(@Header("Authorization") authHeader: String,@Path("id") id: Int): Call<User>
+
+    @GET("users")
+    @Headers("Accept: application/json")
+    fun getUsers(@Header("Authorization") authHeader: String): Call<ArrayList<User>>
+
+    @POST("user/store")
+    @Headers("Accept: application/json")
+    fun postUser(
+        @Header("Authorization") authHeader: String,
+        @Query("name") name: String,
+        @Query("email") email: String,
+        @Query("id_role") id_role: Int?
+    ): Call<Void>
+    // END CRUD USERS
+
+    //CRUD ROL QUESTIONS
+    @POST("question/{id}/update")
+    @Headers("Accept: application/json")
+    fun updateQuestion(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int,
+        @Query("question") question: String
+    ): Call<Void>
+    @GET("question/{id}/edit")
+    @Headers("Accept: application/json")
+    fun editQuestion(@Header("Authorization") authHeader: String,@Path("id") id: Int): Call<Question>
+    @GET("questions")
+    @Headers("Accept: application/json")
+    fun getQuestions(@Header("Authorization") authHeader: String): Call<ArrayList<Question>>
+    @POST("question/store")
+    @Headers("Accept: application/json")
+    fun postQuestion(
+        @Header("Authorization") authHeader: String,
+        @Query("question") question: String
+    ): Call<Void>
+    // END CRUD ROL QUESTIONS
+
+    //CRUD METHODS PAYMENTS
+    @POST("method-payment/{id}/update")
+    @Headers("Accept: application/json")
+    fun updateMethodPayment(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int,
+        @Query("name") name: String,
+        @Query("description") description: String
+    ): Call<Void>
+    @GET("method-payment/{id}/edit")
+    @Headers("Accept: application/json")
+    fun editMethodPayment(@Header("Authorization") authHeader: String,@Path("id") id: Int): Call<MethodPayment>
+    @POST("method-payment/store")
+    @Headers("Accept: application/json")
+    fun postMethodPayment(
+        @Header("Authorization") authHeader: String,
+        @Query("name") name: String,
+        @Query("description") description: String
+    ): Call<Void>
+    // END CRUD METHODS PAYMENTS
+
+    //CRUD CONDITIONS PAYMENTS
+    @POST("type-or-condition-payment/{id}/update")
+    @Headers("Accept: application/json")
+    fun updateConditionPayment(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int,
+        @Query("name") name: String,
+        @Query("description") description: String
+    ): Call<Void>
+    @GET("type-or-condition-payment/{id}/edit")
+    @Headers("Accept: application/json")
+    fun editConditionPayment(@Header("Authorization") authHeader: String,@Path("id") id: Int): Call<TypePayment>
+    @GET("types-or-conditions-payments")
+    @Headers("Accept: application/json")
+    fun getConditionsPayments(@Header("Authorization") authHeader: String): Call<ArrayList<TypePayment>>
+    @POST("type-or-condition-payment/store")
+    @Headers("Accept: application/json")
+    fun postConditionPayment(
+        @Header("Authorization") authHeader: String,
+        @Query("name") name: String,
+        @Query("description") description: String
+    ): Call<Void>
+    // END CRUD CONDITIONS PAYMENTS
+
+    //CRUD ROL STATES
+    @POST("state/{id}/update")
+    @Headers("Accept: application/json")
+    fun updateState(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int,
+        @Query("description") description: String
+    ): Call<Void>
+    @GET("state/{id}/edit")
+    @Headers("Accept: application/json")
+    fun editState(@Header("Authorization") authHeader: String,@Path("id") id: Int): Call<StateRequest>
+    @GET("states")
+    @Headers("Accept: application/json")
+    fun getStates(@Header("Authorization") authHeader: String): Call<ArrayList<StateRequest>>
+    @POST("state/store")
+    @Headers("Accept: application/json")
+    fun postState(
+        @Header("Authorization") authHeader: String,
+        @Query("name") name: String,
+        @Query("description") description: String
+    ): Call<Void>
+    // END CRUD ROL STATES
+
+    //CRUD ROL USERS
+    @POST("role/{id}/update")
+    @Headers("Accept: application/json")
+    fun updateRole(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int,
+        @Query("description") description: String
+    ): Call<Void>
+    @GET("role/{id}/edit")
+    @Headers("Accept: application/json")
+    fun editRole(@Header("Authorization") authHeader: String,@Path("id") id: Int): Call<Role>
+    @GET("roles")
+    @Headers("Accept: application/json")
+    fun getRoles(@Header("Authorization") authHeader: String): Call<ArrayList<Role>>
+    @POST("role/store")
+    @Headers("Accept: application/json")
+    fun postRole(
+        @Header("Authorization") authHeader: String,
+        @Query("name") name: String,
+        @Query("description") description: String
+    ): Call<Void>
+    // END CRUD ROL USERS
+
+
     @POST("supplier/store")
     @Headers("Accept: application/json")
     fun storeSupplier(
@@ -36,6 +194,8 @@ interface ApiService {
         @Query("name") name: String,
         @Query("email") email: String,
         @Query("nic_ruc") nic_ruc: String,
+        @Query("locality") locality: String,
+        @Query("street_and_number") street_and_number: String?, // Puede ser nulo
         @Query("nacionality") nacionality: String
     ): Call<Supplier>
     @POST("supplier/{id}/update")
@@ -47,6 +207,55 @@ interface ApiService {
         @Query("nic_ruc") nic_ruc: String,
         @Query("email") email: String
     ): Call<Void>
+    @POST("request/{id}/cancel")
+    @Headers("Accept: application/json")
+    fun cancelRequest(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int
+    ): Call<Void>
+    @POST("request/{id}/disapprove")
+    @Headers("Accept: application/json")
+    fun disapproveRequest(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int
+    ): Call<Void>
+    @POST("request/{id}/approve")
+    @Headers("Accept: application/json")
+    fun approveRequest(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int
+    ): Call<Void>
+    @POST("request/{id}/validate")
+    @Headers("Accept: application/json")
+    fun validateRequest(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int
+    ): Call<Void>
+    @POST("request/{id}/receive")
+    @Headers("Accept: application/json")
+    fun receiveRequest(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int
+    ): Call<Void>
+    @POST("request/{id}/update")
+    @Headers("Accept: application/json")
+    fun updateRequest(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int,
+        @Query("nacionality") nationality: String,
+        @Query("nic_ruc") nic_ruc: String?,
+        @Query("locality") locality: String,
+        @Query("street_and_number") street_and_number: String?, // Puede ser nulo
+        @Query("typePayment") typePayment: String?,
+        @Query("methodPayment") methodPayment: String?,
+        @Body requestData: RequestData
+    ): Call<Void>
+    @GET("request/{id}/edit")
+    @Headers("Accept: application/json")
+    fun editRequest(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int)
+            : Call<SupplierRequest>
     @GET("supplier/{id}/edit")
     @Headers("Accept: application/json")
     fun editSupplier(
@@ -68,7 +277,7 @@ interface ApiService {
     ): Call<Supplier>
     @GET("user")
     @Headers("Accept: application/json")
-    fun getUser(@Header("Authorization") authHeader: String,): Call<User>
+    fun getUser(@Header("Authorization") authHeader: String): Call<User>
 
     @POST("user")
     @Headers("Accept: application/json")
@@ -109,7 +318,8 @@ interface ApiService {
     fun getTypesPayments(): Call<ArrayList<TypePayment>>
 
     @GET("methods-payments")
-    fun getMethodsPayments(): Call<ArrayList<MethodPayment>>
+    @Headers("Accept: application/json")
+    fun getMethodsPayments(@Header("Authorization") authHeader: String): Call<ArrayList<MethodPayment>>
     @GET("policies")
     fun getPolicies(): Call<ArrayList<Policy>>
 
@@ -127,27 +337,15 @@ interface ApiService {
         @Header("Authorization") authHeader: String,
         @Query("nacionality") nationality: String,
         @Query("nic_ruc") nic_ruc: String?,
-//        @Query("nameSupplier") nameSupplier: String?,
-//        @Query("emailSupplier") emailSupplier: String?,
-//        @Query("locality") locality: String?,
-//        @Query("StreetNumber") StreetNumber: String?,
+        @Query("locality") locality: String?,
+        @Query("street_and_number") street_and_number: String?,
         @Query("typePayment") typePayment: String?,
         @Query("methodPayment") methodPayment: String?,
 //        @Part files: List<MultipartBody.Part>,
         @Body requestData: RequestData
     ): Call<SimpleResponse>
-
-    // start code - get countries/departments/provinces/districts
     @GET("countries")
     fun getCountries(): Call<ArrayList<Countrie>>
-    @GET("departments")
-    fun getDepartments(): Call<ArrayList<Department>>
-    @GET("departments/{department}/provinces")
-    fun getProvinces(@Path(/* value = */ "department") departmentId: String): Call<ArrayList<Province>>
-    @GET("provinces/{province}/districts")
-    fun getDistricts(@Path(/* value = */ "province") provinceId: String): Call<ArrayList<District>>
-    // end code
-
     companion object Factory {
         private const val BASE_URL = "https://gespro-iberoplast.tech/api/"
 

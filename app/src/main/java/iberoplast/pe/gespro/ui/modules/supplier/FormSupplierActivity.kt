@@ -11,6 +11,7 @@ import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
 import iberoplast.pe.gespro.model.Countrie
 import iberoplast.pe.gespro.model.Supplier
+import iberoplast.pe.gespro.util.ActionBarUtils
 import iberoplast.pe.gespro.util.PreferenceHelper
 import iberoplast.pe.gespro.util.PreferenceHelper.get
 import iberoplast.pe.gespro.util.toast
@@ -30,6 +31,7 @@ class FormSupplierActivity : AppCompatActivity() {
     private val spCountry by lazy { findViewById<Spinner>(R.id.spCountry) }
     private val etNicRuc by lazy { findViewById<EditText>(R.id.etNicRuc) }
     private val btnForm by lazy { findViewById<Button>(R.id.btnFormSupplier) }
+    private val btnGoToList by lazy { findViewById<Button>(R.id.btnGoToList) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +43,11 @@ class FormSupplierActivity : AppCompatActivity() {
 
         // Si isEditing es true, estás editando un proveedor, muestra los datos existentes
         if (isEditing && supplier != null) {
+            ActionBarUtils.setCustomTitle(
+                this,
+                "Editando proveedor:",
+                "${supplier.user.name}"
+            )
             etName.setText(supplier.user.name)
             etNicRuc.setText(supplier.nic_ruc)
             etEmail.setText(supplier.user.email)
@@ -53,6 +60,10 @@ class FormSupplierActivity : AppCompatActivity() {
                 executeMethodUpdate(id)
             }
         } else {
+            ActionBarUtils.setCustomTitle(
+                this,
+                "Registro de nuevo proveedor"
+            )
             // Si no estás editando, estás creando un nuevo proveedor, configura el botón
             // para ejecutar el método de creación
             btnForm.text = "Crear"
@@ -61,6 +72,12 @@ class FormSupplierActivity : AppCompatActivity() {
                 // Llama a tu método de creación aquí
                 executeMethodCreate()
             }
+        }
+
+        btnGoToList.setOnClickListener {
+            val intent = Intent(this, SuppliersActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         // Cargar la lista de países en el Spinner y seleccionar "Venezuela" si está definido
@@ -157,7 +174,7 @@ class FormSupplierActivity : AppCompatActivity() {
         val jwt = preferences["jwt", ""]
         val authHeader = "Bearer $jwt"
 
-        val call = apiService.storeSupplier(authHeader, name, email, nic_ruc, nacionality)
+        val call = apiService.storeSupplier(authHeader, name, email, nic_ruc, "", "", nacionality)
         call.enqueue(object: Callback<Supplier>{
             override fun onResponse(call: Call<Supplier>, response: Response<Supplier>) {
                 if (response.isSuccessful) {

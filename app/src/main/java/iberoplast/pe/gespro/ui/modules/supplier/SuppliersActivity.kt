@@ -12,7 +12,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +20,7 @@ import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
 import iberoplast.pe.gespro.model.Supplier
 import iberoplast.pe.gespro.ui.adapters.SupplierAdapter
+import iberoplast.pe.gespro.util.ActionBarUtils
 import iberoplast.pe.gespro.util.PreferenceHelper
 import iberoplast.pe.gespro.util.PreferenceHelper.get
 import iberoplast.pe.gespro.util.toast
@@ -45,6 +45,11 @@ class SuppliersActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_suppliers)
+
+        ActionBarUtils.setCustomTitle(
+            this,
+            "Proveedores"
+        )
 
         etSearch = findViewById(R.id.etSearch)
 
@@ -87,8 +92,9 @@ class SuppliersActivity : AppCompatActivity() {
         super.onCreateContextMenu(menu, v, menuInfo)
 
         if (v?.id == R.id.rvProveedores) {
+            menu?.setHeaderTitle("Opciones")
             val inflater: MenuInflater = menuInflater
-            inflater.inflate(R.menu.menu_options, menu)
+            inflater.inflate(R.menu.menu_options_supplier, menu)
         }
     }
     override fun onContextItemSelected(item: MenuItem): Boolean {
@@ -133,9 +139,6 @@ class SuppliersActivity : AppCompatActivity() {
 
                         // Mostrar el mensaje en el registro (logcat)
                         Log.d("SupplierDetails", message)
-//                        val intent = Intent(this@SuppliersActivity, ShowSupplierActivity::class.java)
-//                        intent.putExtra("supplier_details", supplier)
-//                        startActivity(intent)
                         val intent = Intent(this@SuppliersActivity, ShowSupplierActivity::class.java)
                         intent.putExtra("supplier_details", supplier)
                         startActivity(intent)
@@ -195,16 +198,17 @@ class SuppliersActivity : AppCompatActivity() {
     private fun loadSuppliers() {
         val jwt = preferences["jwt", ""]
         val call = apiService.getSuppliers("Bearer $jwt")
-        val pbSuppliers = findViewById<ProgressBar>(R.id.pbSuppliers)
+        val llLoader = findViewById<LinearLayout>(R.id.llLoader)
         val llContent = findViewById<LinearLayout>(R.id.llContent)
 
-        pbSuppliers.visibility = View.VISIBLE
+        llLoader.visibility = View.VISIBLE
         llContent.visibility = View.GONE
+
         call.enqueue(object : Callback<ArrayList<Supplier>> {
             override fun onResponse(call: Call<ArrayList<Supplier>>, response: Response<ArrayList<Supplier>>) {
                 if (response.isSuccessful) {
 
-                    pbSuppliers.visibility = View.GONE
+                    llLoader.visibility = View.GONE
                     llContent.visibility = View.VISIBLE
 
                     response.body()?.let {

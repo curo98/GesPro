@@ -1,9 +1,13 @@
-package iberoplast.pe.gespro.ui.modules.requests
+package iberoplast.pe.gespro.ui.modules.request
 
 import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
 import android.view.Gravity
 import android.view.View
 import android.view.animation.AlphaAnimation
@@ -17,6 +21,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.model.SupplierRequest
+import iberoplast.pe.gespro.util.ActionBarUtils
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -52,6 +57,7 @@ class ShowRequestActivity : AppCompatActivity() {
         val tvObservation = findViewById<TextView>(R.id.tvObservation)
         val tvTransition = findViewById<TextView>(R.id.tvTransition)
 
+        val tvName = findViewById<TextView>(R.id.tvName)
         val tvTypePay = findViewById<TextView>(R.id.tvTypePayment)
         val tvMethodPay = findViewById<TextView>(R.id.tvMethodPay)
 
@@ -61,12 +67,16 @@ class ShowRequestActivity : AppCompatActivity() {
         // val BarProgress and textValue
         val progressBar = findViewById<ProgressBar>(R.id.progress_bar)
         val textViewProgress = findViewById<TextView>(R.id.text_view_progress)
+        val tvLastNameState = findViewById<TextView>(R.id.tvLastNameState)
 
         val request = intent.getParcelableExtra<SupplierRequest>("request_details")
 
         if (request != null) {
-            val lastTransition = request.getLastStateTransition()
-            val finalState = lastTransition?.toState
+            ActionBarUtils.setCustomTitle(
+                this,
+                "Detalle de solicitud con id: ${request.id}"
+            )
+            val finalState = request.getFinalState()
 
             if (finalState != null) {
                 val progress = when (finalState.name) {
@@ -80,9 +90,10 @@ class ShowRequestActivity : AppCompatActivity() {
                 // Configura el ProgressBar y el TextView con el porcentaje
                 progressBar.progress = progress
                 textViewProgress.text = "$progress%"
+                tvLastNameState.text = finalState.name
 
                 // Si el estado es "Rechazada" o "Cancelada", configura el progreso al 100%
-                if (finalState.name == "Rechazada" || finalState.name == "Cancelada") {
+                if (finalState.name == "Rechazada" || finalState.name == "Cancelada" || finalState.name == "Desaprobada") {
                     progressBar.progress = 100
                     textViewProgress.text = "100%"
                 }
@@ -97,15 +108,18 @@ class ShowRequestActivity : AppCompatActivity() {
             val observations = request.observations
             val transitions = request.stateTransitions
 
+            tvName.text = request.user.name
             tvQuestion.text = "Preguntas: ${questions.size}"
             tvObservation.text = "Observaciones: ${observations.size}"
             tvPolicy.text = "Politicas: ${policies.size}"
             tvTransition.text = "Transiciones: ${transitions.size}"
 
-            val typePaymentText = "Tipo de Pago: ${request.type_payment.name}"
-            tvTypePay.text = typePaymentText
-            val methodPaymentText = "Metodo de Pago: ${request.method_payment.name}"
-            tvMethodPay.text = methodPaymentText
+            // Tu código existente
+            val typePaymentText = "Tipo de Pago: \n${request.type_payment.name}"
+            applyBoldToTextView(tvTypePay, typePaymentText, "Tipo de Pago:")
+
+            val methodPaymentText = "Método de Pago: \n${request.method_payment.name}"
+            applyBoldToTextView(tvMethodPay, methodPaymentText, "Método de Pago:")
 
             tvCreated_at.text = formatDate(request.created_at)
             tvUpdated_at.text = formatDate(request.updated_at)
@@ -174,57 +188,61 @@ class ShowRequestActivity : AppCompatActivity() {
                 }
             }
 
-            ibExpandObservations.setOnClickListener {
-                val isVisible = llDetailObservations.visibility == View.VISIBLE
+            if (observations.isNotEmpty()){
+                val llExpandObservations = findViewById<LinearLayout>(R.id.llExpandObservations)
+                llExpandObservations.visibility = View.VISIBLE
+                ibExpandObservations.setOnClickListener {
+                    val isVisible = llDetailObservations.visibility == View.VISIBLE
 
-                if (isVisible) {
-                    llDetailObservations.startAnimation(createFadeOutAnimation {
-                        llDetailObservations.visibility = View.GONE
-                        ibExpandObservations.setImageResource(R.drawable.ic_expand_more)
-                    })
-                } else {
-                    llDetailObservations.visibility = View.VISIBLE
-                    llDetailObservations.startAnimation(createFadeInAnimation())
-                    ibExpandObservations.setImageResource(R.drawable.ic_expand_less)
+                    if (isVisible) {
+                        llDetailObservations.startAnimation(createFadeOutAnimation {
+                            llDetailObservations.visibility = View.GONE
+                            ibExpandObservations.setImageResource(R.drawable.ic_expand_more)
+                        })
+                    } else {
+                        llDetailObservations.visibility = View.VISIBLE
+                        llDetailObservations.startAnimation(createFadeInAnimation())
+                        ibExpandObservations.setImageResource(R.drawable.ic_expand_less)
 
-                    llDetailObservations.removeAllViews()
+                        llDetailObservations.removeAllViews()
 
-                    val observationsCount = observations.size
+                        val observationsCount = observations.size
 
-                    for ((index, observation) in observations.withIndex()) {
-                        val created_at = formatDate(observation.created_at)
-                        val formattedObservation = "${observation.title} - $created_at"
+                        for ((index, observation) in observations.withIndex()) {
+                            val created_at = formatDate(observation.created_at)
+                            val formattedObservation = "${observation.title} - $created_at"
 
-                        val textView = TextView(this)
-                        textView.layoutParams = LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                        )
-                        textView.text = formattedObservation
-                        textView.gravity = Gravity.CENTER_HORIZONTAL
-
-                        val observationText = TextView(this)
-                        observationText.layoutParams = LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                        )
-                        observationText.text = "Observación realizada por: ${observation.user.name}"
-                        observationText.gravity = Gravity.CENTER_HORIZONTAL
-
-                        llDetailObservations.addView(textView)
-                        llDetailObservations.addView(observationText)
-
-                        // Agregar la línea horizontal si existe un elemento siguiente
-                        if (index < observationsCount - 1) {
-                            val lineView = View(this)
-                            val params = LinearLayout.LayoutParams(
+                            val textView = TextView(this)
+                            textView.layoutParams = LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT,
-                                1 // Altura de la línea horizontal
+                                LinearLayout.LayoutParams.WRAP_CONTENT
                             )
-                            params.setMargins(0, 10.dpToPx(), 0, 10.dpToPx()) // Aplicar padding de 5dp
-                            lineView.layoutParams = params
-                            lineView.setBackgroundColor(Color.BLACK) // Color de la línea
-                            llDetailObservations.addView(lineView)
+                            textView.text = formattedObservation
+                            textView.gravity = Gravity.CENTER_HORIZONTAL
+
+                            val observationText = TextView(this)
+                            observationText.layoutParams = LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                            )
+                            observationText.text = "Observación realizada por: ${observation.user.name}"
+                            observationText.gravity = Gravity.CENTER_HORIZONTAL
+
+                            llDetailObservations.addView(textView)
+                            llDetailObservations.addView(observationText)
+
+                            // Agregar la línea horizontal si existe un elemento siguiente
+                            if (index < observationsCount - 1) {
+                                val lineView = View(this)
+                                val params = LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.MATCH_PARENT,
+                                    1 // Altura de la línea horizontal
+                                )
+                                params.setMargins(0, 10.dpToPx(), 0, 10.dpToPx()) // Aplicar padding de 5dp
+                                lineView.layoutParams = params
+                                lineView.setBackgroundColor(Color.BLACK) // Color de la línea
+                                llDetailObservations.addView(lineView)
+                            }
                         }
                     }
                 }
@@ -330,7 +348,7 @@ class ShowRequestActivity : AppCompatActivity() {
                             LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT
                         )
-                        reviewerTextView.text = "Revisado(@) por: ${transition.reviewer.name}"
+                        reviewerTextView.text = "Por: ${transition.reviewer.name}"
                         reviewerTextView.setTextColor(resources.getColor(R.color.black))
                         reviewerTextView.layoutParams = reviewerParams
                         contentLayout.addView(reviewerTextView)
@@ -395,6 +413,26 @@ class ShowRequestActivity : AppCompatActivity() {
             e.printStackTrace()
             return dateTime // Si ocurre un error, devolvemos el valor original
         }
+    }
+
+    // Función para aplicar formato negrita a un TextView
+    fun applyBoldToTextView(textView: TextView, text: String, boldText: String) {
+        // Crear una instancia de SpannableStringBuilder
+        val spannableStringBuilder = SpannableStringBuilder(text)
+
+        // Encontrar la posición del texto que se formateará con negrita
+        val startIndex = text.indexOf(boldText)
+
+        // Aplicar estilo negrita solo a la porción específica del texto
+        spannableStringBuilder.setSpan(
+            StyleSpan(Typeface.BOLD),
+            startIndex,
+            startIndex + boldText.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+
+        // Asignar el texto formateado al TextView
+        textView.text = spannableStringBuilder
     }
 }
 

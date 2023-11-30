@@ -28,7 +28,7 @@
                         android:id="@+id/imTypePayments"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:title="Tipos de Pago" />
+                        android:title="Condiciones de Pago" />
                     <item
                         android:id="@+id/imMethodPayments"
                         android:layout_width="wrap_content"

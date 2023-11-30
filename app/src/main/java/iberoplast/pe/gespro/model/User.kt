@@ -10,7 +10,8 @@ data class User(
     val email: String,
     val id_role: Int?,
     val device_token: String?,
-    val role: Role?
+    val role: Role?,
+    val supplier: Supplier?
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
@@ -18,7 +19,8 @@ data class User(
         parcel.readString() ?: "",
         parcel.readValue(Int::class.java.classLoader) as? Int,
         parcel.readString(),
-        parcel.readParcelable(Role::class.java.classLoader)
+        parcel.readParcelable(Role::class.java.classLoader),
+        parcel.readParcelable(Supplier::class.java.classLoader)
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -28,6 +30,7 @@ data class User(
         parcel.writeValue(id_role)
         parcel.writeString(device_token)
         parcel.writeParcelable(role, flags)
+        parcel.writeParcelable(supplier, flags)
     }
 
     override fun describeContents(): Int {

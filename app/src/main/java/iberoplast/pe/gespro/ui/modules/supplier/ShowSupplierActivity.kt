@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.model.Supplier
+import iberoplast.pe.gespro.util.ActionBarUtils
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -30,6 +31,11 @@ class ShowSupplierActivity : AppCompatActivity() {
 
         // Verificar si los datos del proveedor no son nulos
         if (supplier != null) {
+            ActionBarUtils.setCustomTitle(
+                this,
+                "Detalle de proveedor:",
+                "${supplier.user.name}"
+            )
             val nacionality = supplier.nacionality
             val nicRuc = supplier.nic_ruc
             val state = supplier.state

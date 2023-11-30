@@ -4,28 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.modules.requests.SupplierRequestsActivity">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:padding="6dp"
-        android:text="Solicitudes de proveedores"
-        android:textSize="15dp" />
-
-    <ProgressBar
-        android:id="@+id/pbRequests"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        tools:visibility="gone" />
+    android:orientation="horizontal"
+    tools:context=".ui.modules.request.SupplierRequestsActivity">
 
     <LinearLayout
         android:id="@+id/llContent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10sp">
         <Button
@@ -50,7 +35,6 @@
             tools:listitem="@layout/item_supplier_request" />
     </LinearLayout>
 
-
-
+    <include layout="@layout/animation_loader_list"/>
 
 </LinearLayout>
