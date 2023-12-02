@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:gravity="start"
-        android:text="Instrucciones"
+        android:text="Instrucciones:"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -33,36 +33,37 @@
             android:layout_height="wrap_content"
             android:gravity="start"
             android:paddingLeft="16dp"
-            android:text="Lorem ipsum dolor sit amet" />
+            android:text="Descargar e imprimir el modelo de carta (código de ética y de conducta) pulsando el botón disponible." />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
             android:paddingLeft="16dp"
-            android:text="Consectetur adipiscing elit" />
+            android:text="Firmar y adjuntar la carta en la opción correspondiente." />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
             android:paddingLeft="16dp"
-            android:text="Integer molestie lorem at massa" />
+            android:text="Adjuntar los demás documentos requeridos." />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
             android:paddingLeft="16dp"
-            android:text="Facilisis in pretium nisl aliquet" />
+            android:text="Marcar check aceptando cumplir con el código de ética." />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
             android:paddingLeft="16dp"
-            android:text="Nulla volutpat aliquam velit" />
+            android:text="Para culminar con el proceso, pulse el botón 'Finalizar' y espere la confirmación." />
     </LinearLayout>
+
 
     <!-- Documentos necesarios -->
     <TextView
@@ -80,7 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
-        android:text="Modelo de carta descargado" />
+        android:text="Modelo de carta" />
 
     <!-- Opciones de documentos -->
     <TextView

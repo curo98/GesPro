@@ -102,8 +102,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:paddingLeft="10sp"
-                    android:text="Metodo de pago" />
+                    android:paddingStart="10sp"
+                    android:text="Metodo de pago"
+                    tools:ignore="RtlSymmetry" />
             </LinearLayout>
 
             <View
@@ -223,7 +224,43 @@
                     android:orientation="vertical"
                     android:visibility="gone"></LinearLayout>
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/llExpandDocuments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!-- Tu FrameLayout estático aquí -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
 
+                    <TextView
+                        android:id="@+id/tvDocument"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center_horizontal"
+                        android:text="Documentos" />
+
+                    <ImageButton
+                        android:id="@+id/ibExpandDocuments"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        android:background="@color/white"
+                        android:src="@drawable/ic_expand_more" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:id="@+id/llDetailDocuments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+                </LinearLayout>
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/llExpandTransitions"
                 android:layout_width="match_parent"

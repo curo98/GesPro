@@ -90,7 +90,7 @@ class LoginActivity : AppCompatActivity() {
                         // Continúa con el proceso de inicio de sesión
                         createSessionPreference(loginResponse.jwt, loginResponse.role.name, loginResponse.user.name)
                         Log.d("LoginResponseSuccess", loginResponse.toString())
-                        toast("Bienvenido ${loginResponse.role.name}")
+                        toast("Bienvenido ${loginResponse.user.name}")
                         goToMenuActivity(true)
                     }else{
                         toast("Credenciales incorrectas")

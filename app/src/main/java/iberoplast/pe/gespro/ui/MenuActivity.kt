@@ -65,7 +65,6 @@ class MenuActivity : AppCompatActivity() {
     private val apiService by lazy {
         ApiService.create()
     }
-
     private val preferences by lazy {
         PreferenceHelper.defaultPrefs(this@MenuActivity)
     }
@@ -75,6 +74,17 @@ class MenuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu)
+
+        val btnFiles = findViewById<Button>(R.id.btnFiles)
+        btnFiles.setOnClickListener {
+            val intent = Intent(this, FilesActivity::class.java)
+            startActivity(intent)
+        }
+
+        val storeToken = intent.getBooleanExtra("store_token", false)
+        if (storeToken){
+            storeToken()
+        }
 
         val userRoleName = preferences["UserRolePreferences", ""]
 
@@ -116,10 +126,6 @@ class MenuActivity : AppCompatActivity() {
 
         }
 
-        val storeToken = intent.getBooleanExtra("store_token", false)
-        if (storeToken){
-            storeToken()
-        }
         val btnCrearSolicitud = findViewById<Button>(R.id.btnCrearSolicitud)
         val btnListProveedores = findViewById<Button>(R.id.btn_list_proveedores)
         val btnListSolicitudes = findViewById<Button>(R.id.btn_list_solicitudes)
@@ -413,7 +419,6 @@ class MenuActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_in_activity, menu)
 
         // Accede al rol del usuario desde tus preferencias
-        val preferences = PreferenceHelper.defaultPrefs(this)
         val userRoleName = preferences["UserRolePreferences", ""]
 
         // Accede a los elementos de menú que deseas mostrar u ocultar según el rol del usuario

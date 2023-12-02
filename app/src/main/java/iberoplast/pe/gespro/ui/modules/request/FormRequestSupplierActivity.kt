@@ -30,7 +30,7 @@ import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
 import iberoplast.pe.gespro.io.response.SimpleResponse
 import iberoplast.pe.gespro.model.Countrie
-import iberoplast.pe.gespro.model.Document
+import iberoplast.pe.gespro.model.Documents
 import iberoplast.pe.gespro.model.MethodPayment
 import iberoplast.pe.gespro.model.Policy
 import iberoplast.pe.gespro.model.PolicyPivot
@@ -47,7 +47,7 @@ import iberoplast.pe.gespro.util.PreferenceHelper.set
 import iberoplast.pe.gespro.util.toast
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -72,7 +72,7 @@ class FormRequestSupplierActivity : AppCompatActivity() {
     private var methodPayment: String? = null
     private val checkBoxList = mutableListOf<CheckBox>()
     val questionsWithResponses = mutableListOf<QuestionResponse>()
-    val listaArchivos = mutableListOf<Document>()
+    val listaArchivos = mutableListOf<Documents>()
 
 
     private lateinit var getContent1: ActivityResultLauncher<String>
@@ -94,22 +94,29 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         getContent1 = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let { selectedUri ->
                 val fileName = getFileName(selectedUri)
+                val fileContent = getContentBytes(selectedUri)
+                val fileData = Documents(fileName, fileContent)
                 tvAdjuntar1.text = "Archivo seleccionado: $fileName"
-                listaArchivos.add(Document("Título del Archivo 1", fileName, selectedUri))
+                listaArchivos.add(fileData)
             }
         }
+
         // Inicializa getContent2 para el botón 2
         getContent2 = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let { selectedUri ->
                 val fileName = getFileName(selectedUri)
+                val fileContent = getContentBytes(selectedUri)
+                val fileData = Documents(fileName, fileContent)
                 tvAdjuntar2.text = "Archivo seleccionado: $fileName"
-                listaArchivos.add(Document("Título del Archivo 2", fileName, selectedUri))
+                listaArchivos.add(fileData)
             }
         }
+
         // Configuración de eventos de clic para el botón 1
         btnAdjuntar1.setOnClickListener {
             openGallery(getContent1)
         }
+
         // Configuración de eventos de clic para el botón 2
         btnAdjuntar2.setOnClickListener {
             openGallery(getContent2)
@@ -211,34 +218,17 @@ class FormRequestSupplierActivity : AppCompatActivity() {
 
         // Start code formstep4
         btnNextFormRequest4.setOnClickListener {
-
-            // Continuar con el paso 4(TEST)
-            llFormStep4.visibility = View.GONE
-            llFormStep5.visibility = View.VISIBLE
-
-            val textViewDatos = findViewById<TextView>(R.id.datos)
-            val textViewDatos2 = findViewById<TextView>(R.id.datos2)
-
-            for (archivo in listaArchivos) {
-                val titulo = archivo.title
-                val nombre = archivo.name
-                val ruta = archivo.ruta
-
-                // Construye una cadena con los datos del archivo
-                val datosArchivo = "Título: $titulo\nNombre: $nombre\nRuta: $ruta"
-
-                // Asigna la cadena a los TextViews
-                if (textViewDatos.text.isEmpty()) {
-                    textViewDatos.text = datosArchivo
-                } else {
-                    textViewDatos2.text = datosArchivo
-                }
+            val checkBox1 = findViewById<CheckBox>(R.id.checkBox1)
+            if (checkBox1.isChecked()) {
+                // Continuar con el paso 4(TEST)
+                llFormStep4.visibility = View.GONE
+                llFormStep5.visibility = View.VISIBLE
+                currentStep = 5
+                // Actualizar la barra de progreso
+                updateProgressBar()
+            } else {
+                toast("Debe aceptar el cumplimiento de código de ética")
             }
-
-            currentStep = 5
-            // Actualizar la barra de progreso
-            updateProgressBar()
-
         }
         // end code formstep4
 
@@ -356,12 +346,13 @@ class FormRequestSupplierActivity : AppCompatActivity() {
 
         return true
     }
-    // Función para abrir la galería y seleccionar un archivo
     private fun openGallery(getContent: ActivityResultLauncher<String>) {
+        // Lanzar la actividad de selección de archivos
         getContent.launch("*/*")
     }
 
     private fun getFileName(uri: Uri): String {
+        // Obtener el nombre del archivo desde su URI
         val cursor = contentResolver.query(uri, null, null, null, null)
         cursor?.use {
             if (it.moveToFirst()) {
@@ -377,9 +368,45 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         return "Archivo no encontrado"
     }
 
+    private fun getContentBytes(uri: Uri): ByteArray {
+        // Obtener los bytes del contenido del archivo
+        val inputStream = contentResolver.openInputStream(uri)
+        return inputStream?.readBytes() ?: byteArrayOf()
+    }
+    private fun sendFiles() {
+        val jwt = preferences["jwt", ""]
+        val authHeader = "Bearer $jwt"
+
+        for (fileData in listaArchivos) {
+            Log.d("FileUpload", "Archivo a enviar: ${fileData.filename}")
+        }
+        val fileParts = mutableListOf<MultipartBody.Part>()
+
+        for (fileData in listaArchivos) {
+            val fileRequestBody = fileData.fileContent.toRequestBody("application/octet-stream".toMediaTypeOrNull())
+            val filePart = MultipartBody.Part.createFormData("files[]", fileData.filename, fileRequestBody)
+            fileParts.add(filePart)
+        }
+
+        val call = apiService.uploadFiles(authHeader, fileParts)
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Log.d("FileUpload", "Archivos enviados exitosamente")
+                } else {
+                    Log.e("FileUpload", "Error en la respuesta del servidor: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("FileUpload", "Error en la solicitud: ${t.message}")
+            }
+        })
+    }
+
     private fun executeMethodCreate(methodPayment: String?) {
         val btnConfirm = findViewById<Button>(R.id.btnSend)
-        btnConfirm.isClickable = false
+//        btnConfirm.isClickable = false
         val jwt = preferences["jwt", ""]
         val authHeader = "Bearer $jwt"
         val spCountry = findViewById<Spinner>(R.id.spinnerPaises)
@@ -406,17 +433,10 @@ class FormRequestSupplierActivity : AppCompatActivity() {
             }
         }
         val requestData = RequestData(selectedPolicies, questionsWithResponses)
-        val files = mutableListOf<MultipartBody.Part>()
-        for (archivo in listaArchivos) {
-            val nombreArchivo = archivo.title  // Obtén el nombre del archivo utilizando tu función
-            val requestFile = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), "")
-            val part = MultipartBody.Part.createFormData("files[]", nombreArchivo, requestFile)
-            files.add(part)
-        }
 
         Log.d("FormRequestSupplier", "Selected Policies: $selectedPolicies")
 
-// Imprimir questionsWithResponses en el log
+        // Imprimir questionsWithResponses en el log
         Log.d("FormRequestSupplier", "Questions with Responses: $questionsWithResponses")
 
 
@@ -436,6 +456,9 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                 response: Response<SimpleResponse>
             ) {
                 if (response.isSuccessful) {
+
+                    sendFiles()
+
                     preferences["UserRolePreferences"] = "proveedor"
                     val message = "Su solicitud fue enviada satisfactoriamente."
                     val intent = Intent(
@@ -450,13 +473,13 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                     finish()
                 } else {
                     toast("Ocurrio un error inesperado en el registro de la solicitud")
-                    btnConfirm.isClickable = true
+//                    btnConfirm.isClickable = true
                 }
             }
 
             override fun onFailure(call: Call<SimpleResponse>, t: Throwable) {
                 t.localizedMessage?.let { toast(it) }
-                btnConfirm.isClickable = true
+//                btnConfirm.isClickable = true
             }
 
         })
@@ -927,22 +950,27 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         val dir2 = findViewById<EditText>(R.id.etDir2).text.toString()
         val rgTipoPago = findViewById<RadioGroup>(R.id.rgTipoPago)
 
-        val selectedTipoPagoId = rgTipoPago.checkedRadioButtonId
-        if (dir2.isEmpty()) {
-            etDir2.error = "Ingrese su localidad donde reside o estado"
-            return false
-        }
-        if (dir1.isEmpty()) {
-            etDir1.error = "Ingrese la calle o numero de residencia"
+        val selectedTypePaymentId = rgTipoPago.checkedRadioButtonId
+        if (dir2.isEmpty() || !isValidInput(dir2)) {
+            etDir2.error = "Ingrese su localidad donde reside o estado sin símbolos extraños"
             return false
         }
 
-        if (selectedTipoPagoId == -1) {
+        if (dir1.isEmpty() || !isValidInput(dir1)) {
+            etDir1.error = "Ingrese la calle o numero de residencia sin símbolos extraños"
+            return false
+        }
+
+        if (selectedTypePaymentId == -1) {
             // Ningún RadioButton seleccionado en el grupo de Tipo de Pago
             toast("Debes seleccionar al menos un tipo de pago")
             return false
         }
 
         return true  // El formulario es válido
+    }
+    private fun isValidInput(input: String): Boolean {
+        val regex = Regex("[a-zA-Z0-9 ]+") // Permitir letras, números y espacios
+        return regex.matches(input)
     }
 }

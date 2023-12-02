@@ -14,6 +14,7 @@ data class SupplierRequest(
     val user: User,
     val type_payment: TypePayment,
     val method_payment: MethodPayment,
+    val documents: List<Document>,
     val questions: List<Question>,
     val policies: List<Policy>,
     val observations: List<Observation>
@@ -30,6 +31,7 @@ data class SupplierRequest(
         parcel.readParcelable(User::class.java.classLoader) ?: User(0, "", "", 0, "", null, null),
         parcel.readParcelable(TypePayment::class.java.classLoader) ?: TypePayment(0, "", ""),
         parcel.readParcelable(MethodPayment::class.java.classLoader) ?: MethodPayment(0, "", ""),
+        parcel.createTypedArrayList(Document.CREATOR) ?: emptyList(),
         parcel.createTypedArrayList(Question.CREATOR) ?: emptyList(),
         parcel.createTypedArrayList(Policy.CREATOR) ?: emptyList(),
         parcel.createTypedArrayList(Observation.CREATOR) ?: emptyList(),
@@ -46,6 +48,7 @@ data class SupplierRequest(
         parcel.writeParcelable(user, flags)
         parcel.writeParcelable(type_payment, flags)
         parcel.writeParcelable(method_payment, flags)
+        parcel.writeTypedList(documents)
         parcel.writeTypedList(questions)
         parcel.writeTypedList(policies)
         parcel.writeTypedList(observations)

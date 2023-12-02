@@ -226,6 +226,14 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 
             <Button
+                android:id="@+id/btnFiles"
+                style="@style/MenuButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorBtnLogin"
+                android:text="Files" />
+            <Button
                 android:id="@+id/btnProfile"
                 style="@style/MenuButton"
                 android:layout_width="match_parent"

@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--internet permissions and network state permission-->
     <uses-permission android:name="android.permission.INTERNET" />
+
 
     <application
         android:allowBackup="true"
@@ -14,52 +16,56 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GesPro"
         tools:targetApi="31">
-
+        <activity
+            android:name=".ui.ShowDocumentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.FilesActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.modules.user.UserActivity"
             android:exported="false"
-            android:parentActivityName=".ui.MenuActivity"/>
+            android:parentActivityName=".ui.MenuActivity" />
         <activity
             android:name=".ui.modules.user.FormUserActivity"
             android:exported="false"
-            android:parentActivityName=".ui.modules.user.UserActivity"/>
-
+            android:parentActivityName=".ui.modules.user.UserActivity" />
         <activity
             android:name=".ui.modules.method_payment.FormMethodPaymentActivity"
             android:exported="false"
-            android:parentActivityName=".ui.modules.method_payment.MethodPaymentActivity"/>
+            android:parentActivityName=".ui.modules.method_payment.MethodPaymentActivity" />
         <activity
             android:name=".ui.modules.method_payment.MethodPaymentActivity"
             android:exported="false"
-            android:parentActivityName=".ui.MenuActivity"/>
+            android:parentActivityName=".ui.MenuActivity" />
         <activity
             android:name=".ui.modules.condition_payment.FormConditionPaymentActivity"
             android:exported="false"
-            android:parentActivityName=".ui.modules.condition_payment.ConditionPaymentActivity"/>
+            android:parentActivityName=".ui.modules.condition_payment.ConditionPaymentActivity" />
         <activity
             android:name=".ui.modules.condition_payment.ConditionPaymentActivity"
             android:exported="false"
-            android:parentActivityName=".ui.MenuActivity"/>
+            android:parentActivityName=".ui.MenuActivity" />
         <activity
             android:name=".ui.modules.state.FormStateRequestActivity"
             android:exported="false"
-            android:parentActivityName=".ui.modules.state.StateRequestActivity"/>
+            android:parentActivityName=".ui.modules.state.StateRequestActivity" />
         <activity
             android:name=".ui.modules.question.FormQuestionActivity"
             android:exported="false"
-            android:parentActivityName=".ui.modules.question.QuestionActivity"/>
+            android:parentActivityName=".ui.modules.question.QuestionActivity" />
         <activity
             android:name=".ui.modules.question.QuestionActivity"
             android:exported="false"
-            android:parentActivityName=".ui.MenuActivity"/>
+            android:parentActivityName=".ui.MenuActivity" />
         <activity
             android:name=".ui.modules.role.FormRoleActivity"
             android:exported="false"
-            android:parentActivityName=".ui.modules.role.RoleActivity"/>
+            android:parentActivityName=".ui.modules.role.RoleActivity" />
         <activity
             android:name=".ui.modules.role.RoleActivity"
             android:exported="false"
-            android:parentActivityName=".ui.MenuActivity"/>
+            android:parentActivityName=".ui.MenuActivity" />
         <activity
             android:name=".ui.modules.request.ShowRequestActivity"
             android:exported="false"
@@ -67,7 +73,7 @@
         <activity
             android:name=".ui.modules.supplier.FormSupplierActivity"
             android:exported="false"
-            android:parentActivityName=".ui.modules.supplier.SuppliersActivity"/>
+            android:parentActivityName=".ui.modules.supplier.SuppliersActivity" />
         <activity
             android:name=".ui.modules.supplier.ShowSupplierActivity"
             android:exported="false"
@@ -82,7 +88,7 @@
         <activity
             android:name=".ui.modules.state.StateRequestActivity"
             android:exported="false"
-            android:parentActivityName=".ui.MenuActivity"/>
+            android:parentActivityName=".ui.MenuActivity" />
         <activity
             android:name=".ui.modules.request.SupplierRequestsActivity"
             android:exported="false"

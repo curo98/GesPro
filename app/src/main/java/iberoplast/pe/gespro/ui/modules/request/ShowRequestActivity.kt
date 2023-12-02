@@ -21,9 +21,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.model.SupplierRequest
+import iberoplast.pe.gespro.ui.ShowDocumentActivity
 import iberoplast.pe.gespro.util.ActionBarUtils
 import java.text.SimpleDateFormat
 import java.util.Locale
+
 
 class ShowRequestActivity : AppCompatActivity() {
 
@@ -49,6 +51,9 @@ class ShowRequestActivity : AppCompatActivity() {
         val llDetailObservations = findViewById<LinearLayout>(R.id.llDetailObservations)
         val ibExpandObservations = findViewById<ImageButton>(R.id.ibExpandObservations)
 
+        val llDetailDocuments = findViewById<LinearLayout>(R.id.llDetailDocuments)
+        val ibExpandDocuments = findViewById<ImageButton>(R.id.ibExpandDocuments)
+
         val llDetailTransitions = findViewById<LinearLayout>(R.id.llDetailTransitions)
         val ibExpandTransitions = findViewById<ImageButton>(R.id.ibExpandTransitions)
 
@@ -56,6 +61,7 @@ class ShowRequestActivity : AppCompatActivity() {
         val tvPolicy = findViewById<TextView>(R.id.tvPolicy)
         val tvObservation = findViewById<TextView>(R.id.tvObservation)
         val tvTransition = findViewById<TextView>(R.id.tvTransition)
+        val tvDocument = findViewById<TextView>(R.id.tvDocument)
 
         val tvName = findViewById<TextView>(R.id.tvName)
         val tvTypePay = findViewById<TextView>(R.id.tvTypePayment)
@@ -106,6 +112,7 @@ class ShowRequestActivity : AppCompatActivity() {
             val questions = request.questions
             val policies = request.policies
             val observations = request.observations
+            val documents = request.documents
             val transitions = request.stateTransitions
 
             tvName.text = request.user.name
@@ -113,6 +120,7 @@ class ShowRequestActivity : AppCompatActivity() {
             tvObservation.text = "Observaciones: ${observations.size}"
             tvPolicy.text = "Politicas: ${policies.size}"
             tvTransition.text = "Transiciones: ${transitions.size}"
+            tvDocument.text = "Documentos: ${documents.size}"
 
             // Tu código existente
             val typePaymentText = "Tipo de Pago: \n${request.type_payment.name}"
@@ -184,6 +192,80 @@ class ShowRequestActivity : AppCompatActivity() {
                         textView.gravity = Gravity.CENTER_HORIZONTAL
 
                         llDetailPolicies.addView(textView)
+                    }
+                }
+            }
+
+            ibExpandDocuments.setOnClickListener {
+                val isVisible = llDetailDocuments.visibility == View.VISIBLE
+
+                if (isVisible) {
+                    llDetailDocuments.startAnimation(createFadeOutAnimation {
+                        llDetailDocuments.visibility = View.GONE
+                        ibExpandDocuments.setImageResource(R.drawable.ic_expand_more)
+                    })
+                } else {
+                    llDetailDocuments.visibility = View.VISIBLE
+                    llDetailDocuments.startAnimation(createFadeInAnimation())
+                    ibExpandDocuments.setImageResource(R.drawable.ic_expand_less)
+
+                    llDetailDocuments.removeAllViews()
+
+                    for (document in documents) {
+                        val formattedPolicy = "${document.uri}"
+
+                        // Crear un contenedor lineal horizontal para cada fila
+                        val rowLayout = LinearLayout(this)
+                        rowLayout.layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        )
+                        rowLayout.orientation = LinearLayout.HORIZONTAL
+                        rowLayout.gravity = Gravity.CENTER_VERTICAL
+
+                        // Crear un TextView para mostrar el nombre del documento
+                        val textView = TextView(this)
+                        val textLayoutParams = LinearLayout.LayoutParams(
+                            0,
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            1.0f
+                        )
+                        textLayoutParams.gravity = Gravity.CENTER_VERTICAL
+                        textView.layoutParams = textLayoutParams
+                        textView.text = "https://gespro-iberoplast.tech${document.uri}"
+
+                        // Crear un ImageButton con un icono de "ver" personalizado
+                        val viewButton = ImageButton(this)
+                        val buttonLayoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        )
+                        buttonLayoutParams.gravity = Gravity.CENTER_VERTICAL
+                        viewButton.layoutParams = buttonLayoutParams
+                        viewButton.setImageResource(R.drawable.icon_preview)  // Reemplaza "ic_ver_icon" con el nombre de tu recurso de imagen
+                        viewButton.setOnClickListener {
+                            val uri = document.uri
+
+                            // Concatenar el dominio con la URI para formar la URL completa
+                            val dominio = "https://gespro-iberoplast.tech"
+                            val urlCompleta = "$dominio$uri"
+
+                            // Crear un Intent para iniciar la nueva actividad
+                            val intent = Intent(this, ShowDocumentActivity::class.java)
+
+                            // Pasar la URL completa del PDF como un extra al Intent
+                            intent.putExtra("url", urlCompleta)
+
+                            // Iniciar la nueva actividad
+                            startActivity(intent)
+                        }
+
+                        // Agregar tanto el TextView como el ImageButton al contenedor lineal horizontal
+                        rowLayout.addView(textView)
+                        rowLayout.addView(viewButton)
+
+                        // Agregar el contenedor lineal horizontal al contenedor lineal principal
+                        llDetailDocuments.addView(rowLayout)
                     }
                 }
             }

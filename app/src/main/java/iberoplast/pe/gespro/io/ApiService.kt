@@ -16,6 +16,7 @@ import iberoplast.pe.gespro.model.Supplier
 import iberoplast.pe.gespro.model.SupplierRequest
 import iberoplast.pe.gespro.model.TypePayment
 import iberoplast.pe.gespro.model.User
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
@@ -25,13 +26,18 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 
 interface ApiService {
-
+    @Multipart
+    @POST("upload")
+    @Headers("Accept: application/json")
+    fun uploadFiles(@Header("Authorization") authHeader: String, @Part files: List<MultipartBody.Part>): Call<Void>
     //CHARTS
     @GET("requests-by-weekend")
     @Headers("Accept: application/json")
@@ -342,6 +348,7 @@ interface ApiService {
         @Query("typePayment") typePayment: String?,
         @Query("methodPayment") methodPayment: String?,
 //        @Part files: List<MultipartBody.Part>,
+
         @Body requestData: RequestData
     ): Call<SimpleResponse>
     @GET("countries")
