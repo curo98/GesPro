@@ -13,6 +13,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.model.SupplierRequest
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class SupplierRequestAdapter : RecyclerView.Adapter<SupplierRequestAdapter.ViewHolder>() {
 
@@ -60,12 +62,19 @@ class SupplierRequestAdapter : RecyclerView.Adapter<SupplierRequestAdapter.ViewH
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val tvDeletedMessage: TextView = itemView.findViewById(R.id.tvDeletedMessage)
         private val tvRequestId: TextView = itemView.findViewById(R.id.tvRequestId)
         private val tvUserId: TextView = itemView.findViewById(R.id.tvUserId)
         private val tvStateId: TextView = itemView.findViewById(R.id.tvStateId)
         private val tvTypePayId: TextView = itemView.findViewById(R.id.tvTypePayId)
         private val tvMethodPayId: TextView = itemView.findViewById(R.id.tvMethodPayId)
         fun bind(request: SupplierRequest) {
+            if (request.deleted_at != null) {
+                // Si ha sido eliminada, aplicar sombreado al CardView
+                tvDeletedMessage.visibility = View.VISIBLE
+                tvDeletedMessage.text = "Esta solicitud ha sido eliminada\n${formatDate(request.deleted_at)}"
+                itemView.setBackgroundResource(R.drawable.bg_deleted_item)
+            }
             // CODIGO PARA APLICAR NEGRITA A LOS TEXTVIEW, EXCEPTO A LOS VALOR OBTENIDOS DESDE LA API
             applyBoldStyleToAttribute(tvRequestId, "Solicitud #", request.id)
             applyBoldStyleToAttribute(tvUserId, "Solicitante", request.user.name)
@@ -179,7 +188,20 @@ class SupplierRequestAdapter : RecyclerView.Adapter<SupplierRequestAdapter.ViewH
             applyBoldStyleToAttribute(tvTypePayId, "Comprobante emitido", request.type_payment.name)
             applyBoldStyleToAttribute(tvMethodPayId, "Pago por", request.method_payment.name)
         }
-
+        private fun formatDate(dateTime: String?): String {
+            if (dateTime.isNullOrEmpty()) {
+                return ""
+            }
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
+            try {
+                val date = inputFormat.parse(dateTime)
+                return outputFormat.format(date)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return dateTime // Si ocurre un error, devolvemos el valor original
+            }
+        }
         private fun applyBoldStyleToAttribute(textView: TextView, attribute: String, value: Any?) {
 
             val text = if (
@@ -220,9 +242,11 @@ class SupplierRequestAdapter : RecyclerView.Adapter<SupplierRequestAdapter.ViewH
         holder.bind(request)
         // Agregar OnLongClickListener a la vista raíz del elemento
         holder.itemView.setOnLongClickListener { view ->
-            setNewSelectedRequest(request)
-            // Muestra el menú contextual
-            view.showContextMenu()
+            if (request.deleted_at == null) {
+                setNewSelectedRequest(request)
+                // Muestra el menú contextual
+                view.showContextMenu()
+            }
             true
         }
     }

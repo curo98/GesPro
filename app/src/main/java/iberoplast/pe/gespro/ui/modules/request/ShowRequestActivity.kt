@@ -19,15 +19,19 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import com.airbnb.lottie.LottieAnimationView
+import com.squareup.picasso.Picasso
 import iberoplast.pe.gespro.R
+import iberoplast.pe.gespro.io.PdfFragmentListener
 import iberoplast.pe.gespro.model.SupplierRequest
-import iberoplast.pe.gespro.ui.ShowDocumentActivity
 import iberoplast.pe.gespro.util.ActionBarUtils
+import iberoplast.pe.gespro.util.PdfFragment
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 
-class ShowRequestActivity : AppCompatActivity() {
+class ShowRequestActivity : AppCompatActivity(), PdfFragmentListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -62,6 +66,8 @@ class ShowRequestActivity : AppCompatActivity() {
         val tvObservation = findViewById<TextView>(R.id.tvObservation)
         val tvTransition = findViewById<TextView>(R.id.tvTransition)
         val tvDocument = findViewById<TextView>(R.id.tvDocument)
+
+        val ivFlagCountry: ImageView = findViewById(R.id.ivFlagCountry)
 
         val tvName = findViewById<TextView>(R.id.tvName)
         val tvTypePay = findViewById<TextView>(R.id.tvTypePayment)
@@ -115,16 +121,37 @@ class ShowRequestActivity : AppCompatActivity() {
             val documents = request.documents
             val transitions = request.stateTransitions
 
+            val uri = request.user.supplier?.flag_country
+
+            // Concatenar el dominio con la URI para formar la URL completa
+            val domain = "https://gespro-iberoplast.tech"
+            val flagCountryURL = "$domain$uri"
+
             tvName.text = request.user.name
-            tvQuestion.text = "Preguntas: ${questions.size}"
+            Picasso.get().load("${flagCountryURL}").into(ivFlagCountry)
+
+            // Crear un tipo de letra en negrita
+            val boldTypeface = Typeface.defaultFromStyle(Typeface.BOLD)
+            // Aplicar el tipo de letra en negrita a los TextView
+            tvQuestion.text = "Preguntas respondidas: ${questions.size}"
+            tvQuestion.setTypeface(boldTypeface, Typeface.BOLD)
+
             tvObservation.text = "Observaciones: ${observations.size}"
-            tvPolicy.text = "Politicas: ${policies.size}"
-            tvTransition.text = "Transiciones: ${transitions.size}"
-            tvDocument.text = "Documentos: ${documents.size}"
+            tvObservation.setTypeface(boldTypeface, Typeface.BOLD)
+
+            tvPolicy.text = "Políticas aceptadas: ${policies.size}"
+            tvPolicy.setTypeface(boldTypeface, Typeface.BOLD)
+
+            tvTransition.text = "Seguimiento: ${transitions.size}"
+            tvTransition.setTypeface(boldTypeface, Typeface.BOLD)
+
+            tvDocument.text = "Documentos adjuntados: ${documents.size}"
+            tvDocument.setTypeface(boldTypeface, Typeface.BOLD)
+
 
             // Tu código existente
-            val typePaymentText = "Tipo de Pago: \n${request.type_payment.name}"
-            applyBoldToTextView(tvTypePay, typePaymentText, "Tipo de Pago:")
+            val typePaymentText = "Condición de Pago: \n${request.type_payment.name}"
+            applyBoldToTextView(tvTypePay, typePaymentText, "Condición de Pago:")
 
             val methodPaymentText = "Método de Pago: \n${request.method_payment.name}"
             applyBoldToTextView(tvMethodPay, methodPaymentText, "Método de Pago:")
@@ -232,7 +259,7 @@ class ShowRequestActivity : AppCompatActivity() {
                         )
                         textLayoutParams.gravity = Gravity.CENTER_VERTICAL
                         textView.layoutParams = textLayoutParams
-                        textView.text = "https://gespro-iberoplast.tech${document.uri}"
+                        textView.text = document.title
 
                         // Crear un ImageButton con un icono de "ver" personalizado
                         val viewButton = ImageButton(this)
@@ -244,20 +271,22 @@ class ShowRequestActivity : AppCompatActivity() {
                         viewButton.layoutParams = buttonLayoutParams
                         viewButton.setImageResource(R.drawable.icon_preview)  // Reemplaza "ic_ver_icon" con el nombre de tu recurso de imagen
                         viewButton.setOnClickListener {
+
+                            val cvShowRequest = findViewById<CardView>(R.id.cvShowRequest)
+                            cvShowRequest.visibility = View.GONE
                             val uri = document.uri
 
                             // Concatenar el dominio con la URI para formar la URL completa
                             val dominio = "https://gespro-iberoplast.tech"
-                            val urlCompleta = "$dominio$uri"
+                            val pdf_url = "$dominio$uri"
 
-                            // Crear un Intent para iniciar la nueva actividad
-                            val intent = Intent(this, ShowDocumentActivity::class.java)
-
-                            // Pasar la URL completa del PDF como un extra al Intent
-                            intent.putExtra("url", urlCompleta)
-
-                            // Iniciar la nueva actividad
-                            startActivity(intent)
+                            val pdfFragment = PdfFragment.newInstance("${pdf_url}")
+                            pdfFragment.setPdfFragmentListener(this)
+                            // Utiliza replace en lugar de add
+                            supportFragmentManager.beginTransaction()
+                                .replace(android.R.id.content, pdfFragment)
+                                .addToBackStack(null)
+                                .commit()
                         }
 
                         // Agregar tanto el TextView como el ImageButton al contenedor lineal horizontal
@@ -352,6 +381,7 @@ class ShowRequestActivity : AppCompatActivity() {
                             LinearLayout.LayoutParams.WRAP_CONTENT
                         )
                         itemLayout.orientation = LinearLayout.HORIZONTAL
+                        itemLayoutParams.gravity = Gravity.CENTER
                         itemLayout.layoutParams = itemLayoutParams
 
                         // Agregar el TextView con la fecha (centrado verticalmente en la parte superior)
@@ -360,10 +390,11 @@ class ShowRequestActivity : AppCompatActivity() {
                             LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT
                         )
-                        dateTextView.text = formatDate(request.created_at)
+                        dateTextView.text = formatDateTime(request.created_at)
                         dateTextView.setTextColor(resources.getColor(R.color.black))
                         dateParams.gravity = Gravity.CENTER
                         itemLayout.addView(dateTextView, dateParams)
+
 
                         // Agregar un espacio entre el TextView y la línea vertical
                         val spaceView = View(this)
@@ -382,17 +413,31 @@ class ShowRequestActivity : AppCompatActivity() {
                         verticalLine.setBackgroundColor(resources.getColor(R.color.black))
                         itemLayout.addView(verticalLine, verticalLineParams)
 
-                        // Agregar el icono de check_circle
-                        val checkCircle = ImageView(this)
+//                        // Agregar el icono de check_circle
+//                        val checkCircle = ImageView(this)
+//                        val checkCircleParams = LinearLayout.LayoutParams(
+//                            resources.getDimensionPixelSize(R.dimen.check_circle_size),
+//                            resources.getDimensionPixelSize(R.dimen.check_circle_size)
+//                        )
+//                        checkCircle.setImageResource(R.drawable.ic_check_circle)
+//                        checkCircleParams.gravity = Gravity.CENTER_VERTICAL // Centra verticalmente el icono
+//                        checkCircleParams.marginEnd = resources.getDimensionPixelSize(R.dimen.check_circle_margin_end)
+//                        checkCircleParams.marginStart = resources.getDimensionPixelSize(R.dimen.check_circle_margin_start) // Agregar margen izquierdo
+//                        itemLayout.addView(checkCircle, checkCircleParams)
+                        // Agregar el icono de check_circle con animación Lottie
+                        val checkCircle = LottieAnimationView(this)
                         val checkCircleParams = LinearLayout.LayoutParams(
                             resources.getDimensionPixelSize(R.dimen.check_circle_size),
                             resources.getDimensionPixelSize(R.dimen.check_circle_size)
                         )
-                        checkCircle.setImageResource(R.drawable.ic_check_circle)
+                        checkCircle.setAnimation(getLottieAnimationAssetForState(transition.toState.name))
+                        checkCircle.loop(true)
+                        checkCircle.playAnimation()
                         checkCircleParams.gravity = Gravity.CENTER_VERTICAL // Centra verticalmente el icono
                         checkCircleParams.marginEnd = resources.getDimensionPixelSize(R.dimen.check_circle_margin_end)
                         checkCircleParams.marginStart = resources.getDimensionPixelSize(R.dimen.check_circle_margin_start) // Agregar margen izquierdo
                         itemLayout.addView(checkCircle, checkCircleParams)
+
 
                         // Crear un LinearLayout para el contenido
                         val contentLayout = LinearLayout(this)
@@ -454,9 +499,24 @@ class ShowRequestActivity : AppCompatActivity() {
                     }
                 }
             }
-
-
         }
+    }
+    private fun getLottieAnimationAssetForState(stateName: String): String {
+        return when (stateName) {
+            "Cancelada" -> "canceled.json"
+            "Recibida" -> "received.json"
+            "Por recibir" -> "pending_receive.json"
+            "Por validar" -> "validate.json"
+            "Por aprobar" -> "pending_validate.json"
+            "Aprobada" -> "approved.json"
+            "Validada" -> "validated.json"
+            "Rechazada" -> "rejected.json"
+            else -> "loader.json"
+        }
+    }
+    override fun onCloseButtonClicked() {
+        val cvShowRequest = findViewById<CardView>(R.id.cvShowRequest)
+        cvShowRequest.visibility = View.VISIBLE
     }
     // Función de extensión para convertir dp a píxeles
     fun Int.dpToPx(): Int {
@@ -491,6 +551,23 @@ class ShowRequestActivity : AppCompatActivity() {
         try {
             val date = inputFormat.parse(dateTime)
             return outputFormat.format(date)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return dateTime // Si ocurre un error, devolvemos el valor original
+        }
+    }
+    private fun formatDateTime(dateTime: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+        val outputDateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
+        val outputTimeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault()) // Ajusta el formato para incluir AM/PM
+
+        try {
+            val date = inputFormat.parse(dateTime)
+            val formattedDate = outputDateFormat.format(date)
+            val formattedTime = outputTimeFormat.format(date)
+
+            // Concatena la fecha y la hora con AM/PM
+            return "$formattedDate\n$formattedTime"
         } catch (e: Exception) {
             e.printStackTrace()
             return dateTime // Si ocurre un error, devolvemos el valor original

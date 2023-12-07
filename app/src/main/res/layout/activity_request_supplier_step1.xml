@@ -24,10 +24,11 @@
         android:orientation="horizontal"
         android:id="@+id/rgTipoProveedor"> <!-- Espacio agregado aquí -->
 
-        <Spinner
+        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
             android:id="@+id/spinnerPaises"
             android:layout_height="wrap_content"
             android:layout_width="match_parent" />
+
     </RadioGroup>
 
     <TextView

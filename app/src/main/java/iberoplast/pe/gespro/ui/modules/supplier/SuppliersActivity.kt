@@ -95,6 +95,33 @@ class SuppliersActivity : AppCompatActivity() {
             menu?.setHeaderTitle("Opciones")
             val inflater: MenuInflater = menuInflater
             inflater.inflate(R.menu.menu_options_supplier, menu)
+
+            val showItem = menu?.findItem(R.id.show)
+            val editItem = menu?.findItem(R.id.edit)
+            val trashItem = menu?.findItem(R.id.trash)
+
+            showItem?.isVisible = false
+            editItem?.isVisible = false
+            trashItem?.isVisible = false
+
+
+            val userRoleName = preferences["UserRolePreferences", ""]
+
+            when (userRoleName) {
+                "compras" -> {
+                    showItem?.isVisible = true
+                }
+
+                "contabilidad" -> {
+                    showItem?.isVisible = true
+                }
+
+                "admin" -> {
+                    showItem?.isVisible = true
+                    editItem?.isVisible = true
+                }
+                // Agrega más casos según sea necesario
+            }
         }
     }
     override fun onContextItemSelected(item: MenuItem): Boolean {

@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="30sp"
+            android:textStyle="bold"
             android:text="@string/label_register"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
 

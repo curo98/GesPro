@@ -8,6 +8,7 @@ data class SupplierRequest(
     val id_user: Int,
     val id_type_payment: Int,
     val id_method_payment: Int,
+    val deleted_at: String,
     val created_at: String,
     val updated_at: String,
     val stateTransitions: List<StateTransition>,
@@ -27,8 +28,9 @@ data class SupplierRequest(
         parcel.readInt(),
         parcel.readString() ?: "",
         parcel.readString() ?: "",
+        parcel.readString() ?: "",
         parcel.createTypedArrayList(StateTransition.CREATOR) ?: emptyList(),
-        parcel.readParcelable(User::class.java.classLoader) ?: User(0, "", "", 0, "", null, null),
+        parcel.readParcelable(User::class.java.classLoader) ?: User(0, "","", "", 0, "", null, null),
         parcel.readParcelable(TypePayment::class.java.classLoader) ?: TypePayment(0, "", ""),
         parcel.readParcelable(MethodPayment::class.java.classLoader) ?: MethodPayment(0, "", ""),
         parcel.createTypedArrayList(Document.CREATOR) ?: emptyList(),
@@ -42,6 +44,7 @@ data class SupplierRequest(
         parcel.writeInt(id_user)
         parcel.writeInt(id_type_payment)
         parcel.writeInt(id_method_payment)
+        parcel.writeString(deleted_at)
         parcel.writeString(created_at)
         parcel.writeString(updated_at)
         parcel.writeTypedList(stateTransitions)

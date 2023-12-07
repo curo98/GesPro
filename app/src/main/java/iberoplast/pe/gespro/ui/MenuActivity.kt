@@ -32,6 +32,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.messaging.messaging
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
+import iberoplast.pe.gespro.io.response.VerifyRequest
 import iberoplast.pe.gespro.io.response.charts.ChartDataResponse
 import iberoplast.pe.gespro.io.response.charts.ResponseCounts
 import iberoplast.pe.gespro.io.response.charts.UserRoleResponse
@@ -74,12 +75,6 @@ class MenuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu)
-
-        val btnFiles = findViewById<Button>(R.id.btnFiles)
-        btnFiles.setOnClickListener {
-            val intent = Intent(this, FilesActivity::class.java)
-            startActivity(intent)
-        }
 
         val storeToken = intent.getBooleanExtra("store_token", false)
         if (storeToken){
@@ -133,8 +128,7 @@ class MenuActivity : AppCompatActivity() {
         val btnLogout = findViewById<Button>(R.id.btnLogout)
 
         btnCrearSolicitud.setOnClickListener{
-            val intent = Intent(this, FormRequestSupplierActivity::class.java)
-            startActivity(intent)
+            verifyRequest()
         }
 
         btnListProveedores.setOnClickListener{
@@ -191,6 +185,34 @@ class MenuActivity : AppCompatActivity() {
             }
         }
 
+    }
+    private fun verifyRequest() {
+        val jwt = preferences["jwt", ""]
+        val authHeader = "Bearer $jwt"
+        val call = apiService.verifyRequest(authHeader)
+
+        call.enqueue(object : Callback<VerifyRequest> {
+            override fun onResponse(call: Call<VerifyRequest>, response: Response<VerifyRequest>) {
+                if (response.isSuccessful) {
+                    val apiResponse = response.body()
+
+                    if (apiResponse?.canContinue == true) {
+                        // Puedes continuar a la otra actividad
+                        val intent = Intent(this@MenuActivity, FormRequestSupplierActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        // Mostrar el Toast de error
+                        toast(apiResponse?.message ?: "Respuesta sin mensaje")
+                    }
+                } else {
+                    toast("Error en la solicitud")
+                }
+            }
+
+            override fun onFailure(call: Call<VerifyRequest>, t: Throwable) {
+                toast("Error en la solicitud: ${t.message}")
+            }
+        })
     }
 
     private fun barChart() {
@@ -424,6 +446,7 @@ class MenuActivity : AppCompatActivity() {
         // Accede a los elementos de menú que deseas mostrar u ocultar según el rol del usuario
         val imAdministration = menu?.findItem(R.id.imAdministration)
         val imSuppliers = menu?.findItem(R.id.imSuppliers)
+        val imNotify = menu?.findItem(R.id.imNotify)
         val imRequests = menu?.findItem(R.id.imRequests)
         val imCreateRequest = menu?.findItem(R.id.imCreateRequest)
         val imListMyRequests = menu?.findItem(R.id.imListMyRequests)
@@ -431,6 +454,7 @@ class MenuActivity : AppCompatActivity() {
 
         when (userRoleName) {
             "admin" -> {
+                imNotify?.isVisible = true
                 imAdministration?.isVisible = true
                 imSuppliers?.isVisible = true
                 imRequests?.isVisible = true
@@ -472,10 +496,10 @@ class MenuActivity : AppCompatActivity() {
         return true
     }
 
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val intent: Intent = when (item.itemId) {
+        val intent: Intent? = when (item.itemId) {
             R.id.imMyProfile -> Intent(this, ProfileActivity::class.java)
+            R.id.imNotify -> Intent(this, NotifyActivity::class.java)
             R.id.imStates -> Intent(this, StateRequestActivity::class.java)
             R.id.imTypePayments -> Intent(this, ConditionPaymentActivity::class.java)
             R.id.imMethodPayments -> Intent(this, MethodPaymentActivity::class.java)
@@ -484,7 +508,7 @@ class MenuActivity : AppCompatActivity() {
             R.id.imUsers -> Intent(this, UserActivity::class.java)
             R.id.imCreateSupplier -> Intent(this, FormSupplierActivity::class.java)
             R.id.imListSuppliers -> Intent(this, SuppliersActivity::class.java)
-            R.id.imCreateRequest -> Intent(this, FormRequestSupplierActivity::class.java)
+            R.id.imCreateRequest -> null // No necesitas un Intent aquí, ya que se manejará dentro de verifyRequest()
             R.id.imListMyRequests, R.id.imListRequests -> Intent(this, SupplierRequestsActivity::class.java)
             R.id.imLogout -> {
                 performLogout()
@@ -493,7 +517,12 @@ class MenuActivity : AppCompatActivity() {
             else -> return super.onOptionsItemSelected(item)
         }
 
-        startActivity(intent)
+        if (intent != null) {
+            startActivity(intent)
+        } else {
+            // Llama a verifyRequest() y maneja la navegación dentro de esa función
+            verifyRequest()
+        }
         return true
     }
     private fun performLogout(){

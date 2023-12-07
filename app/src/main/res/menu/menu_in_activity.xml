@@ -5,6 +5,10 @@
         android:id="@+id/imMyProfile"
         android:title="Mi perfil" />
     <item
+        android:id="@+id/imNotify"
+        android:title="Notificar"
+        android:visible="false"/>
+    <item
         android:id="@+id/imAdministration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

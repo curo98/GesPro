@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
+import iberoplast.pe.gespro.io.response.VerifyRequest
 import iberoplast.pe.gespro.model.SupplierRequest
 import iberoplast.pe.gespro.ui.adapters.SupplierRequestAdapter
 import iberoplast.pe.gespro.util.ActionBarUtils
@@ -81,10 +82,38 @@ class SupplierRequestsActivity : AppCompatActivity() {
         }
 
         btnCreate.setOnClickListener {
-            val intent = Intent(this, FormRequestSupplierActivity::class.java)
-            startActivity(intent)
-            finish()
+            verifyRequest()
         }
+    }
+    private fun verifyRequest()
+    {
+        val jwt = preferences["jwt", ""]
+        val authHeader = "Bearer $jwt"
+        val call = apiService.verifyRequest(authHeader)
+
+        call.enqueue(object : Callback<VerifyRequest> {
+            override fun onResponse(call: Call<VerifyRequest>, response: Response<VerifyRequest>) {
+                if (response.isSuccessful) {
+                    val apiResponse = response.body()
+
+                    if (apiResponse?.canContinue == true) {
+                        // Puedes continuar a la otra actividad
+                        val intent = Intent(this@SupplierRequestsActivity, FormRequestSupplierActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        // Mostrar el Toast de error
+                        toast(apiResponse?.message ?: "Respuesta sin mensaje")
+                    }
+                } else {
+                    toast("Error en la solicitud")
+                }
+            }
+
+            override fun onFailure(call: Call<VerifyRequest>, t: Throwable) {
+                toast("Error en la solicitud: ${t.message}")
+            }
+        })
     }
 
     override fun onCreateContextMenu(
@@ -103,6 +132,7 @@ class SupplierRequestsActivity : AppCompatActivity() {
             val validateItem = menu?.findItem(R.id.validate)
             val showItem = menu?.findItem(R.id.show)
             val editItem = menu?.findItem(R.id.edit)
+            val trashItem = menu?.findItem(R.id.trash)
             val cancel = menu?.findItem(R.id.cancel)
             val approveItem = menu?.findItem(R.id.approve)
             val disapproveItem = menu?.findItem(R.id.disapprove)
@@ -112,6 +142,7 @@ class SupplierRequestsActivity : AppCompatActivity() {
             validateItem?.isVisible = false
             showItem?.isVisible = false
             editItem?.isVisible = false
+            trashItem?.isVisible = false
             cancel?.isVisible = false
             approveItem?.isVisible = false
             disapproveItem?.isVisible = false
@@ -138,13 +169,15 @@ class SupplierRequestsActivity : AppCompatActivity() {
 
                 "proveedor" -> {
                     showItem?.isVisible = true
-                    editItem?.isVisible = true
-                    cancel?.isVisible = true
+                    editItem?.isVisible = estado != "Cancelada" && estado != "Desaprobada"
+                    trashItem?.isVisible = true
+                    cancel?.isVisible = estado != "Aprobada" && estado != "Cancelada" && estado != "Desaprobada"
                 }
 
                 "admin" -> {
                     showItem?.isVisible = true
                     editItem?.isVisible = estado != "Cancelada" && estado != "Desaprobada"
+                    trashItem?.isVisible = true
                     cancel?.isVisible =
                         estado != "Aprobada" && estado != "Cancelada" && estado != "Desaprobada"
                     receiveItem?.isVisible = estado == "Por recibir"
@@ -166,6 +199,7 @@ class SupplierRequestsActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.show -> executeIfNotNull(id) { showRequest(it) }
             R.id.edit -> executeIfNotNull(id) { editRequest(it) }
+            R.id.trash -> executeIfNotNull(id) { trashRequest(it) }
             R.id.receive -> executeIfNotNull(id) { receiveRequest(it) }
             R.id.validate -> executeIfNotNull(id) { validateRequest(it) }
             R.id.approve -> executeIfNotNull(id) { approveRequest(it) }
@@ -184,6 +218,7 @@ class SupplierRequestsActivity : AppCompatActivity() {
     private fun performRequestAction(id: Int, action: String, successMessage: String) {
         val jwt = preferences["jwt", ""]
         val call = when (action) {
+            "trash" -> apiService.trashRequest("Bearer $jwt", id)
             "cancel" -> apiService.cancelRequest("Bearer $jwt", id)
             "disapprove" -> apiService.disapproveRequest("Bearer $jwt", id)
             "receive" -> apiService.receiveRequest("Bearer $jwt", id)
@@ -209,6 +244,9 @@ class SupplierRequestsActivity : AppCompatActivity() {
                 t.localizedMessage?.let { toast(it) }
             }
         })
+    }
+    private fun trashRequest(id: Int) {
+        performRequestAction(id, "trash", "La solicitud ha sido eliminada correctamente")
     }
 
     private fun cancelRequest(id: Int) {

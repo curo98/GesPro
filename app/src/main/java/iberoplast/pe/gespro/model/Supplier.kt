@@ -6,6 +6,7 @@ import android.os.Parcelable
 data class Supplier(
     val id: Int,
     val nacionality: String,
+    val flag_country: String,
     val nic_ruc: String,
     val locality: String,
     val street_and_number: String,
@@ -21,16 +22,18 @@ data class Supplier(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
+        parcel.readString() ?: "",
         parcel.readInt(),
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
-        parcel.readParcelable(User::class.java.classLoader) ?: User(0, "", "", 0, "", null, null)
+        parcel.readParcelable(User::class.java.classLoader) ?: User(0, "", "", "", 0, "", null, null)
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
         parcel.writeString(nacionality)
+        parcel.writeString(flag_country)
         parcel.writeString(nic_ruc)
         parcel.writeString(locality)
         parcel.writeString(street_and_number)

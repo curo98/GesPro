@@ -8,6 +8,7 @@ data class User(
     val id: Int,
     val name: String,
     val email: String,
+    val photo: String,
     val id_role: Int?,
     val device_token: String?,
     val role: Role?,
@@ -15,6 +16,7 @@ data class User(
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
+        parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readValue(Int::class.java.classLoader) as? Int,
@@ -27,6 +29,7 @@ data class User(
         parcel.writeInt(id)
         parcel.writeString(name)
         parcel.writeString(email)
+        parcel.writeString(photo)
         parcel.writeValue(id_role)
         parcel.writeString(device_token)
         parcel.writeParcelable(role, flags)

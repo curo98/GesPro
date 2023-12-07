@@ -1,13 +1,19 @@
 package iberoplast.pe.gespro.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import com.squareup.picasso.Picasso
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
 import iberoplast.pe.gespro.model.User
@@ -15,6 +21,9 @@ import iberoplast.pe.gespro.util.ActionBarUtils
 import iberoplast.pe.gespro.util.PreferenceHelper
 import iberoplast.pe.gespro.util.PreferenceHelper.get
 import iberoplast.pe.gespro.util.toast
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,9 +36,27 @@ class ProfileActivity : AppCompatActivity() {
         PreferenceHelper.defaultPrefs(this)
     }
 
+    private val ciPhotoProfile by lazy { findViewById<ImageView>(R.id.ciPhotoProfile) }
+    private val etName by lazy { findViewById<EditText>(R.id.etName) }
+    private val etEmail by lazy { findViewById<EditText>(R.id.etEmail) }
+
+    private lateinit var getContent: ActivityResultLauncher<String>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+
+        // Inicializar getContent
+        getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let { selectedUri ->
+                val fileName = getFileName(selectedUri)
+                val fileContent = getContentBytes(selectedUri)
+                uploadPhotoProfile(fileName, fileContent)
+            }
+        }
+
+        ciPhotoProfile.setOnClickListener {
+            openGallery(getContent)
+        }
 
         val UserName = preferences["UserName", ""]
 
@@ -67,19 +94,76 @@ class ProfileActivity : AppCompatActivity() {
         })
     }
 
-    private fun displayProfileData(user: User){
-        // Obtener el TextInputLayout con el id iln
-        val iln = findViewById<TextInputLayout>(R.id.iln)
-        // Obtener el TextInputEditText con el id etName
-        val etName = iln.editText
-        // Establecer el texto del TextInputEditText
-        etName?.setText(user.name)
+    private fun openGallery(getContent: ActivityResultLauncher<String>) {
+        // Lanzar la actividad de selección de archivos
+        getContent.launch("image/*")
+    }
+    private fun getFileName(uri: Uri): String {
+        // Obtener el nombre del archivo desde su URI
+        val cursor = contentResolver.query(uri, null, null, null, null)
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val displayNameColumnIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                if (displayNameColumnIndex != -1) {
+                    val displayName = it.getString(displayNameColumnIndex)
+                    if (displayName != null) {
+                        return displayName
+                    }
+                }
+            }
+        }
+        return "Archivo no encontrado"
+    }
+    private fun getContentBytes(uri: Uri): ByteArray {
+        // Obtener los bytes del contenido del archivo
+        val inputStream = contentResolver.openInputStream(uri)
+        return inputStream?.readBytes() ?: byteArrayOf()
+    }
+    private fun uploadPhotoProfile(filename: String, fileContent: ByteArray) {
+        val jwt = preferences["jwt", ""]
+        val authHeader = "Bearer $jwt"
+        // Crear el objeto de la solicitud multipart
+        val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), fileContent)
+        val file = MultipartBody.Part.createFormData("file", filename, requestFile)
 
-        val ile = findViewById<TextInputLayout>(R.id.ile)
-        // Obtener el TextInputEditText con el id etName
-        val etEmail = ile.editText
-        // Establecer el texto del TextInputEditText
-        etEmail?.setText(user.email)
+        // Realizar la llamada a la API para cargar la foto
+        val call: Call<Void> = apiService.uploadPhotoProfile(authHeader, file)
+
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    // Éxito en la carga
+                    toast("Foto de perfil actualizada")
+                    val intent =
+                        Intent(this@ProfileActivity, ProfileActivity::class.java)
+                    finish()
+                    startActivity(intent)
+                } else {
+                    toast("Error al cargar la foto")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                toast("Error en la llamada de carga")
+            }
+        })
+    }
+
+    private fun displayProfileData(user: User){
+        val uri = user.photo
+        // Concatenar el dominio con la URI para formar la URL completa
+        val domain = "https://gespro-iberoplast.tech"
+        val photoURL = "$domain$uri"
+        Picasso.get()
+            .load(photoURL)
+            .placeholder(R.drawable.incognito) // Imagen de marcador de posición mientras carga
+            .error(R.drawable.incognito) // Imagen de error si falla la carga
+            .fit()
+            .centerCrop()
+            .into(ciPhotoProfile)
+
+        etName.setText(user.name)
+        etEmail.setText(user.email)
 
         val llLoader = findViewById<LinearLayout>(R.id.llLoader)
         val cvProfile = findViewById<CardView>(R.id.cvProfile)
@@ -94,10 +178,6 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun updateProfile(){
-
-        val etName = findViewById<TextInputEditText>(R.id.etName)
-        val etEmail = findViewById<TextInputEditText>(R.id.etEmail)
-
         val name = etName.text.toString().trim() // Obtén el valor del nombre y elimina espacios en blanco iniciales y finales
         val email = etEmail.text.toString().trim() // Obtén el valor del correo electrónico y elimina espacios en blanco iniciales y finales
 

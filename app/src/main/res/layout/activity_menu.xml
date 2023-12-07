@@ -2,7 +2,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -224,15 +223,6 @@
                 android:gravity="center"
                 android:text="Bienvenido"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
-
-            <Button
-                android:id="@+id/btnFiles"
-                style="@style/MenuButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/colorBtnLogin"
-                android:text="Files" />
             <Button
                 android:id="@+id/btnProfile"
                 style="@style/MenuButton"
@@ -283,10 +273,6 @@
                 android:background="@color/colorBtnLogin"
                 android:drawableEnd="@drawable/salir"
                 android:text="@string/btn_cerrar_sesion" />
-
-
-            <!-- match_content hace que sus atributos internos se ajusten al ancho total del
-            elemento padre-->
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

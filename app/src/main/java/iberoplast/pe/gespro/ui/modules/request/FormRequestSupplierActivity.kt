@@ -9,10 +9,13 @@ import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.Filter
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RadioButton
@@ -26,11 +29,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.io.ApiService
+import iberoplast.pe.gespro.io.PdfFragmentListener
 import iberoplast.pe.gespro.io.response.SimpleResponse
 import iberoplast.pe.gespro.model.Countrie
-import iberoplast.pe.gespro.model.Documents
+import iberoplast.pe.gespro.model.DocumentLoadToServer
 import iberoplast.pe.gespro.model.MethodPayment
 import iberoplast.pe.gespro.model.Policy
 import iberoplast.pe.gespro.model.PolicyPivot
@@ -41,6 +46,7 @@ import iberoplast.pe.gespro.model.SupplierRequest
 import iberoplast.pe.gespro.model.TypePayment
 import iberoplast.pe.gespro.ui.modules.SuccesfulRegisterActivity
 import iberoplast.pe.gespro.util.ActionBarUtils
+import iberoplast.pe.gespro.util.PdfFragment
 import iberoplast.pe.gespro.util.PreferenceHelper
 import iberoplast.pe.gespro.util.PreferenceHelper.get
 import iberoplast.pe.gespro.util.PreferenceHelper.set
@@ -52,12 +58,24 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class FormRequestSupplierActivity : AppCompatActivity() {
+class FormRequestSupplierActivity : AppCompatActivity(), PdfFragmentListener {
 
     private val etNicRuc by lazy { findViewById<EditText>(R.id.etNicRuc) }
     private val etDir2 by lazy { findViewById<EditText>(R.id.etDir2) }
     private val etDir1 by lazy { findViewById<EditText>(R.id.etDir1) }
     private val btnSend by lazy { findViewById<Button>(R.id.btnSend) }
+
+    private val tvTittleCodeEtic by lazy { findViewById<TextView>(R.id.tvTittleCodeEtic) }
+    private val tvTitleConst by lazy { findViewById<TextView>(R.id.tvTitleConst) }
+    private val tvTittleRepres by lazy { findViewById<TextView>(R.id.tvTittleRepres) }
+    private val tvTitleCart by lazy { findViewById<TextView>(R.id.tvTitleCart) }
+    private val tvTitleRuc by lazy { findViewById<TextView>(R.id.tvTitleRuc) }
+
+    private val ivDoc1 by lazy { findViewById<ImageView>(R.id.ivDoc1) }
+    private val ivDoc2 by lazy { findViewById<ImageView>(R.id.ivDoc2) }
+    private val ivDoc3 by lazy { findViewById<ImageView>(R.id.ivDoc3) }
+    private val ivDoc4 by lazy { findViewById<ImageView>(R.id.ivDoc4) }
+    private val ivDoc5 by lazy { findViewById<ImageView>(R.id.ivDoc5) }
 
     private var currentStep = 1 // Valor predeterminado: paso 1 (20%)
     private lateinit var progressBar: ProgressBar
@@ -72,11 +90,14 @@ class FormRequestSupplierActivity : AppCompatActivity() {
     private var methodPayment: String? = null
     private val checkBoxList = mutableListOf<CheckBox>()
     val questionsWithResponses = mutableListOf<QuestionResponse>()
-    val listaArchivos = mutableListOf<Documents>()
+    val listaArchivos = mutableListOf<DocumentLoadToServer>()
 
 
     private lateinit var getContent1: ActivityResultLauncher<String>
     private lateinit var getContent2: ActivityResultLauncher<String>
+    private lateinit var getContent3: ActivityResultLauncher<String>
+    private lateinit var getContent4: ActivityResultLauncher<String>
+    private lateinit var getContent5: ActivityResultLauncher<String>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,25 +111,101 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         val btnAdjuntar2 = findViewById<Button>(R.id.btnAdjuntar2)
         val tvAdjuntar2 = findViewById<TextView>(R.id.tvAdjuntar2)
 
+        val btnAdjuntar3 = findViewById<Button>(R.id.btnAdjuntar3)
+        val tvAdjuntar3 = findViewById<TextView>(R.id.tvAdjuntar3)
+
+        val btnAdjuntar4 = findViewById<Button>(R.id.btnAdjuntar4)
+        val tvAdjuntar4 = findViewById<TextView>(R.id.tvAdjuntar4)
+
+        val btnAdjuntar5 = findViewById<Button>(R.id.btnAdjuntar5)
+        val tvAdjuntar5 = findViewById<TextView>(R.id.tvAdjuntar5)
+
         // Inicializa getContent1 para el botón 1
         getContent1 = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let { selectedUri ->
-                val fileName = getFileName(selectedUri)
-                val fileContent = getContentBytes(selectedUri)
-                val fileData = Documents(fileName, fileContent)
-                tvAdjuntar1.text = "Archivo seleccionado: $fileName"
-                listaArchivos.add(fileData)
+                if (isPdfFile(selectedUri)) {
+                    val title = tvTittleCodeEtic.text.toString()
+                    val fileName = getFileName(selectedUri)
+                    val fileContent = getContentBytes(selectedUri)
+                    val fileData = DocumentLoadToServer(title, fileName, fileContent)
+                    tvAdjuntar1.text = "Archivo seleccionado: $fileName"
+                    listaArchivos.add(fileData)
+                } else {
+                    // If it's not a PDF file, display a Toast message indicating the restriction
+                    toast("Solo se permite archivos PDF")
+                }
             }
         }
 
         // Inicializa getContent2 para el botón 2
         getContent2 = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let { selectedUri ->
-                val fileName = getFileName(selectedUri)
-                val fileContent = getContentBytes(selectedUri)
-                val fileData = Documents(fileName, fileContent)
-                tvAdjuntar2.text = "Archivo seleccionado: $fileName"
-                listaArchivos.add(fileData)
+                if (isPdfFile(selectedUri)) {
+                    val title = tvTitleConst.text.toString()
+                    val fileName = getFileName(selectedUri)
+                    val fileContent = getContentBytes(selectedUri)
+                    val fileData = DocumentLoadToServer(title, fileName, fileContent)
+                    tvAdjuntar2.text = "Archivo seleccionado: $fileName"
+                    listaArchivos.add(fileData)
+                } else {
+                    // If it's not a PDF file, display a Toast message indicating the restriction
+                    toast("Solo se permite archivos PDF")
+                }
+
+            }
+        }
+
+        // Inicializa getContent2 para el botón 2
+        getContent3 = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let { selectedUri ->
+                if (isPdfFile(selectedUri)) {
+                    val title = tvTittleRepres.text.toString()
+                    val fileName = getFileName(selectedUri)
+                    val fileContent = getContentBytes(selectedUri)
+                    val fileData = DocumentLoadToServer(title, fileName, fileContent)
+                    tvAdjuntar3.text = "Archivo seleccionado: $fileName"
+                    listaArchivos.add(fileData)
+                } else {
+                    // If it's not a PDF file, display a Toast message indicating the restriction
+                    toast("Solo se permite archivos PDF")
+                }
+
+            }
+        }
+
+        // Inicializa getContent2 para el botón 2
+        getContent4 = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let { selectedUri ->
+                if (isPdfFile(selectedUri)) {
+                    val title = tvTitleCart.text.toString()
+                    val fileName = getFileName(selectedUri)
+                    val fileContent = getContentBytes(selectedUri)
+                    val fileData = DocumentLoadToServer(title, fileName, fileContent)
+                    tvAdjuntar4.text = "Archivo seleccionado: $fileName"
+                    listaArchivos.add(fileData)
+                } else {
+                    // If it's not a PDF file, display a Toast message indicating the restriction
+                    toast("Solo se permite archivos PDF")
+                }
+
+            }
+        }
+
+        // Inicializa getContent2 para el botón 2
+        getContent5 = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let { selectedUri ->
+                if (isPdfFile(selectedUri)) {
+                    val title = tvTitleRuc.text.toString()
+                    val fileName = getFileName(selectedUri)
+                    val fileContent = getContentBytes(selectedUri)
+                    val fileData = DocumentLoadToServer(title, fileName, fileContent)
+                    tvAdjuntar5.text = "Archivo seleccionado: $fileName"
+                    listaArchivos.add(fileData)
+                } else {
+                    // If it's not a PDF file, display a Toast message indicating the restriction
+                    toast("Solo se permite archivos PDF")
+                }
+
             }
         }
 
@@ -121,6 +218,21 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         btnAdjuntar2.setOnClickListener {
             openGallery(getContent2)
         }
+
+        // Configuración de eventos de clic para el botón 3
+        btnAdjuntar3.setOnClickListener {
+            openGallery(getContent3)
+        }
+        // Configuración de eventos de clic para el botón 4
+        btnAdjuntar4.setOnClickListener {
+            openGallery(getContent4)
+        }
+
+        // Configuración de eventos de clic para el botón 5
+        btnAdjuntar5.setOnClickListener {
+            openGallery(getContent5)
+        }
+
 
 
         progressBar = findViewById(R.id.progressBar)
@@ -179,7 +291,7 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         val webView = findViewById<WebView>(R.id.webView)
 
         val url =
-            "https://drive.google.com/file/d/1Y4gwaZnYgfpS2Y2eE6CtMEnMMapuA5aA/view?usp=drive_link"
+            "https://drive.google.com/file/d/1QMWS8IJD3iTIxUFfl4GX5WD7JhXRRuK1/view?usp=sharing"
         // Reemplaza "ENLACE_PDF" con el enlace de Google Drive a tu archivo PDF
 
         val webSettings = webView.settings
@@ -301,11 +413,128 @@ class FormRequestSupplierActivity : AppCompatActivity() {
             etDir2.setText(request.user.supplier?.locality)
             etDir1.setText(request.user.supplier?.street_and_number)
 
+            for (document in request.documents) {
+                val title = document.title
+                val name = document.name
+
+                when (title) {
+                    tvTittleCodeEtic.text.toString() -> {
+                        // Coincide con tvTittleCodeEtic, imprimir en tvAdjuntar1
+                        ivDoc1.visibility = View.VISIBLE
+                        tvAdjuntar1.text = "Archivo seleccionado: $name"
+                        ivDoc1.setOnClickListener {
+                            val llFormStep4 = findViewById<LinearLayout>(R.id.llFormStep4)
+                            llFormStep4.visibility = View.GONE
+                            val uri = document.uri
+
+                            // Concatenar el dominio con la URI para formar la URL completa
+                            val dominio = "https://gespro-iberoplast.tech"
+                            val pdf_url = "$dominio$uri"
+
+                            val pdfFragment = PdfFragment.newInstance("${pdf_url}")
+                            pdfFragment.setPdfFragmentListener(this)
+                            // Utiliza replace en lugar de add
+                            supportFragmentManager.beginTransaction()
+                                .replace(android.R.id.content, pdfFragment)
+                                .addToBackStack(null)
+                                .commit()
+                        }
+                    }
+                    tvTitleConst.text.toString() -> {
+                        ivDoc2.visibility = View.VISIBLE
+                        // Coincide con tvTitleConst, imprimir en tvAdjuntar2
+                        tvAdjuntar2.text = "Archivo seleccionado: $name"
+                        ivDoc2.setOnClickListener {
+                            val llFormStep4 = findViewById<LinearLayout>(R.id.llFormStep4)
+                            llFormStep4.visibility = View.GONE
+                            val uri = document.uri
+
+                            // Concatenar el dominio con la URI para formar la URL completa
+                            val dominio = "https://gespro-iberoplast.tech"
+                            val pdf_url = "$dominio$uri"
+
+                            val pdfFragment = PdfFragment.newInstance("${pdf_url}")
+                            pdfFragment.setPdfFragmentListener(this)
+                            // Utiliza replace en lugar de add
+                            supportFragmentManager.beginTransaction()
+                                .replace(android.R.id.content, pdfFragment)
+                                .addToBackStack(null)
+                                .commit()
+                        }
+                    }
+                    tvTittleRepres.text.toString() -> {
+                        ivDoc3.visibility = View.VISIBLE
+                        // Coincide con tvTittleRepres, imprimir en tvAdjuntar3
+                        tvAdjuntar3.text = "Archivo seleccionado: $name"
+                        ivDoc3.setOnClickListener {
+                            val llFormStep4 = findViewById<LinearLayout>(R.id.llFormStep4)
+                            llFormStep4.visibility = View.GONE
+                            val uri = document.uri
+
+                            // Concatenar el dominio con la URI para formar la URL completa
+                            val dominio = "https://gespro-iberoplast.tech"
+                            val pdf_url = "$dominio$uri"
+
+                            val pdfFragment = PdfFragment.newInstance("${pdf_url}")
+                            pdfFragment.setPdfFragmentListener(this)
+                            // Utiliza replace en lugar de add
+                            supportFragmentManager.beginTransaction()
+                                .replace(android.R.id.content, pdfFragment)
+                                .addToBackStack(null)
+                                .commit()
+                        }
+                    }
+                    tvTitleCart.text.toString() -> {
+                        ivDoc4.visibility = View.VISIBLE
+                        // Coincide con tvTittleRepres, imprimir en tvAdjuntar4
+                        tvAdjuntar4.text = "Archivo seleccionado: $name"
+                        ivDoc4.setOnClickListener {
+                            val llFormStep4 = findViewById<LinearLayout>(R.id.llFormStep4)
+                            llFormStep4.visibility = View.GONE
+                            val uri = document.uri
+
+                            // Concatenar el dominio con la URI para formar la URL completa
+                            val dominio = "https://gespro-iberoplast.tech"
+                            val pdf_url = "$dominio$uri"
+
+                            val pdfFragment = PdfFragment.newInstance("${pdf_url}")
+                            pdfFragment.setPdfFragmentListener(this)
+                            // Utiliza replace en lugar de add
+                            supportFragmentManager.beginTransaction()
+                                .replace(android.R.id.content, pdfFragment)
+                                .addToBackStack(null)
+                                .commit()
+                        }
+                    }
+                    tvTitleRuc.text.toString() -> {
+                        ivDoc5.visibility = View.VISIBLE
+                        // Coincide con tvTittleRepres, imprimir en tvAdjuntar5
+                        tvAdjuntar5.text = "Archivo seleccionado: $name"
+                        ivDoc5.setOnClickListener {
+                            val llFormStep4 = findViewById<LinearLayout>(R.id.llFormStep4)
+                            llFormStep4.visibility = View.GONE
+                            val uri = document.uri
+
+                            // Concatenar el dominio con la URI para formar la URL completa
+                            val dominio = "https://gespro-iberoplast.tech"
+                            val pdf_url = "$dominio$uri"
+
+                            val pdfFragment = PdfFragment.newInstance("${pdf_url}")
+                            pdfFragment.setPdfFragmentListener(this)
+                            // Utiliza replace en lugar de add
+                            supportFragmentManager.beginTransaction()
+                                .replace(android.R.id.content, pdfFragment)
+                                .addToBackStack(null)
+                                .commit()
+                        }
+                    }
+                }
+            }
+            loadCountries(request)
             loadTypesPayments(request)
             loadMethodsPayments(request)
             loadPolicies(request)
             loadQuestions(request)
-            loadCountries(request)
 
             btnSend.setOnClickListener {
                 val id = request.id
@@ -316,11 +545,11 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                 this,
                 "Registro de nueva solicitud"
             )
+            loadCountries(null)
             loadTypesPayments(null)
             loadMethodsPayments(null)
             loadPolicies(null)
             loadQuestions(null)
-            loadCountries(null)
 
             btnSend.setOnClickListener {
                 if (!validateQuestionResponses()) {
@@ -329,6 +558,10 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                 executeMethodCreate(methodPayment)
             }
         }
+    }
+    override fun onCloseButtonClicked() {
+        val llFormStep4 = findViewById<LinearLayout>(R.id.llFormStep4)
+        llFormStep4.visibility = View.VISIBLE
     }
     private fun validateQuestionResponses(): Boolean {
         val questionContainer = findViewById<LinearLayout>(R.id.questionContainer)
@@ -348,9 +581,12 @@ class FormRequestSupplierActivity : AppCompatActivity() {
     }
     private fun openGallery(getContent: ActivityResultLauncher<String>) {
         // Lanzar la actividad de selección de archivos
-        getContent.launch("*/*")
+        getContent.launch("application/pdf")
     }
-
+    private fun isPdfFile(uri: Uri): Boolean {
+        val type = contentResolver.getType(uri)
+        return type?.startsWith("application/pdf") == true
+    }
     private fun getFileName(uri: Uri): String {
         // Obtener el nombre del archivo desde su URI
         val cursor = contentResolver.query(uri, null, null, null, null)
@@ -380,12 +616,21 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         for (fileData in listaArchivos) {
             Log.d("FileUpload", "Archivo a enviar: ${fileData.filename}")
         }
+
+        // Imprime el contenido de listaArchivos
+        for (fileData in listaArchivos) {
+            Log.d("MisArchivosCargados", "Elemento de listaArchivos: Title=${fileData.title}, Filename=${fileData.filename}, FileContent=${fileData.fileContent.size} bytes")
+        }
         val fileParts = mutableListOf<MultipartBody.Part>()
 
         for (fileData in listaArchivos) {
+
             val fileRequestBody = fileData.fileContent.toRequestBody("application/octet-stream".toMediaTypeOrNull())
             val filePart = MultipartBody.Part.createFormData("files[]", fileData.filename, fileRequestBody)
+
+            val titlePart = MultipartBody.Part.createFormData("titles[]", fileData.title)
             fileParts.add(filePart)
+            fileParts.add(titlePart)
         }
 
         val call = apiService.uploadFiles(authHeader, fileParts)
@@ -485,7 +730,46 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         })
 
     }
+    private fun sendUpdateFiles(id: Int)
+    {
+        val jwt = preferences["jwt", ""]
+        val authHeader = "Bearer $jwt"
 
+        for (fileData in listaArchivos) {
+            Log.d("FileUpdatedUpload", "Archivo actualizado a enviar: ${fileData.filename}")
+        }
+
+        // Imprime el contenido de listaArchivos
+        for (fileData in listaArchivos) {
+            Log.d("MisArchivosActualizadosCargados", "Elemento de listaArchivos actualizada: Title=${fileData.title}, Filename=${fileData.filename}, FileContent=${fileData.fileContent.size} bytes")
+        }
+        val fileParts = mutableListOf<MultipartBody.Part>()
+
+        for (fileData in listaArchivos) {
+
+            val fileRequestBody = fileData.fileContent.toRequestBody("application/octet-stream".toMediaTypeOrNull())
+            val filePart = MultipartBody.Part.createFormData("files[]", fileData.filename, fileRequestBody)
+
+            val titlePart = MultipartBody.Part.createFormData("titles[]", fileData.title)
+            fileParts.add(filePart)
+            fileParts.add(titlePart)
+        }
+
+        val call = apiService.uploadFilesUpdated(authHeader, id, fileParts)
+        call.enqueue(object : Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Log.d("FileUpload", "Archivos enviados actualizados exitosamente")
+                } else {
+                    Log.e("FileUpload", "Error en la respuesta del servidor: ${response.code()}")
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("FileUpload", "Error en la solicitud: ${t.message}")
+            }
+        })
+    }
     private fun executeMethodUpdate(id: Int, methodPayment: String?) {
         btnSend.isClickable = false
         val jwt = preferences["jwt", ""]
@@ -537,6 +821,7 @@ class FormRequestSupplierActivity : AppCompatActivity() {
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
+                    sendUpdateFiles(id)
                     val message = "Su solicitud fue actualizada correctamente."
                     val intent = Intent(
                         this@FormRequestSupplierActivity,
@@ -567,7 +852,7 @@ class FormRequestSupplierActivity : AppCompatActivity() {
     }
 
     private fun loadCountries(request: SupplierRequest?) {
-        val spCountries = findViewById<Spinner>(R.id.spinnerPaises)
+        val spCountries = findViewById<SearchableSpinner>(R.id.spinnerPaises)
 
         val call = apiService.getCountries()
         call.enqueue(object : Callback<ArrayList<Countrie>> {
@@ -578,36 +863,92 @@ class FormRequestSupplierActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val countries = response.body() ?: ArrayList()
 
-                    // Crear un ArrayAdapter para el Spinner con la lista de países
-                    val adapter = ArrayAdapter(
+                    // Create a custom ArrayAdapter with a filter to make it searchable
+                    val adapter = object : ArrayAdapter<Countrie>(
                         this@FormRequestSupplierActivity,
                         android.R.layout.simple_list_item_1,
                         countries
-                    )
+                    ) {
+                        override fun getFilter(): Filter {
+                            return object : Filter() {
+                                override fun performFiltering(constraint: CharSequence?): FilterResults {
+                                    val filterResults = FilterResults()
+                                    val filteredList = ArrayList<Countrie>()
 
-                    // Asignar el ArrayAdapter al Spinner
+                                    if (constraint.isNullOrBlank()) {
+                                        filteredList.addAll(countries)
+                                    } else {
+                                        val filterPattern = constraint.toString().toLowerCase().trim()
+
+                                        for (country in countries) {
+                                            if (country.name.toLowerCase().contains(filterPattern)) {
+                                                filteredList.add(country)
+                                            }
+                                        }
+                                    }
+
+                                    filterResults.values = filteredList
+                                    filterResults.count = filteredList.size
+                                    return filterResults
+                                }
+
+                                override fun publishResults(
+                                    constraint: CharSequence?,
+                                    results: FilterResults?
+                                ) {
+                                    clear()
+                                    addAll(results?.values as ArrayList<Countrie>)
+                                    notifyDataSetChanged()
+                                }
+                            }
+                        }
+                    }
+
+                    // Set the custom adapter to the SearchableSpinner
                     spCountries.adapter = adapter
 
-                    // Verificar si hay un objeto request y si tiene la nacionalidad
+                    // Set the listener to handle item selection
+                    spCountries.onItemSelectedListener = object :
+                        AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            parentView: AdapterView<*>?,
+                            selectedItemView: View?,
+                            position: Int,
+                            id: Long
+                        ) {
+                            // Handle item selection
+                        }
+
+                        override fun onNothingSelected(parentView: AdapterView<*>?) {
+                            // Do nothing here
+                        }
+                    }
+
+                    // Set the prompt text
+                    spCountries.setTitle("Select a Country")
+
+                    // Handle request and pre-select if necessary
                     if (request != null && request.user.supplier?.nacionality != null) {
                         val nationality = request.user.supplier?.nacionality
 
-                        // Encontrar la posición de la nationality en la lista de países
-                        val nationalityPosition = countries.indexOfFirst { it.name == nationality }
+                        // Find the position of the nationality in the list of countries
+                        val nationalityPosition = adapter.getPosition(
+                            countries.find { it.name == nationality }
+                        )
 
-                        // Si se encuentra, seleccionar automáticamente la nationality en el Spinner
+                        // If found, select the nationality in the spinner
                         if (nationalityPosition != -1) {
                             spCountries.setSelection(nationalityPosition)
                         }
                     }
 
                 } else {
-                    // Manejar la respuesta no exitosa aquí
+                    // Handle unsuccessful response here
                 }
             }
 
             override fun onFailure(call: Call<ArrayList<Countrie>>, t: Throwable) {
-                // Manejar la falla en la solicitud aquí
+                // Handle failure in the request here
             }
         })
     }

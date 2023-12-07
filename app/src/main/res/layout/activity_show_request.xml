@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cvShowRequest"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -61,16 +62,30 @@
                 </LinearLayout>
             </FrameLayout>
 
-            <TextView
-                android:id="@+id/tvName"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ivProfile"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:text=""
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/tvName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ivProfile"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:text="NAME SUPPLIER"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+                <ImageView
+                    android:id="@+id/ivFlagCountry"
+                    android:layout_width="50dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_margin="10dp"
+                    android:layout_height="30dp"
+                    android:scaleType="centerCrop"/>
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -279,7 +294,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center_horizontal"
-                        android:text="Transiciones" />
+                        android:text="Seguimiento" />
 
                     <ImageButton
                         android:id="@+id/ibExpandTransitions"

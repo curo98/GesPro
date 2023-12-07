@@ -1,0 +1,18 @@
+<!-- bg_deleted_item.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Borde del fondo con margen -->
+    <item android:left="8dp" android:right="8dp" android:top="8dp" android:bottom="8dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#7E7A7A" /> <!-- Color de fondo sombreado -->
+            <corners android:radius="5dp" /> <!-- Radio de las esquinas -->
+        </shape>
+    </item>
+    <!-- Borde -->
+    <item android:left="4dp" android:right="4dp" android:top="4dp" android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#00000000" /> <!-- Color transparente -->
+            <corners android:radius="5dp" /> <!-- Radio de las esquinas -->
+            <stroke android:color="#000000" android:width="4dp" /> <!-- Color y ancho del borde -->
+        </shape>
+    </item>
+</layer-list>

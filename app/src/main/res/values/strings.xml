@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">GesPro</string>
-    <string name="label_login">Inicio de Sesion</string>
+    <string name="label_login">Inicio de Sesión</string>
     <string name="label_email">Correo</string>
     <string name="label_password">Clave</string>
-    <string name="label_link_register">Aun no te has registrado?</string>
+    <string name="label_link_register">Aún no te has registrado?</string>
     <string name="label_register">Registro</string>
     <string name="btn_register">CONFIRMAR REGISTRO</string>
     <string name="label_name">Nombres y Apellidos</string>

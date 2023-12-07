@@ -2,8 +2,10 @@ package iberoplast.pe.gespro.ui.modules.supplier
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.squareup.picasso.Picasso
 import iberoplast.pe.gespro.R
 import iberoplast.pe.gespro.model.Supplier
 import iberoplast.pe.gespro.util.ActionBarUtils
@@ -14,10 +16,10 @@ class ShowSupplierActivity : AppCompatActivity() {
     // Definir las variables val para los TextViews
     private val tvName by lazy { findViewById<TextView>(R.id.tvName) }
     private val tvNicRuc by lazy { findViewById<TextView>(R.id.tvNicRuc) }
-    private val tvCountry by lazy { findViewById<TextView>(R.id.tvCountry) }
     private val tvEmail by lazy { findViewById<TextView>(R.id.tvEmail) }
     private val tvPhone by lazy { findViewById<TextView>(R.id.tvPhone) }
     private val tvState by lazy { findViewById<TextView>(R.id.tvState) }
+    private val ivProfile by lazy { findViewById<ImageView>(R.id.ivProfile) }
     private val tvCreated_at by lazy { findViewById<TextView>(R.id.tvCreated_at) }
     private val tvUpdated_at by lazy { findViewById<TextView>(R.id.tvUpdated_at) }
     private val btnReturnList by lazy { findViewById<TextView>(R.id.btnReturnList) }
@@ -29,6 +31,7 @@ class ShowSupplierActivity : AppCompatActivity() {
         // Recuperar los datos del proveedor del Intent
         val supplier = intent.getParcelableExtra<Supplier>("supplier_details")
 
+        val ivFlagCountry: ImageView = findViewById(R.id.ivFlagCountry)
         // Verificar si los datos del proveedor no son nulos
         if (supplier != null) {
             ActionBarUtils.setCustomTitle(
@@ -36,7 +39,6 @@ class ShowSupplierActivity : AppCompatActivity() {
                 "Detalle de proveedor:",
                 "${supplier.user.name}"
             )
-            val nacionality = supplier.nacionality
             val nicRuc = supplier.nic_ruc
             val state = supplier.state
 
@@ -45,7 +47,16 @@ class ShowSupplierActivity : AppCompatActivity() {
             val updated_at = formatDate(supplier.updated_at)
 
             // Mostrar los valores en los TextViews
-            tvCountry.text = nacionality
+            val uri = supplier.flag_country
+            val uriPhoto = supplier.user.photo
+
+            // Concatenar el dominio con la URI para formar la URL completa
+            val domain = "https://gespro-iberoplast.tech"
+            val flagCountryURL = "$domain$uri"
+            val photoProfileURL = "$domain$uriPhoto"
+
+            Picasso.get().load("${photoProfileURL}").into(ivProfile)
+            Picasso.get().load("${flagCountryURL}").into(ivFlagCountry)
             tvNicRuc.text = nicRuc
             tvState.text = state
             if (state.equals("inactivo", ignoreCase = true)) {

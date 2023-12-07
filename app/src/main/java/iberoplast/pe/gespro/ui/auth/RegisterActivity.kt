@@ -81,11 +81,12 @@ class RegisterActivity : AppCompatActivity() {
                         createSessionPreference(loginResponse.jwt, loginResponse.role.name, loginResponse.user.name)
                         toast("Bienvenido ${loginResponse.role.name}")
                         goToMenuActivity(true)
+                        finish()
                     }else{
                         toast("Credenciales incorrectas")
                     }
                 }else{
-                    toast("Ocurrio un error en el registro")
+                    toast("Intenta con otro correo")
                 }
             }
 

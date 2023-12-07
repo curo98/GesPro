@@ -136,10 +136,11 @@ class FormSupplierActivity : AppCompatActivity() {
         val name = etName.text.toString().trim()
         val nic_ruc = etNicRuc.text.toString().trim()
         val email = etEmail.text.toString().trim()
+        val nacionality = spCountry.selectedItem.toString()
         val jwt = preferences["jwt", ""]
         val authHeader = "Bearer $jwt"
 
-        val call = apiService.updateSupplier(authHeader, id, name, nic_ruc, email)
+        val call = apiService.updateSupplier(authHeader, id, name, nic_ruc, email, nacionality)
         call.enqueue(object: Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
@@ -147,15 +148,6 @@ class FormSupplierActivity : AppCompatActivity() {
                     val intent = Intent(this@FormSupplierActivity, SuppliersActivity::class.java)
                     startActivity(intent)
                     finish()
-                } else {
-                    // Manejo de errores
-                    val errorMessage = when (response.code()) {
-                        401 -> "No autorizado"
-                        404 -> "Proveedor no encontrado"
-                        500 -> "Error interno del servidor"
-                        else -> "Error desconocido"
-                    }
-                    toast(errorMessage)
                 }
             }
             override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -163,7 +155,6 @@ class FormSupplierActivity : AppCompatActivity() {
             }
         })
     }
-
     private fun executeMethodCreate()
     {
         val name = etName.text.toString().trim()

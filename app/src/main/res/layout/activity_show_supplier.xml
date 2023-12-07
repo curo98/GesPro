@@ -29,16 +29,30 @@
             android:padding="5dp"
             app:srcCompat="@drawable/logo" />
 
-        <TextView
-            android:id="@+id/tvName"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ivProfile"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:text="Razon social"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ivProfile"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:text="NAME SUPPLIER"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/ivFlagCountry"
+                android:layout_width="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_margin="10dp"
+                android:layout_height="30dp"
+                android:scaleType="centerCrop"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,33 +62,15 @@
 
             <TextView
                 android:id="@+id/tvEmail"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvName"
                 android:layout_centerHorizontal="true"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:text=""
                 android:textSize="15sp"
                 android:textStyle="italic" />
 
-            <!-- Línea divisoria horizontal -->
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="#A9A9A9" />
-
-            <TextView
-                android:id="@+id/tvCountry"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tvName"
-                android:layout_centerHorizontal="true"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Country"
-                android:textSize="15sp"
-                android:textStyle="italic" />
         </LinearLayout>
 
         <LinearLayout

@@ -3,6 +3,7 @@ package iberoplast.pe.gespro.io
 import Role
 import iberoplast.pe.gespro.io.response.LoginResponse
 import iberoplast.pe.gespro.io.response.SimpleResponse
+import iberoplast.pe.gespro.io.response.VerifyRequest
 import iberoplast.pe.gespro.io.response.charts.ChartDataResponse
 import iberoplast.pe.gespro.io.response.charts.ResponseCounts
 import iberoplast.pe.gespro.io.response.charts.UserRoleResponse
@@ -34,6 +35,24 @@ import retrofit2.http.Query
 
 
 interface ApiService {
+    @POST("fcm/send")
+    @Headers("Accept: application/json")
+    fun sendNotification(
+        @Header("Authorization") authHeader: String,
+        @Query("title") title: String,
+        @Query("body") body: String
+    ): Call<Void>
+    @GET("verify-request")
+    @Headers("Accept: application/json")
+    fun verifyRequest(@Header("Authorization") authHeader: String): Call<VerifyRequest>
+    @Multipart
+    @POST("uploadPhotoProfile")
+    @Headers("Accept: application/json")
+    fun uploadPhotoProfile(@Header("Authorization") authHeader: String, @Part file: MultipartBody.Part): Call<Void>
+    @Multipart
+    @POST("uploadFilesUpdated/{id}")
+    @Headers("Accept: application/json")
+    fun uploadFilesUpdated(@Header("Authorization") authHeader: String, @Path("id") id: Int, @Part files: List<MultipartBody.Part>): Call<Void>
     @Multipart
     @POST("upload")
     @Headers("Accept: application/json")
@@ -211,7 +230,14 @@ interface ApiService {
         @Path("id") id: Int,
         @Query("name") name: String,
         @Query("nic_ruc") nic_ruc: String,
-        @Query("email") email: String
+        @Query("email") email: String,
+        @Query("nacionality") nacionality: String
+    ): Call<Void>
+    @POST("request/{id}/trash")
+    @Headers("Accept: application/json")
+    fun trashRequest(
+        @Header("Authorization") authHeader: String,
+        @Path("id") id: Int
     ): Call<Void>
     @POST("request/{id}/cancel")
     @Headers("Accept: application/json")

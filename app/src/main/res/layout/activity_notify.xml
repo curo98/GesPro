@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center_vertical"
+    android:gravity="center_vertical"
+    android:paddingTop="15dp"
+    tools:context=".ui.NotifyActivity"
+    android:padding="30dp">
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Título:"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/etTitle"
+        android:inputType="textMultiLine"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:hint="Ingrese el titulo del mensaje ..."/>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Mensaje:"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/etBody"
+        android:inputType="textMultiLine"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:hint="Ingrese el cuerpo del mensaje ..."/>
+
+    <!-- Botones "Anterior" y "Siguiente" -->
+    <LinearLayout
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="15dp">
+
+        <Button
+            style="@style/ButtonForm"
+            android:background="@color/colorBtnLogin"
+            android:drawableEnd="@drawable/icon_next"
+            android:id="@+id/btnNotify"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="ENVIAR NOTIFICACION"
+            android:layout_marginBottom="10dp"/>
+    </LinearLayout>
+</LinearLayout>

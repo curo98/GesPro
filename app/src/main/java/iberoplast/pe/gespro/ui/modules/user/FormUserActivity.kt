@@ -110,19 +110,14 @@ class FormUserActivity : AppCompatActivity() {
             }
         })
     }
-
-
     private fun executeMethodCreate() {
         val jwt = preferences["jwt", ""]
         val name = findViewById<EditText>(R.id.etName).text.toString()
         val email = findViewById<EditText>(R.id.etEmail).text.toString()
-
         val selectedRoleName = spRole.selectedItem as? String
         val selectedRole = roles.firstOrNull { it.name == selectedRoleName }
-
         // Obtener el ID del rol seleccionado
         val id_role = selectedRole?.id ?: -1
-
         val call = apiService.postUser("Bearer $jwt", name, email, id_role)
         call.enqueue(object : Callback<Void> {
             override fun onResponse(
@@ -136,25 +131,19 @@ class FormUserActivity : AppCompatActivity() {
                     finish()
                 }
             }
-
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 // Manejar errores de la solicitud
             }
         })
     }
-
-
     private fun executeMethodUpdate(id: Int) {
         val jwt = preferences["jwt", ""]
         val name = findViewById<EditText>(R.id.etName).text.toString()
         val email = findViewById<EditText>(R.id.etEmail).text.toString()
-
         val selectedRoleName = spRole.selectedItem as? String
         val selectedRole = roles.firstOrNull { it.name == selectedRoleName }
-
         // Obtener el ID del rol seleccionado
         val id_role = selectedRole?.id ?: -1 // Cambia esto según el valor por defecto
-
         val call = apiService.updateUser("Bearer $jwt", id, name, email, id_role)
         call.enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
@@ -165,7 +154,6 @@ class FormUserActivity : AppCompatActivity() {
                     finish()
                 }
             }
-
             override fun onFailure(call: Call<Void>, t: Throwable) {
                 // Manejar errores de la solicitud
             }

@@ -5,6 +5,7 @@ import android.os.Parcelable
 
 data class Document(
     val id: Int,
+    val title: String,
     val name: String,
     val uri: String,
     val id_supplier: Int,
@@ -15,13 +16,15 @@ data class Document(
         parcel.readInt(),
         parcel.readString() ?: "",
         parcel.readString() ?: "",
+        parcel.readString() ?: "",
         parcel.readInt(),
-        parcel.readParcelable(Supplier::class.java.classLoader) ?: Supplier(0, "", "", "", "", 0, "", "", "", User(0, "", "", 0, "", null, null)),
+        parcel.readParcelable(Supplier::class.java.classLoader) ?: Supplier(0, "", "","", "", "", 0, "", "", "", User(0, "", "", "", 0, "", null, null)),
         parcel.readParcelable(DocumentPivot::class.java.classLoader) ?: DocumentPivot(0, 0)
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
+        parcel.writeString(title)
         parcel.writeString(name)
         parcel.writeString(uri)
         parcel.writeInt(id_supplier)

@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llFormStep4"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="15dp"
-    tools:context=".ui.modules.request.FormRequestSupplierActivity"
     android:visibility="gone"
-    android:id="@+id/llFormStep4">
+    tools:context=".ui.modules.request.FormRequestSupplierActivity">
 
     <!-- Instrucciones -->
     <TextView
@@ -32,35 +30,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:paddingLeft="16dp"
             android:text="Descargar e imprimir el modelo de carta (código de ética y de conducta) pulsando el botón disponible." />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:paddingLeft="16dp"
             android:text="Firmar y adjuntar la carta en la opción correspondiente." />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:paddingLeft="16dp"
             android:text="Adjuntar los demás documentos requeridos." />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:paddingLeft="16dp"
             android:text="Marcar check aceptando cumplir con el código de ética." />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:paddingLeft="16dp"
             android:text="Para culminar con el proceso, pulse el botón 'Finalizar' y espere la confirmación." />
     </LinearLayout>
 
@@ -112,12 +105,14 @@
             android:textStyle="italic" />
 
         <TextView
+            android:id="@+id/tvPreviewDoc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/icon_preview"
             android:drawablePadding="6dp"
-            android:text="Visualizar / Editar documento adjunto"
+            android:text="Visualizar documento adjunto"
             android:textColor="#008000"
+            android:visibility="gone"
             android:textSize="14sp"
             android:textStyle="italic" />
     </LinearLayout>
@@ -135,6 +130,7 @@
 
     <!-- Código de ética y conducta -->
     <TextView
+        android:id="@+id/tvTittleCodeEtic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -149,23 +145,42 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnAdjuntar1"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Adjuntar" />
+            android:layout_weight="4"
+            >
+            <Button
+                android:id="@+id/btnAdjuntar1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Adjuntar" />
 
-        <TextView
-            android:id="@+id/tvAdjuntar1"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tvAdjuntar1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Archivo no seleccionado"
+                android:textSize="12sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Archivo no seleccionado"
-            android:textSize="12sp" />
+            android:layout_weight="1">
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/ivDoc1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_preview"/>
+        </LinearLayout>
     </LinearLayout>
 
     <!-- Constitución de la empresa -->
     <TextView
+        android:id="@+id/tvTitleConst"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -179,24 +194,42 @@
         android:layout_marginTop="4dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnAdjuntar2"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Adjuntar" />
+            android:layout_weight="4"
+            >
+            <Button
+                android:id="@+id/btnAdjuntar2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Adjuntar" />
 
-        <TextView
-            android:id="@+id/tvAdjuntar2"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tvAdjuntar2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Archivo no seleccionado"
+                android:textSize="12sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Archivo no seleccionado"
-            android:textSize="12sp" />
+            android:layout_weight="1">
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/ivDoc2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_preview"/>
+        </LinearLayout>
     </LinearLayout>
 
     <!-- DNI del representante legal -->
     <TextView
+        android:id="@+id/tvTittleRepres"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -210,24 +243,42 @@
         android:layout_marginTop="4dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnAdjuntar3"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Adjuntar" />
+            android:layout_weight="4"
+            >
+            <Button
+                android:id="@+id/btnAdjuntar3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Adjuntar" />
 
-        <TextView
-            android:id="@+id/tvAdjuntar3"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tvAdjuntar3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Archivo no seleccionado"
+                android:textSize="12sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Archivo no seleccionado"
-            android:textSize="12sp" />
+            android:layout_weight="1">
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/ivDoc3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_preview"/>
+        </LinearLayout>
     </LinearLayout>
 
     <!-- Carta firmada y membretada con datos bancarios -->
     <TextView
+        android:id="@+id/tvTitleCart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -241,24 +292,42 @@
         android:layout_marginTop="4dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btnAdjuntarCarta"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Adjuntar" />
+            android:layout_weight="4"
+            >
+            <Button
+                android:id="@+id/btnAdjuntar4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Adjuntar" />
 
-        <TextView
-            android:id="@+id/textArchivoCarta"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tvAdjuntar4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Archivo no seleccionado"
+                android:textSize="12sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Archivo no seleccionado"
-            android:textSize="12sp" />
+            android:layout_weight="1">
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/ivDoc4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_preview"/>
+        </LinearLayout>
     </LinearLayout>
 
     <!-- Ficha RUC -->
     <TextView
+        android:id="@+id/tvTitleRuc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -272,18 +341,37 @@
         android:layout_marginTop="4dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
-
-        <Button
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Adjuntar" />
+            android:layout_weight="4"
+            >
+            <Button
+                android:id="@+id/btnAdjuntar5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Adjuntar" />
 
-        <TextView
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tvAdjuntar5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Archivo no seleccionado"
+                android:textSize="12sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Archivo no seleccionado"
-            android:textSize="12sp" />
+            android:layout_weight="1">
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/ivDoc5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_preview"/>
+        </LinearLayout>
     </LinearLayout>
 
     <!-- Acepto cumplir con el código de ética -->

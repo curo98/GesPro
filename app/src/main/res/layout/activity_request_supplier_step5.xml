@@ -9,17 +9,6 @@
     android:visibility="gone"
     android:id="@+id/llFormStep5">
 
-    <TextView
-        android:id="@+id/datos"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""/>
-    <TextView
-        android:id="@+id/datos2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""/>
-
     <LinearLayout
         android:id="@+id/questionContainer"
         android:layout_width="match_parent"

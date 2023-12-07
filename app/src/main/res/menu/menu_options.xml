@@ -8,6 +8,9 @@
         android:id="@+id/edit"
         android:title="Editar" />
     <item
+        android:id="@+id/trash"
+        android:title="Eliminar" />
+    <item
         android:id="@+id/cancel"
         android:title="Cancelar" />
     <item
